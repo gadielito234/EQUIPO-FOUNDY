@@ -3,10 +3,12 @@ import { supabase } from './supabase';
 function Register({ onSwitchToLogin }) {
     const [formData, setFormData] = useState({
         nombre: '',
-        apellido: '',
+        apellidos: '',
         usuario: '',
+        tipo_usuario: '',
         contrasena: '',
         confirmarContrasena: '',
+        telefono: '',
     });
     const [loading, setLoading] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
@@ -46,9 +48,11 @@ function Register({ onSwitchToLogin }) {
                 .insert([
                     {
                         nombre: formData.nombre,
-                        apellido: formData.apellido,
+                        apellidos: formData.apellidos,
                         usuario: formData.usuario,
-                        contrasena: formData.contrasena, // Recuerda encriptar en produccion (ej. bcrypt)
+                        tipo_usuario: formData.tipo_usuario,
+                        contrasena: formData.contrasena,
+                        telefono: formData.telefono,
                     },
                 ]);
             if (error) throw error;
@@ -63,7 +67,7 @@ function Register({ onSwitchToLogin }) {
         }
     };
     return (
-        <div className="min-vh-100 d-flex justify-content-center align-items-center bg-light my4">
+        <div className="min-vh-100 d-flex justify-content-center align-items-center bg-light my-4">
             <div className="card shadow p-4" style={{ width: "420px" }}>
                 <div className="text-center mb-4">
                     <h2 className="fw-bold">Crear cuenta</h2>
@@ -98,13 +102,13 @@ function Register({ onSwitchToLogin }) {
                             />
                         </div>
                         <div className="col-6 mb-3">
-                            <label className="form-label">Apellido</label>
+                            <label className="form-label">Apellidos</label>
                             <input
                                 type="text"
-                                name="apellido"
+                                name="apellidos"
                                 className="form-control"
-                                placeholder="Pérez"
-                                value={formData.apellido}
+                                placeholder="Pérez García"
+                                value={formData.apellidos}
                                 onChange={handleChange}
                                 required
                             />
@@ -118,6 +122,32 @@ function Register({ onSwitchToLogin }) {
                             className="form-control"
                             placeholder="juanperez"
                             value={formData.usuario}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <label className="form-label">Tipo de usuario</label>
+                        <select
+                            name="tipo_usuario"
+                            className="form-control"
+                            value={formData.tipo_usuario}
+                            onChange={handleChange}
+                            required
+                        >
+                            <option value="">Selecciona una opción</option>
+                            <option value="Emprendedor">Emprendedor</option>
+                            <option value="Inversionista">Inversionista</option>
+                        </select>
+                    </div>
+                    <div className="mb-3">
+                        <label className="form-label">Teléfono</label>
+                        <input
+                            type="tel"
+                            name="telefono"
+                            className="form-control"
+                            placeholder="5512345678"
+                            value={formData.telefono}
                             onChange={handleChange}
                             required
                         />
@@ -168,4 +198,4 @@ function Register({ onSwitchToLogin }) {
         </div>
     );
 }
-export default Register;
+export default Register

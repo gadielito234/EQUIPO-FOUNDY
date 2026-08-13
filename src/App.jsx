@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { supabase } from './supabase';
-import Registro from './registro';
-import Inicio from './creacion.jsx';
-
+import { supabase } from './supabase.js';
+import Registro from './registro.jsx';
+import Inicio from './inicio.jsx';
 function App() {
   const [esRegistro, setEsRegistro] = useState(false);
   const [usuarioLogueado, setUsuarioLogueado] = useState(null);
@@ -43,7 +42,7 @@ function App() {
     setUsuario('');
     setContrasena('');
   };
-  // VISTA 1: Si hay un usuario logueado, mostramos verificacion.jsx
+  // VISTA 1: Si hay un usuario logueado, mostramos inicio.jsx
   if (usuarioLogueado) {
     return <Inicio usuarioData={usuarioLogueado} onCerrarSesion={handleCerrarSesion} />;
   }
