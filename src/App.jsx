@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { supabase } from './supabase.js';
-import Registro from './registro.jsx';
-import Inicio from './inicio.jsx';
+import { supabase } from './services/supabase.js';
+import Registro from './pages/registro.jsx';
+import Inicio from './pages/inicio.jsx';
 function App() {
   const [esRegistro, setEsRegistro] = useState(false);
   const [usuarioLogueado, setUsuarioLogueado] = useState(null);
