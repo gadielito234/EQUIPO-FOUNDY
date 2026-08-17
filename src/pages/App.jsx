@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { supabase } from './services/supabase.js';
-import Registro from './pages/registro.jsx';
-import Inicio from './pages/inicio.jsx';
+import { supabase } from '../services/supabase.js';
+import Recuperacion from './recuperacion.jsx';
+import Registro from './registro.jsx';
+import Inicio from './inicio.jsx';
 function App() {
   const [esRegistro, setEsRegistro] = useState(false);
+  const [esRecuperacion, setEsRecuperacion] = useState(false);
   const [usuarioLogueado, setUsuarioLogueado] = useState(null);
   const [usuario, setUsuario] = useState('');
   const [contrasena, setContrasena] = useState('');
@@ -49,8 +51,22 @@ function App() {
   // VISTA 2: Si quiere registrarse, mostramos registro.jsx
   if (esRegistro) {
     return <Registro onSwitchToLogin={() => setEsRegistro(false)} />;
+
   }
-  // VISTA 3: Por defecto, mostramos el Login
+  // VISTA 3: Si quiere recuperar contraseña, mostramos recuperacion.jsx
+  if (esRecuperacion) {
+    return (
+      <Recuperacion
+        onVolver={() => setEsRecuperacion(false)}
+        onContinuar={(correo) => {
+          // Aquí puedes manejar la lógica para enviar el correo de recuperación
+          console.log('Correo para recuperación:', correo);
+          setEsRecuperacion(false);
+        }}
+      />
+    );
+  }
+  // VISTA 4: Por defecto, mostramos el Login
   return (
     <div className="min-vh-100 d-flex justify-content-center align-items-center bg-light">
       <div className="card shadow p-4" style={{ width: "380px" }}>
@@ -95,6 +111,17 @@ function App() {
           </button>
         </form>
         <p className="text-center mt-4 mb-0">
+          ¿Olvidaste tu contraseña?{" "}
+          <button
+            type="button"
+            className="btn btn-link p-0 text-primary text-decoration-none fw-semibold"
+            onClick={() => setEsRecuperacion(true)}
+            
+          >
+            Recupérala aquí
+          </button>
+        </p>
+        <p className="text-center mt-4 mb-0">
           ¿No tienes cuenta?{" "}
           <button
             type="button"
@@ -108,5 +135,6 @@ function App() {
     </div>
   );
 }
+
 
 export default App;

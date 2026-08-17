@@ -1,16 +1,3 @@
-/* ==========================================================================
-   FOUNDY — PÁGINA DE REGISTRO
-   Diseño basado en la referencia:
-   - 62% imagen
-   - 38% formulario
-   - Panel derecho gris claro
-   - Encabezado FOUNDY en teal
-   - Inputs redondeados
-   - Botón teal
-   ========================================================================== */
-
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Work+Sans:wght@400;500;600&display=swap');
-
 :root {
   --foundy-teal: #086b73;
   --foundy-teal-dark: #05565c;
@@ -18,10 +5,6 @@
   --foundy-white: #ffffff;
   --foundy-text: #11104d;
 }
-
-/* ==========================================================================
-   CONTENEDOR PRINCIPAL
-   ========================================================================== */
 
 .bg-light.my-4 {
   position: relative;
@@ -44,11 +27,6 @@
   font-family: 'Work Sans', Arial, sans-serif;
 }
 
-
-/* ==========================================================================
-   PANEL IZQUIERDO — IMAGEN
-   ========================================================================== */
-
 .bg-light.my-4::before {
   content: "";
 
@@ -61,10 +39,8 @@
   height: 100%;
 
   background-image:
-    linear-gradient(
-      rgba(0, 0, 0, 0.05),
-      rgba(0, 0, 0, 0.05)
-    ),
+    linear-gradient(rgba(0, 0, 0, 0.05),
+      rgba(0, 0, 0, 0.05)),
     url('/images/emprendedores-negocios.jpg');
 
   background-size: cover;
@@ -72,11 +48,6 @@
 
   z-index: 0;
 }
-
-
-/* ==========================================================================
-   TEXTO SOBRE LA IMAGEN
-   ========================================================================== */
 
 .bg-light.my-4::after {
   content: "Today a small\A investment can\A become a great\A future";
@@ -115,11 +86,6 @@
   z-index: 2;
 }
 
-
-/* ==========================================================================
-   TARJETA / FORMULARIO DERECHO
-   ========================================================================== */
-
 .bg-light.my-4 .card.shadow.p-4 {
 
   position: relative;
@@ -149,10 +115,6 @@
 }
 
 
-/* ==========================================================================
-   ENCABEZADO FOUNDY
-   ========================================================================== */
-
 .bg-light.my-4 .card.shadow.p-4::before {
   content: "";
 
@@ -176,19 +138,9 @@
   z-index: 10;
 }
 
-
-/* ==========================================================================
-   OCULTAR EL ENCABEZADO ORIGINAL SI EXISTE
-   ========================================================================== */
-
 .bg-light.my-4 .card .text-center.mb-4 {
   display: none;
 }
-
-
-/* ==========================================================================
-   ALERTAS
-   ========================================================================== */
 
 .bg-light.my-4 .card .alert {
   position: relative;
@@ -210,11 +162,6 @@
   color: var(--foundy-teal-dark);
 }
 
-
-/* ==========================================================================
-   ETIQUETAS
-   ========================================================================== */
-
 .bg-light.my-4 .card .form-label {
 
   display: block;
@@ -230,11 +177,6 @@
 
   line-height: 1.2;
 }
-
-
-/* ==========================================================================
-   INPUTS
-   ========================================================================== */
 
 .bg-light.my-4 .card .form-control {
 
@@ -263,9 +205,6 @@
   outline: none;
 }
 
-
-/* Cuando se selecciona un input */
-
 .bg-light.my-4 .card .form-control:focus {
 
   background: #ffffff !important;
@@ -275,19 +214,9 @@
   box-shadow: 0 0 0 2px rgba(8, 107, 115, 0.12) !important;
 }
 
-
-/* ==========================================================================
-   ESPACIADO ENTRE CAMPOS
-   ========================================================================== */
-
 .bg-light.my-4 .card .mb-3 {
   margin-bottom: 13px !important;
 }
-
-
-/* ==========================================================================
-   BOTÓN REGISTRAR
-   ========================================================================== */
 
 .bg-light.my-4 .card .btn-primary {
 
@@ -323,16 +252,9 @@
 }
 
 .bg-light.my-4 .card .btn-primary:hover {
-
   background: var(--foundy-teal-dark) !important;
-
   transform: translateY(-1px);
 }
-
-
-/* ==========================================================================
-   BOTÓN / ENLACE DE INICIAR SESIÓN
-   ========================================================================== */
 
 .bg-light.my-4 .card .btn-link.text-primary {
 
@@ -344,11 +266,6 @@
 
   border: none;
 }
-
-
-/* ==========================================================================
-   SELECT
-   ========================================================================== */
 
 .bg-light.my-4 .card select.form-control {
 
@@ -365,18 +282,8 @@
   padding-right: 30px;
 }
 
-
-/* ==========================================================================
-   FLECHA DE REGRESO
-   ========================================================================== */
-
-/*
-   Si tu JSX tiene un <button> o <a> para regresar,
-   este estilo intenta colocarlo sobre la imagen.
-*/
-
-.bg-light.my-4 > a:first-child,
-.bg-light.my-4 > button:first-child {
+.bg-light.my-4>a:first-child,
+.bg-light.my-4>button:first-child {
 
   position: absolute;
 
@@ -408,11 +315,6 @@
   box-shadow: none !important;
 }
 
-
-/* ==========================================================================
-   ACCESIBILIDAD
-   ========================================================================== */
-
 .bg-light.my-4 .card .form-control:focus-visible,
 .bg-light.my-4 .card .btn:focus-visible {
 
@@ -420,11 +322,6 @@
 
   outline-offset: 2px;
 }
-
-
-/* ==========================================================================
-   TABLETS
-   ========================================================================== */
 
 @media (max-width: 900px) {
 
@@ -446,11 +343,6 @@
   }
 }
 
-
-/* ==========================================================================
-   MÓVILES
-   ========================================================================== */
-
 @media (max-width: 767px) {
 
   .bg-light.my-4 {
@@ -470,9 +362,6 @@
     overflow-y: auto;
   }
 
-
-  /* Imagen arriba */
-
   .bg-light.my-4::before {
 
     position: absolute;
@@ -483,9 +372,6 @@
     width: 100%;
     height: 260px;
   }
-
-
-  /* Texto sobre la imagen */
 
   .bg-light.my-4::after {
 
@@ -502,9 +388,6 @@
 
     border-radius: 20px;
   }
-
-
-  /* Formulario */
 
   .bg-light.my-4 .card.shadow.p-4 {
 
@@ -525,10 +408,8 @@
 
 
   .bg-light.my-4 .card.shadow.p-4::before {
-
     border-radius: 25px 25px 40px 40px;
   }
-
 
   .bg-light.my-4 .card .form-control {
 
@@ -537,7 +418,6 @@
     font-size: 13px;
   }
 
-
   .bg-light.my-4 .card .btn-primary {
 
     width: 150px !important;
@@ -545,11 +425,6 @@
     height: 38px;
   }
 }
-
-
-/* ==========================================================================
-   PANTALLAS MUY PEQUEÑAS
-   ========================================================================== */
 
 @media (max-width: 400px) {
 
