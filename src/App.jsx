@@ -2,8 +2,12 @@ import { useState } from 'react';
 import { supabase } from './services/supabase.js';
 import Registro from './pages/registro.jsx';
 import Inicio from './pages/inicio.jsx';
+import PasswordRecovery from './pages/PasswordRecovery.jsx';
 function App() {
   const [esRegistro, setEsRegistro] = useState(false);
+  const [esRecuperacion, setEsRecuperacion] = useState(false);
+  const [esReset, setEsReset] = useState(false);
+  const [correoRecuperacion, setCorreoRecuperacion] = useState('');
   const [usuarioLogueado, setUsuarioLogueado] = useState(null);
   const [usuario, setUsuario] = useState('');
   const [contrasena, setContrasena] = useState('');
@@ -50,6 +54,16 @@ function App() {
   if (esRegistro) {
     return <Registro onSwitchToLogin={() => setEsRegistro(false)} />;
   }
+
+//Vista de recuperacion de contraseña
+  if (esRecuperacion) {
+    return (<PasswordRecovery onVolver={() => setEsRecuperacion(false)} />);
+  }
+
+  if (esReset) {
+  return (<ResetPassword correo={correoRecuperacion}onVolver={() => { setEsReset(false)}}/>);
+}
+
   // VISTA 3: Por defecto, mostramos el Login
   return (
     <div className="min-vh-100 d-flex justify-content-center align-items-center bg-light">
@@ -86,6 +100,17 @@ function App() {
               required
             />
           </div>
+          <p className="text-center mt-4 mb-0">
+          Do you forget your password?{" "}</p>
+          <button
+            type="button"
+            className="btn btn-link p-0 text-primary text-decoration-none fw-semibold"
+            onClick={() => {setEsRegistro(false);
+            setEsRecuperacion(true);
+            }}
+            >Restore here
+          </button>
+
           <button
             type="submit"
             className="btn btn-primary w-100"
@@ -94,6 +119,8 @@ function App() {
             {loading ? 'Cargando...' : 'Iniciar sesión'}
           </button>
         </form>
+
+
         <p className="text-center mt-4 mb-0">
           ¿No tienes cuenta?{" "}
           <button
