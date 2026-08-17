@@ -50,10 +50,6 @@ function Recuperacion({ onVolver, onContinuar }) {
             <div className="recovery-card">
 
                 <div className="recovery-header">
-                    <div className="recovery-logo">
-                        ↗
-                    </div>
-                    <h1>FOUNDY</h1>
                 </div>
 
                 <div className="recovery-body">
