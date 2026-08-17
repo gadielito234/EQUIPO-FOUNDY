@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../services/supabase';
+import "../styles/registro.css";;
 function Register({ onSwitchToLogin }) {
     const [formData, setFormData] = useState({
         nombre: '',
