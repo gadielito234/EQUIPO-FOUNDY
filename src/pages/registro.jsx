@@ -153,6 +153,19 @@ function Register({ onSwitchToLogin }) {
                             required
                         />
                     </div>
+                    {/* Esto fue lo que Venus, Iveth y Zoar añadieron */}
+                    <div className="mb-3">
+                        <label className="form-label">DUI</label>
+                        <input
+                            type="dui"
+                            name="dui"
+                            className="form-control"
+                            placeholder="23560189-0"
+                            value={formData.dui}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
                     <div className="mb-3">
                         <label className="form-label">Contraseña</label>
                         <input
