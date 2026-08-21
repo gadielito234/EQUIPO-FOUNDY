@@ -5,23 +5,38 @@ function Home({ usuarioData, onCerrarSesion }) {
 
   return (
     <div className="foundy-home">
-      <nav className="border-b border-slate-200 bg-slate-50">
-        <div className="mx-auto flex max-w-7xl items-center gap-8 px-6 py-4">
-          <a className="text-xl font-bold text-teal-900" href="#inicio">Foundy</a>
-          <div className="flex flex-1 items-center gap-6">
-            <a className="font-semibold text-teal-700" href="#inicio">Inicio</a>
-            <a className="text-slate-600 hover:text-teal-700" href="#funciones">Funciones</a>
-            <a className="text-slate-600 hover:text-teal-700" href="#precios">Precios</a>
-          </div>
-          <span className="text-sm text-slate-600">Hola, {nombreUsuario}</span>
-          <button type="button" className="rounded-md border border-slate-400 px-3 py-2 text-sm text-slate-700 hover:bg-slate-100" onClick={onCerrarSesion}>
-              Cerrar sesión
+      <nav className="navbar navbar-expand-lg bg-body-tertiary">
+        <div className="container-fluid">
+          <a className="navbar-brand" href="#inicio">Foundy</a>
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Abrir navegación"
+          >
+            <span className="navbar-toggler-icon" />
           </button>
+          <div className="collapse navbar-collapse" id="navbarNav">
+            <ul className="navbar-nav me-auto">
+              <li className="nav-item">
+                <a className="nav-link active" aria-current="page" href="#inicio">Inicio</a>
+              </li>
+              <li className="nav-item"><a className="nav-link" href="#funciones">Funciones</a></li>
+              <li className="nav-item"><a className="nav-link" href="#precios">Precios</a></li>
+            </ul>
+            <span className="navbar-text me-3">Hola, {nombreUsuario}</span>
+            <button type="button" className="btn btn-outline-secondary" onClick={onCerrarSesion}>
+              Cerrar sesión
+            </button>
+          </div>
         </div>
       </nav>
-      <main id="inicio" className="mx-auto max-w-7xl px-6 py-12">
-        <h1 className="text-3xl font-bold text-teal-900">Bienvenido a Foundy</h1>
-        <p className="mt-3 text-slate-600">Tu espacio de trabajo está listo.</p>
+      <main id="inicio" className="container py-5">
+        <h1>Bienvenido a Foundy</h1>
+        <p>Tu espacio de trabajo está listo.</p>
       </main>
     </div>
   );
