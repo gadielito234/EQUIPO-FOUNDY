@@ -3,7 +3,9 @@ import { supabase } from '../services/supabase.js';
 import Recuperacion from './recuperacion.jsx';
 import Registro from './registro.jsx';
 import Inicio from './inicio.jsx';
+import Landing from './landing.jsx';
 function App() {
+  const [mostrarLanding, setMostrarLanding] = useState(true);
   const [esRegistro, setEsRegistro] = useState(false);
   const [esRecuperacion, setEsRecuperacion] = useState(false);
   const [usuarioLogueado, setUsuarioLogueado] = useState(null);
@@ -33,7 +35,7 @@ function App() {
       }
       // Guarda los datos del usuario encontrado
       setUsuarioLogueado(data);
-    } catch (err) {
+    } catch {
       setErrorMsg('Ocurrió un error al intentar iniciar sesión.');
     } finally {
       setLoading(false);
@@ -47,6 +49,17 @@ function App() {
   // VISTA 1: Si hay un usuario logueado, mostramos inicio.jsx
   if (usuarioLogueado) {
     return <Inicio usuarioData={usuarioLogueado} onCerrarSesion={handleCerrarSesion} />;
+  }
+  if (mostrarLanding) {
+    return (
+      <Landing
+        onLogin={() => setMostrarLanding(false)}
+        onRegister={() => {
+          setMostrarLanding(false);
+          setEsRegistro(true);
+        }}
+      />
+    );
   }
   // VISTA 2: Si quiere registrarse, mostramos registro.jsx
   if (esRegistro) {
@@ -68,34 +81,35 @@ function App() {
   }
   // VISTA 4: Por defecto, mostramos el Login
   return (
-    <div className="min-vh-100 d-flex justify-content-center align-items-center bg-light">
-      <div className="card shadow p-4" style={{ width: "380px" }}>
-        <div className="text-center mb-4">
-          <h2 className="fw-bold">Iniciar sesión</h2>
-          <p className="text-muted">Ingresa tus datos para continuar</p>
+    <div className="flex min-h-screen items-center justify-center bg-slate-100 px-4 py-8">
+      <div className="w-full max-w-sm rounded-xl bg-white p-8 shadow-lg">
+        <div className="mb-6 text-center">
+          <h2 className="text-2xl font-bold text-slate-900">Iniciar sesión</h2>
+          <p className="mt-2 text-sm text-slate-500">Ingresa tus datos para continuar</p>
         </div>
+        
         {errorMsg && (
-          <div className="alert alert-danger py-2 small text-center" role="alert">
+          <div className="mb-4 rounded-md bg-red-50 px-3 py-2 text-center text-sm text-red-700" role="alert">
             {errorMsg}
           </div>
         )}
         <form onSubmit={handleLogin}>
-          <div className="mb-3">
-            <label className="form-label">Usuario</label>
+          <div className="mb-4">
+            <label className="mb-1 block text-sm font-medium text-slate-700">Usuario</label>
             <input
               type="text"
-              className="form-control"
+              className="w-full rounded-md border border-slate-300 px-3 py-2.5 text-sm outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
               placeholder="Tu usuario"
               value={usuario}
               onChange={(e) => setUsuario(e.target.value)}
               required
             />
           </div>
-          <div className="mb-3">
-            <label className="form-label">Contraseña</label>
+          <div className="mb-4">
+            <label className="mb-1 block text-sm font-medium text-slate-700">Contraseña</label>
             <input
               type="password"
-              className="form-control"
+              className="w-full rounded-md border border-slate-300 px-3 py-2.5 text-sm outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
               placeholder="••••••••"
               value={contrasena}
               onChange={(e) => setContrasena(e.target.value)}
@@ -104,28 +118,28 @@ function App() {
           </div>
           <button
             type="submit"
-            className="btn btn-primary w-100"
+            className="w-full rounded-md bg-teal-700 px-4 py-2.5 font-semibold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-60"
             disabled={loading}
           >
             {loading ? 'Cargando...' : 'Iniciar sesión'}
           </button>
         </form>
-        <p className="text-center mt-4 mb-0">
+        <p className="mt-5 text-center text-sm text-slate-600">
           ¿Olvidaste tu contraseña?{" "}
           <button
             type="button"
-            className="btn btn-link p-0 text-primary text-decoration-none fw-semibold"
+            className="p-0 font-semibold text-teal-700 hover:underline"
             onClick={() => setEsRecuperacion(true)}
             
           >
             Recupérala aquí
           </button>
         </p>
-        <p className="text-center mt-4 mb-0">
+        <p className="mt-3 text-center text-sm text-slate-600">
           ¿No tienes cuenta?{" "}
           <button
             type="button"
-            className="btn btn-link p-0 text-primary text-decoration-none fw-semibold"
+            className="p-0 font-semibold text-teal-700 hover:underline"
             onClick={() => setEsRegistro(true)}
           >
             Regístrate
