@@ -9,6 +9,7 @@ function Register({ onSwitchToLogin }) {
         contrasena: '',
         confirmarContrasena: '',
         telefono: '',
+        dui: '',
     });
     const [loading, setLoading] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
@@ -53,6 +54,7 @@ function Register({ onSwitchToLogin }) {
                         tipo_usuario: formData.tipo_usuario,
                         contrasena: formData.contrasena,
                         telefono: formData.telefono,
+                        dui: formData.dui,
                     },
                 ]);
             if (error) throw error;
