@@ -1,7 +1,8 @@
-import Home from './Home';
+import HomeInversionista from './HomeInversionista';
+
 function Inicio({ usuarioData, onCerrarSesion }) {
     return (
-        <Home
+        <HomeInversionista
             usuarioData={usuarioData}
             onCerrarSesion={onCerrarSesion}
         />

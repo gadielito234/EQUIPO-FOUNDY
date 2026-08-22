@@ -8,7 +8,7 @@ function App() {
   const [mostrarLanding, setMostrarLanding] = useState(true);
   const [esRegistro, setEsRegistro] = useState(false);
   const [esRecuperacion, setEsRecuperacion] = useState(false);
-  const [usuarioLogueado, setUsuarioLogueado] = useState(null);
+  const [usuarioLogueado, setUsuarioLogueado] = useState({ usuario: 'David Diaz' });
   const [usuario, setUsuario] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [loading, setLoading] = useState(false);
