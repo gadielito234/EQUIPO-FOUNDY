@@ -83,6 +83,7 @@ const investmentGrowth = [
 function HomeInversionista({ usuarioData, onCerrarSesion }) {
   const nombreUsuario = usuarioData?.usuario || 'David Diaz';
   const [searchTerm, setSearchTerm] = useState('');
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const filteredOpportunities = opportunities.filter((item) => {
     if (!searchTerm.trim()) return true;
@@ -92,20 +93,33 @@ function HomeInversionista({ usuarioData, onCerrarSesion }) {
 
   return (
     <div className="min-h-screen bg-[#efeee7] text-[#1e4043]">
-      <div className="flex min-h-screen">
-        <aside className="w-[260px] border-r border-[#d9d3c7] bg-[#f5f2eb] p-5">
+      <div className="flex min-h-screen w-full">
+        <aside
+          className={[
+            'border-r border-[#d9d3c7] bg-[#f5f2eb] p-5 transition-all duration-200 ease-in-out',
+            sidebarOpen ? 'w-[260px]' : 'w-[92px]',
+          ].join(' ')}
+        >
           <div className="mb-7 border-b border-[#0b5d61]/70 pb-4">
-            <div className="flex items-center justify-center">
+            <button
+              type="button"
+              onClick={() => setSidebarOpen((value) => !value)}
+              className="flex w-full items-center justify-center"
+              aria-label={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
+            >
               <img
                 src="/images/foundy-negro.png"
                 alt="Foundy"
-                className="h-10 w-auto object-contain"
+                className={sidebarOpen ? 'h-10 w-auto object-contain' : 'h-8 w-auto object-contain'}
               />
-            </div>
+            </button>
           </div>
 
           <div className="mb-6 flex justify-center">
-            <div className="h-20 w-20 overflow-hidden rounded-full border-[3px] border-[#1b4a4d] shadow-lg ring-1 ring-[#dfece4]">
+            <div className={[
+              'overflow-hidden rounded-full border-[3px] border-[#1b4a4d] shadow-lg ring-1 ring-[#dfece4]',
+              sidebarOpen ? 'h-20 w-20' : 'h-12 w-12',
+            ].join(' ')}>
               <img
                 src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80"
                 alt="Perfil"
@@ -114,10 +128,12 @@ function HomeInversionista({ usuarioData, onCerrarSesion }) {
             </div>
           </div>
 
-          <div className="mb-6 flex items-center justify-center gap-2 rounded-xl bg-[#e7e0d5] px-3 py-2 text-center text-sm font-medium text-[#213e42] shadow-sm">
-            <span className="text-base">◔</span>
-            <span>{nombreUsuario}</span>
-          </div>
+          {sidebarOpen && (
+            <div className="mb-6 flex items-center justify-center gap-2 rounded-xl bg-[#e7e0d5] px-3 py-2 text-center text-sm font-medium text-[#213e42] shadow-sm">
+              <span className="text-base">◔</span>
+              <span>{nombreUsuario}</span>
+            </div>
+          )}
 
           <nav className="space-y-2">
             {sidebarItems.map(({ label, active, icon }) => (
@@ -127,26 +143,39 @@ function HomeInversionista({ usuarioData, onCerrarSesion }) {
                 className={[
                   'flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm transition',
                   active ? 'bg-[#e8ebea] text-[#1b4550] shadow-sm' : 'text-[#4d5f61] hover:bg-[#ecf1ee]',
+                  !sidebarOpen && 'justify-center px-2',
                 ].join(' ')}
+                title={sidebarOpen ? '' : label}
               >
                 <span className="flex h-5 w-5 items-center justify-center text-base">{icon}</span>
-                <span>{label}</span>
+                {sidebarOpen && <span>{label}</span>}
               </button>
             ))}
           </nav>
 
           <div className="mt-4 space-y-2 border-t border-[#d9d3c7] pt-4">
-            <button type="button" className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm text-[#4d5f61] transition hover:bg-[#ecf1ee]">
+            <button
+              type="button"
+              className={[
+                'flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm text-[#4d5f61] transition hover:bg-[#ecf1ee]',
+                !sidebarOpen && 'justify-center px-2',
+              ].join(' ')}
+              title={sidebarOpen ? '' : 'Support'}
+            >
               <span className="flex h-5 w-5 items-center justify-center text-base">?</span>
-              <span>Support</span>
+              {sidebarOpen && <span>Support</span>}
             </button>
             <button
               type="button"
               onClick={onCerrarSesion}
-              className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm text-[#4d5f61] transition hover:bg-[#ecf1ee]"
+              className={[
+                'flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm text-[#4d5f61] transition hover:bg-[#ecf1ee]',
+                !sidebarOpen && 'justify-center px-2',
+              ].join(' ')}
+              title={sidebarOpen ? '' : 'Logout'}
             >
               <span className="flex h-5 w-5 items-center justify-center text-base">↩</span>
-              <span>Logout</span>
+              {sidebarOpen && <span>Logout</span>}
             </button>
           </div>
         </aside>
