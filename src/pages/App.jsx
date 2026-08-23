@@ -4,7 +4,12 @@ import Recuperacion from './recuperacion.jsx';
 import Registro from './registro.jsx';
 import Inicio from './inicio.jsx';
 import Landing from './landing.jsx';
+import FoundyCard from './foundyCard.jsx';
+
 function App() {
+  // LÍNEA TEMPORAL PARA PROBAR TU PANTALLA:
+  return <FoundyCard />;
+
   const [mostrarLanding, setMostrarLanding] = useState(true);
   const [esRegistro, setEsRegistro] = useState(false);
   const [esRecuperacion, setEsRecuperacion] = useState(false);
