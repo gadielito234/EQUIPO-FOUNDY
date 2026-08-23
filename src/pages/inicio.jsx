@@ -1,7 +1,7 @@
-import Home from './Home';
-function Inicio({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome }) {
+import Statistics from './Statistics.jsx';
+function Inicio({ usuarioData, onCerrarSesion }) {
     return (
-        <HomeInversionista
+        <Statistics
             usuarioData={usuarioData}
             onCerrarSesion={onCerrarSesion}
             onOpenSettings={onOpenSettings}
