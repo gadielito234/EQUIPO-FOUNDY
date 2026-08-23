@@ -1,7 +1,7 @@
-import Home from './Home';
+import Statistics from './Statistics.jsx';
 function Inicio({ usuarioData, onCerrarSesion }) {
     return (
-        <Home
+        <Statistics
             usuarioData={usuarioData}
             onCerrarSesion={onCerrarSesion}
         />
