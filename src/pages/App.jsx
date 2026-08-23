@@ -4,6 +4,7 @@ import Recuperacion from './recuperacion.jsx';
 import Registro from './registro.jsx';
 import Inicio from './inicio.jsx';
 import Landing from './landing.jsx';
+import PerfilConfiguracion from './PerfilConfiguracion.jsx';
 import CrearProyecto from './emprendedor/CrearProyecto.jsx';
 import ChatEmprendedor from './chat/ChatEmprendedor.jsx';
 import ChatInversionista from './chat/ChatInversionista.jsx';
@@ -11,7 +12,8 @@ function App() {
   const [mostrarLanding, setMostrarLanding] = useState(true);
   const [esRegistro, setEsRegistro] = useState(false);
   const [esRecuperacion, setEsRecuperacion] = useState(false);
-  const [usuarioLogueado, setUsuarioLogueado] = useState({ usuario: 'David Diaz' });
+  const [usuarioLogueado, setUsuarioLogueado] = useState(null);
+  const [pantallaLogueado, setPantallaLogueado] = useState('home');
   const [usuario, setUsuario] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [loading, setLoading] = useState(false);
@@ -46,9 +48,15 @@ function App() {
   };
   const handleCerrarSesion = () => {
     setUsuarioLogueado(null);
+    setPantallaLogueado('home');
     setUsuario('');
     setContrasena('');
   };
+
+  const irAHome = () => setPantallaLogueado('home');
+  const irAConfiguracion = () => setPantallaLogueado('settings');
+
+  // VISTA 1: Si hay un usuario logueado, mostramos la vista interna correspondiente
   if (window.location.pathname === '/crear-proyecto') {
     return <CrearProyecto nombreUsuario="Entrepreneur" />;
   }
@@ -60,7 +68,24 @@ function App() {
   }
   // VISTA 1: Si hay un usuario logueado, mostramos inicio.jsx
   if (usuarioLogueado) {
-    return <Inicio usuarioData={usuarioLogueado} onCerrarSesion={handleCerrarSesion} />;
+    if (pantallaLogueado === 'settings') {
+      return (
+        <PerfilConfiguracion
+          usuarioData={usuarioLogueado}
+          onCerrarSesion={handleCerrarSesion}
+          onBackHome={irAHome}
+        />
+      );
+    }
+
+    return (
+      <Inicio
+        usuarioData={usuarioLogueado}
+        onCerrarSesion={handleCerrarSesion}
+        onOpenSettings={irAConfiguracion}
+        onBackHome={irAHome}
+      />
+    );
   }
   if (mostrarLanding) {
     return (
