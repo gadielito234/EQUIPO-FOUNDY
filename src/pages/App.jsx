@@ -4,6 +4,9 @@ import Recuperacion from './recuperacion.jsx';
 import Registro from './registro.jsx';
 import Inicio from './inicio.jsx';
 import Landing from './landing.jsx';
+import CrearProyecto from './emprendedor/CrearProyecto.jsx';
+import ChatEmprendedor from './chat/ChatEmprendedor.jsx';
+import ChatInversionista from './chat/ChatInversionista.jsx';
 function App() {
   const [mostrarLanding, setMostrarLanding] = useState(true);
   const [esRegistro, setEsRegistro] = useState(false);
@@ -46,6 +49,15 @@ function App() {
     setUsuario('');
     setContrasena('');
   };
+  if (window.location.pathname === '/crear-proyecto') {
+    return <CrearProyecto nombreUsuario="Entrepreneur" />;
+  }
+  if (window.location.pathname === '/chat-emprendedor') {
+    return <ChatEmprendedor />;
+  }
+  if (window.location.pathname === '/chat-inversionista') {
+    return <ChatInversionista />;
+  }
   // VISTA 1: Si hay un usuario logueado, mostramos inicio.jsx
   if (usuarioLogueado) {
     return <Inicio usuarioData={usuarioLogueado} onCerrarSesion={handleCerrarSesion} />;

@@ -1,7 +1,6 @@
 import '../styles/home.css';
 
 function Home({ usuarioData, onCerrarSesion }) {
-  const nombreUsuario = usuarioData?.usuario || 'usuario';
 
   return (
     <div className="foundy-home">
@@ -27,7 +26,7 @@ function Home({ usuarioData, onCerrarSesion }) {
               <li className="nav-item"><a className="nav-link" href="#funciones">Funciones</a></li>
               <li className="nav-item"><a className="nav-link" href="#precios">Precios</a></li>
             </ul>
-            <span className="navbar-text me-3">Hola, {nombreUsuario}</span>
+            <span className="navbar-text me-3">Hola, {usuarioData?.usuario || 'usuario'}</span>
             <button type="button" className="btn btn-outline-secondary" onClick={onCerrarSesion}>
               Cerrar sesión
             </button>
