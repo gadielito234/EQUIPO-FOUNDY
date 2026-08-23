@@ -6,6 +6,8 @@ function Register({ onSwitchToLogin }) {
         apellidos: '',
         usuario: '',
         tipo_usuario: '',
+        telefono: '',
+        dui: '',
         contrasena: '',
         confirmarContrasena: '',
         telefono: '',
@@ -52,9 +54,9 @@ function Register({ onSwitchToLogin }) {
                         apellidos: formData.apellidos,
                         usuario: formData.usuario,
                         tipo_usuario: formData.tipo_usuario,
-                        contrasena: formData.contrasena,
                         telefono: formData.telefono,
                         dui: formData.dui,
+c
                     },
                 ]);
             if (error) throw error;
@@ -158,7 +160,7 @@ function Register({ onSwitchToLogin }) {
                     <div className="mt-4">
                         <label className="mb-1 block text-sm font-medium text-slate-700">DUI</label>
                         <input
-                            type="dui"
+                            type="text"
                             name="dui"
                             className="w-full rounded-md border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
                             placeholder="23560189-0"

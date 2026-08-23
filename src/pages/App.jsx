@@ -5,6 +5,9 @@ import Registro from './registro.jsx';
 import Inicio from './inicio.jsx';
 import Landing from './landing.jsx';
 import PerfilConfiguracion from './PerfilConfiguracion.jsx';
+import CrearProyecto from './emprendedor/CrearProyecto.jsx';
+import ChatEmprendedor from './chat/ChatEmprendedor.jsx';
+import ChatInversionista from './chat/ChatInversionista.jsx';
 function App() {
   const [mostrarLanding, setMostrarLanding] = useState(true);
   const [esRegistro, setEsRegistro] = useState(false);
@@ -54,6 +57,16 @@ function App() {
   const irAConfiguracion = () => setPantallaLogueado('settings');
 
   // VISTA 1: Si hay un usuario logueado, mostramos la vista interna correspondiente
+  if (window.location.pathname === '/crear-proyecto') {
+    return <CrearProyecto nombreUsuario="Entrepreneur" />;
+  }
+  if (window.location.pathname === '/chat-emprendedor') {
+    return <ChatEmprendedor />;
+  }
+  if (window.location.pathname === '/chat-inversionista') {
+    return <ChatInversionista />;
+  }
+  // VISTA 1: Si hay un usuario logueado, mostramos inicio.jsx
   if (usuarioLogueado) {
     if (pantallaLogueado === 'settings') {
       return (

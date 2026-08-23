@@ -7,6 +7,7 @@ const sidebarItems = [
   { name: 'Settings', icon: '⚙' },
   { name: 'Notifications', icon: '◔' },
 ];
+function Home({ usuarioData, onCerrarSesion }) {
 
 const growthData = [
   { month: 'Jan', value: 28 },

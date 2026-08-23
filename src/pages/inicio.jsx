@@ -1,7 +1,7 @@
 import Home from './Home';
 function Inicio({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome }) {
     return (
-        <Home
+        <HomeInversionista
             usuarioData={usuarioData}
             onCerrarSesion={onCerrarSesion}
             onOpenSettings={onOpenSettings}
