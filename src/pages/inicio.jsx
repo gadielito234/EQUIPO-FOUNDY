@@ -4,6 +4,8 @@ function Inicio({ usuarioData, onCerrarSesion }) {
         <Statistics
             usuarioData={usuarioData}
             onCerrarSesion={onCerrarSesion}
+            onOpenSettings={onOpenSettings}
+            onBackHome={onBackHome}
         />
     );
 }

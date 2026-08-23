@@ -1,0 +1,666 @@
+:root {
+  --foundy-bg: #f4f6f8;
+  --foundy-sidebar-bg: #f1f4f6;
+  --foundy-panel-bg: #ffffff;
+  --foundy-card-bg: linear-gradient(135deg, #06494d 0%, #0d4c52 40%, #1a6d71 100%);
+  --foundy-card-edge: rgba(255, 255, 255, 0.12);
+  --foundy-main-text: #0f2d39;
+  --foundy-subtle-text: #6d7b88;
+  --foundy-border: rgba(11, 37, 43, 0.1);
+  --foundy-shadow: 0 14px 24px rgba(13, 44, 50, 0.06);
+  --foundy-green: #1b7f61;
+  --foundy-green-soft: rgba(27, 127, 97, 0.12);
+  --foundy-button: #1d5c4d;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.foundy-page {
+  display: flex;
+  min-height: 100vh;
+  background: var(--foundy-bg);
+  color: var(--foundy-main-text);
+}
+
+.foundy-sidebar {
+  width: 260px;
+  min-width: 240px;
+  min-height: 100vh;
+  background: var(--foundy-sidebar-bg);
+  border-right: 1px solid var(--foundy-border);
+  padding: 24px 16px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.foundy-sidebar__profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.foundy-avatar-frame {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid rgba(8, 67, 67, 0.15);
+  background: linear-gradient(135deg, #dfeef1, #cde8d9);
+}
+
+.foundy-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.foundy-profile-badge {
+  border: 1px solid #dfe7eb;
+  background: rgba(255, 255, 255, 0.68);
+  border-radius: 999px;
+  padding: 7px 18px;
+  color: var(--foundy-main-text);
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.foundy-sidebar__menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.foundy-sidebar__footer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin-top: auto;
+}
+
+.foundy-menu-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 12px;
+  border-radius: 10px;
+  border: 1px dashed transparent;
+  background: transparent;
+  color: var(--foundy-main-text);
+  font-size: 0.96rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.foundy-menu-item:hover,
+.foundy-menu-item.active {
+  background: rgba(8, 67, 67, 0.04);
+  border-color: rgba(8, 67, 67, 0.18);
+}
+
+.foundy-menu-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(9, 48, 60, 0.08);
+  font-size: 0.95rem;
+  color: var(--foundy-main-text);
+}
+
+.foundy-footer-item {
+  border-top: 1px solid rgba(11, 37, 43, 0.08);
+  padding-top: 10px;
+  margin-top: 8px;
+  color: #4a5865;
+}
+
+.foundy-logout-item {
+  margin-top: 2px;
+}
+
+.foundy-main {
+  flex: 1;
+  padding: 24px 26px 30px;
+}
+
+.foundy-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  background: rgba(255, 255, 255, 0.18);
+  border-bottom: 1px solid rgba(11, 37, 43, 0.08);
+  padding-bottom: 18px;
+}
+
+.foundy-logo {
+  height: 38px;
+  width: auto;
+  object-fit: contain;
+}
+
+.foundy-topnav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  flex: 1;
+}
+
+.foundy-topnav-link {
+  border: none;
+  background: transparent;
+  color: #5f6d7a;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 10px 2px 12px;
+  cursor: pointer;
+  position: relative;
+}
+
+.foundy-topnav-link--active {
+  color: var(--foundy-main-text);
+  font-weight: 700;
+}
+
+.foundy-topnav-link--active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+  background: var(--foundy-main-text);
+  border-radius: 2px;
+}
+
+.foundy-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: min(220px, 100%);
+  min-height: 42px;
+  border: 1px solid var(--foundy-border);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 0 12px;
+}
+
+.foundy-search-icon {
+  color: #6a7787;
+  font-size: 1.1rem;
+}
+
+.foundy-search input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  outline: none;
+  color: var(--foundy-main-text);
+}
+
+.foundy-search input::placeholder {
+  color: #637181;
+}
+
+.foundy-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  padding: 26px 0 18px;
+}
+
+.foundy-banner__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.foundy-banner__tag {
+  font-size: 0.74rem;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  color: var(--foundy-main-text);
+  text-transform: uppercase;
+}
+
+.foundy-banner h1 {
+  max-width: 610px;
+  font-size: clamp(2.2rem, 2.6vw, 3.35rem);
+  line-height: 1.05;
+  letter-spacing: -0.06em;
+  font-weight: 700;
+  color: #121f2d;
+}
+
+.foundy-invest-btn {
+  border: none;
+  min-width: 150px;
+  background: linear-gradient(135deg, #dff9ee, #7cc9b4);
+  color: var(--foundy-main-text);
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 15px 18px;
+  box-shadow: 0 12px 22px rgba(16, 84, 74, 0.15);
+  cursor: pointer;
+}
+
+.foundy-content-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: 26px;
+  align-items: start;
+}
+
+.foundy-left-column,
+.foundy-right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.foundy-card-box,
+.foundy-summary-box,
+.foundy-chart-box,
+.foundy-updates-box {
+  background: var(--foundy-panel-bg);
+  border-radius: 16px;
+  border: 1px solid var(--foundy-border);
+  box-shadow: var(--foundy-shadow);
+}
+
+.foundy-card-box {
+  background: linear-gradient(135deg, #0a363c 0%, #0d4a52 50%, #1f7a7d 100%);
+  min-height: 220px;
+  padding: 22px 18px 18px;
+  color: #f5f9f8;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.foundy-card-header,
+.foundy-summary-header,
+.foundy-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.foundy-card-brand {
+  font-size: 1.08rem;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+}
+
+.foundy-card-chip {
+  width: 40px;
+  height: 28px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid var(--foundy-card-edge);
+  color: rgba(255, 255, 255, 0.8);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.76rem;
+  letter-spacing: 0.14em;
+}
+
+.foundy-card-number {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.foundy-card-mask {
+  font-size: 1.12rem;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.9);
+  margin-top: 6px;
+}
+
+.foundy-card-label {
+  display: block;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 6px;
+}
+
+.foundy-card-footer strong {
+  font-size: 1.05rem;
+}
+
+.foundy-card-initials {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.12);
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+
+.foundy-summary-box,
+.foundy-chart-box,
+.foundy-updates-box {
+  padding: 18px 18px 16px;
+}
+
+.foundy-summary-header {
+  margin-bottom: 18px;
+  color: var(--foundy-main-text);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.foundy-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.foundy-badge--success {
+  background: var(--foundy-green-soft);
+  color: var(--foundy-green);
+}
+
+.foundy-badge--neutral {
+  background: rgba(17, 54, 62, 0.06);
+  color: #183b48;
+}
+
+.foundy-badge--update {
+  background: rgba(27, 127, 97, 0.12);
+  color: var(--foundy-green);
+}
+
+.foundy-summary-label {
+  font-size: 0.74rem;
+  color: #8a97a2;
+  margin-bottom: 8px;
+}
+
+.foundy-summary-value {
+  font-size: clamp(2rem, 2.4vw, 2.7rem);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  color: var(--foundy-main-text);
+}
+
+.foundy-chart {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  align-items: end;
+  gap: 14px;
+  height: 140px;
+  padding-top: 14px;
+}
+
+.foundy-chart-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: end;
+  gap: 10px;
+  height: 100%;
+}
+
+.foundy-chart-bar {
+  width: 100%;
+  max-width: 28px;
+  border-radius: 8px 8px 5px 5px;
+  background: linear-gradient(180deg, #d2eae6 0%, #7fa9b0 100%);
+}
+
+.foundy-chart-column span {
+  font-size: 0.62rem;
+  color: #7d8a96;
+}
+
+.foundy-perks-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.foundy-perk-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--foundy-border);
+  background: linear-gradient(180deg, #fdfefe, #f4f9f8);
+}
+
+.foundy-perk-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: rgba(27, 127, 97, 0.12);
+  color: var(--foundy-green);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+}
+
+.foundy-perk-icon--accent {
+  background: rgba(16, 81, 96, 0.1);
+  color: #0f6b7d;
+}
+
+.foundy-perk-card h3 {
+  margin: 0 0 4px;
+  font-size: 0.9rem;
+  color: var(--foundy-main-text);
+}
+
+.foundy-perk-card p {
+  margin: 0;
+  font-size: 0.7rem;
+  color: var(--foundy-subtle-text);
+}
+
+.foundy-updates-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.foundy-updates-header h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--foundy-main-text);
+}
+
+.foundy-link-button {
+  border: none;
+  background: transparent;
+  color: #275559;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.foundy-update-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.foundy-update-item {
+  display: flex;
+  position: relative;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  border: 1px solid rgba(11, 37, 43, 0.08);
+  background: rgba(246, 249, 250, 0.9);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.foundy-update-ico {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  color: var(--foundy-main-text);
+}
+
+.foundy-update-ico--green {
+  background: linear-gradient(135deg, #ddf7ee, #bfe8d9);
+}
+
+.foundy-update-ico--purple {
+  background: linear-gradient(135deg, #e8ebff, #d6d8ff);
+}
+
+.foundy-update-content {
+  flex: 1;
+  min-width: 0;
+  padding-right: 88px;
+}
+
+.foundy-update-head {
+  position: relative;
+  margin-bottom: 6px;
+}
+
+.foundy-update-head h3 {
+  margin: 0;
+  font-size: 0.98rem;
+  color: var(--foundy-main-text);
+}
+
+.foundy-update-head .foundy-badge--update {
+  position: absolute;
+  top: -4px;
+  right: -88px;
+}
+
+.foundy-update-content p {
+  margin: 0;
+  font-size: 0.7rem;
+  line-height: 1.5;
+  color: #5d6c7a;
+}
+
+.foundy-update-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 0.68rem;
+  color: #8391a0;
+}
+
+.foundy-update-value {
+  position: absolute;
+  top: 48px;
+  right: 16px;
+  font-size: 0.95rem;
+  color: var(--foundy-main-text);
+  font-weight: 800;
+}
+
+@media (max-width: 980px) {
+  .foundy-page {
+    flex-direction: column;
+  }
+
+  .foundy-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--foundy-border);
+  }
+
+  .foundy-sidebar__menu,
+  .foundy-sidebar__footer {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .foundy-content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .foundy-main {
+    padding: 18px 16px 28px;
+  }
+
+  .foundy-topbar {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .foundy-topnav {
+    order: 3;
+    width: 100%;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .foundy-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .foundy-search {
+    width: 100%;
+  }
+
+  .foundy-perks-grid,
+  .foundy-sidebar__menu,
+  .foundy-sidebar__footer {
+    grid-template-columns: 1fr;
+  }
+}
