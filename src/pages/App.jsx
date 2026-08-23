@@ -123,8 +123,8 @@ function App() {
   }
   // VISTA 4: Por defecto, mostramos el Login
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-100 px-4 py-8">
-      <div className="w-full max-w-sm rounded-xl bg-white p-8 shadow-lg">
+    <div className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-[url('/images/maxresdefault.jpg')] bg-cover bg-center px-4 py-8 before:absolute before:inset-0 before:-z-10 before:bg-[rgba(7,27,35,0.42)] before:content-['']">
+      <div className="relative w-full max-w-sm rounded-xl bg-white p-8 shadow-[0_12px_30px_rgba(7,27,35,0.28)]">
         <div className="mb-6 text-center">
           <h2 className="text-2xl font-bold text-slate-900">Iniciar sesión</h2>
           <p className="mt-2 text-sm text-slate-500">Ingresa tus datos para continuar</p>
