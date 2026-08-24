@@ -9,7 +9,7 @@ const initialProject = {
   retorno: "",
 };
 
-function CrearProyecto({ nombreUsuario = "Entrepreneur", onCerrarSesion }) {
+function CrearProyecto({ nombreUsuario = "Entrepreneur", onCerrarSesion, onBackHome }) {
   const [proyecto, setProyecto] = useState(initialProject);
   const [imagenes, setImagenes] = useState([]);
   const [alerta, setAlerta] = useState(null);
@@ -60,10 +60,9 @@ function CrearProyecto({ nombreUsuario = "Entrepreneur", onCerrarSesion }) {
     <div className="min-h-screen bg-[#f5f7f6] text-slate-800">
       <nav className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 px-4 py-3 backdrop-blur sm:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-4">
-          <div
-            className="h-7 w-28"
-            aria-label="Espacio reservado para el logo"
-          />
+          <button type="button" onClick={onBackHome} className="h-7 w-28 text-left text-lg font-black text-[#006b73]" aria-label="Volver al panel">
+            Foundy
+          </button>
           <div className="hidden items-center gap-8 text-sm font-medium text-slate-500 md:flex">
             <a href="#crear-proyecto" className="text-[#006b73]">
               Espacio de trabajo

@@ -80,7 +80,7 @@ const investmentGrowth = [
   { month: 'Jul', value: 90 },
 ];
 
-function HomeInversionista({ usuarioData, onCerrarSesion }) {
+function HomeInversionista({ usuarioData, onCerrarSesion, onBackHome, onOpenSettings, onOpenChat, onOpenFoundyCard }) {
   const nombreUsuario = usuarioData?.usuario || 'David Diaz';
   const [searchTerm, setSearchTerm] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -140,6 +140,7 @@ function HomeInversionista({ usuarioData, onCerrarSesion }) {
               <button
                 key={label}
                 type="button"
+                onClick={label === 'Home' ? onBackHome : label === 'Messages' ? onOpenChat : label === 'Settings' ? onOpenSettings : undefined}
                 className={[
                   'flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm transition',
                   active ? 'bg-[#e8ebea] text-[#1b4550] shadow-sm' : 'text-[#4d5f61] hover:bg-[#ecf1ee]',
@@ -194,6 +195,7 @@ function HomeInversionista({ usuarioData, onCerrarSesion }) {
                 <button
                   key={item}
                   type="button"
+                  onClick={item === 'Dashboard' || item === 'Statistics' ? onBackHome : item === 'Foundy card' ? onOpenFoundyCard : undefined}
                   className={[
                     'relative pb-1',
                     index === 0 ? 'border-b-2 border-[#0d5d61] text-[#0d5d61]' : 'hover:text-[#0d5d61]',

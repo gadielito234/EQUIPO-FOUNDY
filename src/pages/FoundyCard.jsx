@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Home, FolderKanban, Mail, Settings, Bell, HelpCircle, LogOut } from 'lucide-react';
-import '../styles/foundyCard.css';
 
 const defaultUser = {
   name: 'Sara Hernández',
@@ -64,7 +63,7 @@ const updates = [
   },
 ];
 
-function FoundyCardPage() {
+function FoundyCardPage({ onLogout, onBackHome, onOpenSettings, onOpenChat }) {
   const [user] = useState(getStoredUser);
   const userName = user?.name || defaultUser.name;
   const initials = userName
@@ -75,18 +74,18 @@ function FoundyCardPage() {
     .toUpperCase();
 
   return (
-    <div className="foundy-page">
-      <aside className="foundy-sidebar">
-        <div className="foundy-sidebar__profile">
-          <div className="foundy-avatar-frame">
-            <img src={user.avatar || defaultUser.avatar} alt={userName} className="foundy-avatar" />
+    <div className="flex min-h-screen bg-[#f4f6f8] text-[#0f2d39]">
+      <aside className="flex w-64 min-w-60 flex-col border-r border-[#0b252b]/10 bg-[#f1f4f6] px-4 py-6">
+        <div className="mb-7 flex flex-col items-center gap-3">
+          <div className="h-[90px] w-[90px] overflow-hidden rounded-full border-[3px] border-[#084343]/15 bg-gradient-to-br from-[#dfeef1] to-[#cde8d9]">
+            <img src={user.avatar || defaultUser.avatar} alt={userName} className="h-full w-full object-cover" />
           </div>
-          <button type="button" className="foundy-profile-badge">
+          <button type="button" className="cursor-pointer rounded-full border border-[#dfe7eb] bg-white/70 px-[18px] py-[7px] text-[0.86rem] font-semibold">
             {userName}
           </button>
         </div>
 
-        <nav className="foundy-sidebar__menu" aria-label="Sidebar navigation">
+        <nav className="flex w-full flex-col gap-2.5" aria-label="Sidebar navigation">
           {sidebarMenu.map((item, index) => {
             const IconComponent = item.icon;
 
@@ -94,155 +93,156 @@ function FoundyCardPage() {
               <button
                 key={item.label}
                 type="button"
-                className={`foundy-menu-item ${index === 0 ? 'active' : ''}`}
+                onClick={item.label === 'Home' ? onBackHome : item.label === 'Messages' ? onOpenChat : item.label === 'Settings' ? onOpenSettings : undefined}
+                className={`flex w-full cursor-pointer items-center gap-3 rounded-[10px] border border-dashed border-transparent bg-transparent px-3 py-[11px] text-left text-[0.96rem] font-medium transition hover:border-[#084343]/20 hover:bg-[#084343]/[0.04] ${index === 0 ? 'border-[#084343]/20 bg-[#084343]/[0.04]' : ''}`}
               >
-                <span className="foundy-menu-icon"><IconComponent size={20} /></span>
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-[#09303c]/[0.08] bg-white/60 text-[#0f2d39]"><IconComponent size={20} /></span>
                 <span>{item.label}</span>
               </button>
             );
           })}
         </nav>
 
-        <div className="foundy-sidebar__footer">
-          <button type="button" className="foundy-menu-item foundy-footer-item">
-            <span className="foundy-menu-icon"><HelpCircle size={20} /></span>
+        <div className="mt-auto flex w-full flex-col gap-2.5">
+          <button type="button" className="mt-2 flex w-full cursor-pointer items-center gap-3 border-t border-[#0b252b]/[0.08] bg-transparent px-3 pt-3 text-left text-[#4a5865]">
+            <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-[#09303c]/[0.08] bg-white/60"><HelpCircle size={20} /></span>
             <span>Support</span>
           </button>
-          <button type="button" className="foundy-menu-item foundy-footer-item foundy-logout-item">
-            <span className="foundy-menu-icon"><LogOut size={20} /></span>
+          <button type="button" onClick={onLogout} className="mt-0 flex w-full cursor-pointer items-center gap-3 border-t border-[#0b252b]/[0.08] bg-transparent px-3 pt-3 text-left text-[#4a5865]">
+            <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-[#09303c]/[0.08] bg-white/60"><LogOut size={20} /></span>
             <span>Logout</span>
           </button>
         </div>
       </aside>
 
-      <main className="foundy-main">
-        <header className="foundy-topbar">
-          <div className="foundy-brand-wrap" aria-label="Foundy brand logo">
-            <img src="/images/foundy-logo.png" alt="Foundy logo" className="foundy-logo" />
+      <main className="min-w-0 flex-1 px-6 py-6">
+        <header className="flex flex-wrap items-center justify-between gap-[18px] border-b border-[#0b252b]/[0.08] pb-[18px]">
+          <div aria-label="Foundy brand logo">
+            <img src="/images/foundy-logo.png" alt="Foundy logo" className="h-[38px] w-auto object-contain" />
           </div>
 
-          <nav className="foundy-topnav" aria-label="Main navigation">
-            <button type="button" className="foundy-topnav-link">
+          <nav className="flex flex-1 items-center justify-center gap-[18px]" aria-label="Main navigation">
+            <button type="button" onClick={onBackHome} className="relative cursor-pointer border-0 bg-transparent px-0.5 py-2.5 pb-3 text-[0.9rem] font-medium text-[#5f6d7a]">
               Dashboard
             </button>
-            <button type="button" className="foundy-topnav-link">
+            <button type="button" className="relative cursor-pointer border-0 bg-transparent px-0.5 py-2.5 pb-3 text-[0.9rem] font-medium text-[#5f6d7a]">
               Statistics
             </button>
-            <button type="button" className="foundy-topnav-link foundy-topnav-link--active">
+            <button type="button" className="relative cursor-pointer border-0 bg-transparent px-0.5 py-2.5 pb-3 font-bold text-[#0f2d39] after:absolute after:bottom-[-2px] after:left-0 after:right-0 after:h-0.5 after:bg-[#0f2d39]">
               Foundy card
             </button>
           </nav>
 
-          <label className="foundy-search" aria-label="Search">
-            <span className="foundy-search-icon">⌕</span>
-            <input type="text" placeholder="Search" />
+          <label className="flex items-center gap-2 rounded-lg border border-[#0b252b]/10 bg-white/70 px-3 py-2" aria-label="Search">
+            <span className="text-[#6d7b88]">⌕</span>
+            <input type="text" placeholder="Search" className="w-28 bg-transparent text-sm outline-none" />
           </label>
         </header>
 
-        <section className="foundy-banner">
-          <div className="foundy-banner__inner">
-            <span className="foundy-banner__tag">MEMBER DASHBOARD</span>
-            <h1>Manage your Foundy Card and exclusive investment portfolio.</h1>
+        <section className="my-6 flex items-center justify-between gap-4 rounded-xl bg-[#dfeeed] px-6 py-5">
+          <div>
+            <span className="text-[0.7rem] font-bold tracking-[0.16em] text-[#1b7f61]">MEMBER DASHBOARD</span>
+            <h1 className="mt-1 text-2xl font-bold tracking-tight">Manage your Foundy Card and exclusive investment portfolio.</h1>
           </div>
-          <button type="button" className="foundy-invest-btn">
+          <button type="button" className="shrink-0 rounded-lg bg-[#1d5c4d] px-4 py-3 text-sm font-bold text-white hover:bg-[#15483d]">
             + Invest Now
           </button>
         </section>
 
-        <div className="foundy-content-grid">
-          <section className="foundy-left-column">
-            <article className="foundy-card-box">
-              <div className="foundy-card-header">
-                <span className="foundy-card-brand">FOUNDY</span>
-                <span className="foundy-card-chip" aria-label="Card type">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(280px,1fr)]">
+          <section className="flex min-w-0 flex-col gap-5">
+            <article className="min-h-[215px] rounded-2xl bg-gradient-to-br from-[#06494d] via-[#0d4c52] to-[#1a6d71] p-6 text-white shadow-[0_14px_24px_rgba(13,44,50,0.12)]">
+              <div className="flex items-center justify-between">
+                <span className="font-bold tracking-[0.18em]">FOUNDY</span>
+                <span className="text-xl" aria-label="Card type">
                   ●●●
                 </span>
               </div>
 
-              <div className="foundy-card-number">Investor ID</div>
-              <div className="foundy-card-mask"># # # # # # # # # # 8291</div>
+              <div className="mt-10 text-xs uppercase tracking-[0.18em] text-white/65">Investor ID</div>
+              <div className="mt-2 text-lg tracking-[0.2em]"># # # # # # # # # # 8291</div>
 
-              <div className="foundy-card-footer">
+              <div className="mt-7 flex items-end justify-between">
                 <div>
-                  <span className="foundy-card-label">Card Holder</span>
-                  <strong>{userName}</strong>
+                  <span className="block text-[0.65rem] uppercase tracking-widest text-white/60">Card Holder</span>
+                  <strong className="text-sm">{userName}</strong>
                 </div>
-                <div className="foundy-card-initials">{initials}</div>
+                <div className="grid h-10 w-10 place-items-center rounded-full border border-white/30 text-xs font-bold">{initials}</div>
               </div>
             </article>
 
-            <article className="foundy-summary-box">
-              <div className="foundy-summary-header">
+            <article className="rounded-xl border border-[#0b252b]/10 bg-white p-5 shadow-[0_14px_24px_rgba(13,44,50,0.06)]">
+              <div className="flex items-center justify-between font-semibold">
                 <span>Portfolio Summary</span>
-                <span className="foundy-badge foundy-badge--success">+12.4%</span>
+                <span className="rounded-full bg-[#1b7f61]/[0.12] px-3 py-1 text-xs font-bold text-[#1b7f61]">+12.4%</span>
               </div>
 
-              <div className="foundy-summary-body">
-                <div className="foundy-summary-label">Total Value</div>
-                <div className="foundy-summary-value">$128,490.00</div>
+              <div className="mt-5">
+                <div className="text-xs text-[#6d7b88]">Total Value</div>
+                <div className="mt-1 text-3xl font-bold text-[#0f2d39]">$128,490.00</div>
               </div>
             </article>
 
-            <article className="foundy-chart-box">
-              <div className="foundy-summary-header">
+            <article className="rounded-xl border border-[#0b252b]/10 bg-white p-5 shadow-[0_14px_24px_rgba(13,44,50,0.06)]">
+              <div className="flex items-center justify-between font-semibold">
                 <span>ROI Performance</span>
-                <span className="foundy-badge foundy-badge--neutral">YTD</span>
+                <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-[#6d7b88]">YTD</span>
               </div>
 
-              <div className="foundy-chart" aria-label="ROI performance chart">
+              <div className="mt-6 flex h-40 items-end justify-between gap-3" aria-label="ROI performance chart">
                 {chartBars.map((bar) => (
-                  <div key={bar.label} className="foundy-chart-column">
-                    <div className="foundy-chart-bar" style={{ height: `${bar.value}%` }} />
+                  <div key={bar.label} className="flex h-full flex-1 flex-col items-center justify-end gap-2 text-xs text-[#6d7b88]">
+                    <div className="w-full rounded-t-md bg-[#1b7f61]" style={{ height: `${bar.value}%` }} />
                     <span>{bar.label}</span>
                   </div>
                 ))}
               </div>
             </article>
 
-            <div className="foundy-perks-grid">
-              <article className="foundy-perk-card">
-                <div className="foundy-perk-icon">✦</div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <article className="flex items-center gap-3 rounded-xl border border-[#0b252b]/10 bg-white p-4">
+                <div className="grid h-10 w-10 place-items-center rounded-lg bg-[#1b7f61]/[0.12] text-[#1b7f61]">✦</div>
                 <div>
-                  <h3>Early Access</h3>
-                  <p>Priority opportunities</p>
+                  <h3 className="font-semibold">Early Access</h3>
+                  <p className="text-xs text-[#6d7b88]">Priority opportunities</p>
                 </div>
               </article>
 
-              <article className="foundy-perk-card">
-                <div className="foundy-perk-icon foundy-perk-icon--accent">✓</div>
+              <article className="flex items-center gap-3 rounded-xl border border-[#0b252b]/10 bg-white p-4">
+                <div className="grid h-10 w-10 place-items-center rounded-lg bg-[#1b7f61]/[0.12] text-[#1b7f61]">✓</div>
                 <div>
-                  <h3>Tax Benefits</h3>
-                  <p>Smart portfolio planning</p>
+                  <h3 className="font-semibold">Tax Benefits</h3>
+                  <p className="text-xs text-[#6d7b88]">Smart portfolio planning</p>
                 </div>
               </article>
             </div>
           </section>
 
-          <aside className="foundy-right-column">
-            <section className="foundy-updates-box">
-              <div className="foundy-updates-header">
-                <h2>Entrepreneur Updates</h2>
-                <button type="button" className="foundy-link-button">View All</button>
+          <aside>
+            <section className="rounded-xl border border-[#0b252b]/10 bg-white p-5 shadow-[0_14px_24px_rgba(13,44,50,0.06)]">
+              <div className="flex items-center justify-between">
+                <h2 className="font-bold">Entrepreneur Updates</h2>
+                <button type="button" className="text-xs font-bold text-[#1b7f61]">View All</button>
               </div>
 
-              <div className="foundy-update-list">
+              <div className="mt-4 divide-y divide-[#0b252b]/10">
                 {updates.map((item) => (
-                  <article key={item.name} className="foundy-update-item">
-                    <div className={`foundy-update-ico foundy-update-ico--${item.tone}`}>
+                  <article key={item.name} className="flex gap-3 py-4 first:pt-0">
+                    <div className={`grid h-10 w-10 shrink-0 place-items-center rounded-full text-sm font-bold text-white ${item.tone === 'green' ? 'bg-[#1b7f61]' : 'bg-[#7654a8]'}`}>
                       {item.name.split(' ')[0][0]}
                     </div>
-                    <div className="foundy-update-content">
-                      <div className="foundy-update-head">
-                        <h3>{item.name}</h3>
-                        <span className="foundy-badge foundy-badge--update">{item.badge}</span>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <h3 className="truncate text-sm font-semibold">{item.name}</h3>
+                        <span className="shrink-0 rounded-full bg-slate-100 px-2 py-1 text-[10px] font-bold text-[#6d7b88]">{item.badge}</span>
                       </div>
-                      <p>{item.meta}</p>
-                      <div className="foundy-update-meta">
+                      <p className="mt-1 truncate text-xs text-[#6d7b88]">{item.meta}</p>
+                      <div className="mt-2 flex items-center gap-1 text-[10px] text-[#6d7b88]">
                         <span>◔</span>
                         <span>{item.investors} investors</span>
                       </div>
                     </div>
-                    <strong className="foundy-update-value">{item.value}</strong>
+                    <strong className="text-sm text-[#1b7f61]">{item.value}</strong>
                   </article>
                 ))}
               </div>

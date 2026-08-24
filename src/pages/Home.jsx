@@ -1,5 +1,3 @@
-import '../styles/home.css';
-
 const sidebarItems = [
   { name: 'Home', icon: '⌂', active: true },
   { name: 'My projects', icon: '▣' },
@@ -26,39 +24,38 @@ const recentActivity = [
 
 function Sidebar({ nombreUsuario, tipoUsuario, onCerrarSesion, onOpenSettings }) {
   return (
-    <aside className="foundy-sidebar">
-      <div className="foundy-sidebar__top">
-        <div className="foundy-brand">
-          <div className="foundy-brand__mark">F</div>
-          <span className="foundy-brand__text">Foundy</span>
+    <aside className="flex w-full shrink-0 flex-col bg-[#f7fafb] p-4 sm:w-64 lg:w-72">
+      <div>
+        <div className="flex items-center gap-3">
+          <div className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-[#0f8c8d] to-[#0d5c63] font-bold text-white">F</div>
+          <span className="text-xl font-bold tracking-tight text-slate-900">Foundy</span>
         </div>
 
-        <div className="foundy-profile">
-          <div className="foundy-profile__avatar">{nombreUsuario.charAt(0).toUpperCase()}</div>
+        <div className="mt-6 flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3">
+          <div className="grid h-10 w-10 place-items-center rounded-full bg-[#d8ece8] font-bold text-[#0f6866]">{nombreUsuario.charAt(0).toUpperCase()}</div>
           <div>
-            <p className="foundy-profile__name">{nombreUsuario}</p>
-            <p className="foundy-profile__role">TIPO: {tipoUsuario}</p>
+            <p className="truncate text-sm font-bold text-slate-900">{nombreUsuario}</p>
+            <p className="text-[10px] uppercase text-slate-500">TIPO: {tipoUsuario}</p>
           </div>
         </div>
       </div>
 
-      <nav className="foundy-nav" aria-label="Sidebar navigation">
+      <nav className="mt-6 grid gap-2" aria-label="Sidebar navigation">
         {sidebarItems.map((item) => (
           <button
             key={item.name}
             type="button"
-            className={`foundy-nav__item ${item.active ? 'foundy-nav__item--active' : ''}`}
+            className={`flex items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold ${item.active ? 'bg-[#dff0ed] text-[#0d6865]' : 'text-slate-600 hover:bg-slate-100'}`}
             onClick={item.name === 'Settings' ? onOpenSettings : undefined}
           >
-            <span className="foundy-nav__icon">{item.icon}</span>
+            <span className="grid h-7 w-7 place-items-center rounded-lg bg-white text-base">{item.icon}</span>
             <span>{item.name}</span>
           </button>
         ))}
       </nav>
 
-      <div className="foundy-sidebar__footer">
-        <button type="button" className="foundy-sidebar__support">Support</button>
-        <button type="button" className="foundy-sidebar__logout" onClick={onCerrarSesion}>
+      <div className="mt-auto grid gap-2 pt-8"><button type="button" className="rounded-xl px-3 py-3 text-left text-sm text-slate-600 hover:bg-slate-100">Support</button>
+        <button type="button" className="rounded-xl px-3 py-3 text-left text-sm font-semibold text-slate-600 hover:bg-slate-100" onClick={onCerrarSesion}>
           Logout
         </button>
       </div>
@@ -68,15 +65,15 @@ function Sidebar({ nombreUsuario, tipoUsuario, onCerrarSesion, onOpenSettings })
 
 function DashboardHeader() {
   return (
-    <header className="foundy-header">
+    <header className="flex items-center justify-between">
       <div>
-        <p className="foundy-header__eyebrow">Dashboard</p>
-        <h1 className="foundy-header__title">Statistics</h1>
+        <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#0f8c8d]">Dashboard</p>
+        <h1 className="mt-1 text-3xl font-bold text-slate-900">Statistics</h1>
       </div>
 
-      <div className="foundy-header__card">
-        <span className="foundy-header__card-label">Foundy</span>
-        <strong>+12.4%</strong>
+      <div className="rounded-xl bg-white px-4 py-3 text-right shadow-sm">
+        <span className="block text-xs text-slate-500">Foundy</span>
+        <strong className="text-[#0f8c8d]">+12.4%</strong>
       </div>
     </header>
   );
@@ -84,27 +81,27 @@ function DashboardHeader() {
 
 function WelcomeSection({ nombreUsuario }) {
   return (
-    <section className="foundy-welcome">
-      <div className="foundy-welcome__content">
-        <p className="foundy-welcome__kicker">Overview</p>
-        <h2 className="foundy-welcome__title">Welcome back, {nombreUsuario}.</h2>
-        <p className="foundy-welcome__subtitle">Your investments are growing strong this quarter.</p>
+    <section className="mt-8 flex flex-col justify-between gap-6 rounded-2xl bg-gradient-to-br from-[#0f6866] to-[#123e4a] p-6 text-white sm:p-8 lg:flex-row lg:items-center">
+      <div>
+        <p className="text-xs font-bold uppercase tracking-[0.18em] text-teal-100">Overview</p>
+        <h2 className="mt-2 text-3xl font-bold">Welcome back, {nombreUsuario}.</h2>
+        <p className="mt-2 text-sm text-teal-50">Your investments are growing strong this quarter.</p>
 
-        <div className="foundy-welcome__stats">
-          <span>3 new investors</span>
-          <span>Portfolio growth 12% above market</span>
+        <div className="mt-5 flex flex-wrap gap-2 text-xs">
+          <span className="rounded-full bg-white/15 px-3 py-2">3 new investors</span>
+          <span className="rounded-full bg-white/15 px-3 py-2">Portfolio growth 12% above market</span>
         </div>
 
-        <div className="foundy-welcome__actions">
-          <button type="button" className="foundy-btn foundy-btn--primary">Create Project</button>
-          <button type="button" className="foundy-btn foundy-btn--secondary">View Reports</button>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <button type="button" className="rounded-lg bg-white px-4 py-2.5 text-sm font-bold text-[#0f6866]">Create Project</button>
+          <button type="button" className="rounded-lg border border-white/40 px-4 py-2.5 text-sm font-bold text-white">View Reports</button>
         </div>
       </div>
 
-      <div className="foundy-spotlight">
-        <div className="foundy-spotlight__badge">Live</div>
-        <div className="foundy-spotlight__value">$184.2K</div>
-        <p className="foundy-spotlight__label">Portfolio value</p>
+      <div className="min-w-44 rounded-2xl border border-white/20 bg-white/10 p-5">
+        <div className="inline-block rounded-full bg-[#a8dfc1] px-2 py-1 text-xs font-bold text-[#155c48]">Live</div>
+        <div className="mt-5 text-3xl font-bold">$184.2K</div>
+        <p className="mt-1 text-xs text-teal-50">Portfolio value</p>
       </div>
     </section>
   );
@@ -112,52 +109,50 @@ function WelcomeSection({ nombreUsuario }) {
 
 function SummaryCard({ title, value, status, description, progress, badge, cta }) {
   return (
-    <article className="foundy-summary-card">
-      <div className="foundy-summary-card__top">
+    <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="foundy-summary-card__title">{title}</p>
-          <h3 className="foundy-summary-card__value">{value}</h3>
+          <p className="text-xs font-semibold text-slate-500">{title}</p>
+          <h3 className="mt-2 text-2xl font-bold text-slate-900">{value}</h3>
         </div>
-        {status && <span className="foundy-summary-card__status">{status}</span>}
+        {status && <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-bold text-amber-700">{status}</span>}
       </div>
 
-      {description && <p className="foundy-summary-card__description">{description}</p>}
+      {description && <p className="mt-3 text-xs text-slate-500">{description}</p>}
 
       {progress !== undefined && (
-        <div className="foundy-summary-card__progress">
-          <div className="foundy-summary-card__progress-bar">
-            <span style={{ width: `${progress}%` }} />
+        <div className="mt-5">
+          <div className="h-2 overflow-hidden rounded-full bg-slate-100">
+            <span className="block h-full rounded-full bg-[#0f8c8d]" style={{ width: `${progress}%` }} />
           </div>
-          <div className="foundy-summary-card__progress-meta">
+          <div className="mt-2 flex justify-between text-xs text-slate-500">
             <span>{badge}</span>
             <span>{progress}%</span>
           </div>
         </div>
       )}
 
-      {cta && <button type="button" className="foundy-summary-card__button">{cta}</button>}
+      {cta && <button type="button" className="mt-5 text-xs font-bold text-[#0f6866]">{cta}</button>}
     </article>
   );
 }
 
 function GrowthStatistics() {
   return (
-    <section className="foundy-growth-card">
-      <div className="foundy-growth-card__header">
+    <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div className="flex items-center justify-between">
         <div>
-          <p className="foundy-growth-card__label">Growth Statistics</p>
-          <h3 className="foundy-growth-card__title">Net value</h3>
+          <p className="text-xs font-bold uppercase tracking-widest text-[#0f8c8d]">Growth Statistics</p>
+          <h3 className="mt-1 text-xl font-bold text-slate-900">Net value</h3>
         </div>
-        <span className="foundy-growth-card__range">Last 6 Months</span>
+        <span className="text-xs text-slate-500">Last 6 Months</span>
       </div>
 
-      <div className="foundy-chart" aria-label="Monthly growth chart">
+      <div className="mt-8 flex h-52 items-end gap-3" aria-label="Monthly growth chart">
         {growthData.map((item) => (
-          <div key={item.month} className="foundy-chart__column">
-            <div className="foundy-chart__bar-wrap">
-              <div className="foundy-chart__bar" style={{ height: `${item.value}%` }} />
-            </div>
-            <span className="foundy-chart__month">{item.month}</span>
+          <div key={item.month} className="flex h-full flex-1 flex-col items-center justify-end gap-2 text-xs text-slate-500">
+            <div className="flex h-full w-full items-end"><div className="w-full rounded-t-lg bg-[#0f8c8d]" style={{ height: `${item.value}%` }} /></div>
+            <span>{item.month}</span>
           </div>
         ))}
       </div>
@@ -167,19 +162,19 @@ function GrowthStatistics() {
 
 function RecentActivity() {
   return (
-    <aside className="foundy-activity-card">
-      <div className="foundy-activity-card__header">
-        <h3>Recent Activity</h3>
+    <aside className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div>
+        <h3 className="font-bold text-slate-900">Recent Activity</h3>
       </div>
 
-      <div className="foundy-activity-list">
+      <div className="mt-4 divide-y divide-slate-100">
         {recentActivity.map((item) => (
-          <div key={item.title} className="foundy-activity-item">
-            <div className={`foundy-activity-item__dot foundy-activity-item__dot--${item.tone}`} />
-            <div className="foundy-activity-item__content">
-              <p className="foundy-activity-item__title">{item.title}</p>
-              <p className="foundy-activity-item__detail">{item.detail}</p>
-              <span className="foundy-activity-item__time">{item.time}</span>
+          <div key={item.title} className="flex gap-3 py-4 first:pt-0">
+            <div className={`mt-1 h-2.5 w-2.5 shrink-0 rounded-full ${item.tone === 'positive' ? 'bg-[#0f8c8d]' : 'bg-slate-300'}`} />
+            <div>
+              <p className="text-sm font-semibold text-slate-800">{item.title}</p>
+              <p className="mt-1 text-xs text-slate-500">{item.detail}</p>
+              <span className="mt-1 block text-[10px] text-slate-400">{item.time}</span>
             </div>
           </div>
         ))}
@@ -194,7 +189,7 @@ function Home({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome }) {
   const tipoUsuario = usuarioData?.tipo_usuario || 'Usuario';
 
   return (
-    <div className="foundy-dashboard">
+    <div className="flex min-h-screen flex-col bg-[#edf2f3] text-slate-800 lg:flex-row">
       <Sidebar
         nombreUsuario={nombreUsuario}
         tipoUsuario={tipoUsuario}
@@ -202,13 +197,13 @@ function Home({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome }) {
         onOpenSettings={onOpenSettings || onBackHome}
       />
 
-      <div className="foundy-main-panel">
+      <div className="min-w-0 flex-1 p-5 sm:p-8">
         <DashboardHeader />
 
-        <main className="foundy-content">
+        <main>
           <WelcomeSection nombreUsuario={nombreUsuario} />
 
-          <section className="foundy-summary-grid">
+          <section className="mt-6 grid gap-5 md:grid-cols-2">
             <SummaryCard
               title="Active Investments"
               value="2 Ventures"
@@ -225,7 +220,7 @@ function Home({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome }) {
             />
           </section>
 
-          <section className="foundy-lower-grid">
+          <section className="mt-6 grid gap-5 xl:grid-cols-[1.5fr_1fr]">
             <GrowthStatistics />
             <RecentActivity />
           </section>
@@ -234,5 +229,5 @@ function Home({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome }) {
     </div>
   );
 }
-
+}
 export default Home;

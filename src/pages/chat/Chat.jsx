@@ -1,5 +1,4 @@
 import { useState } from "react";
-import "./chat.css";
 
 const conversations = [
   {
@@ -56,7 +55,7 @@ const initialMessages = [
 function Avatar({ person }) {
   return (
     <span
-      className="avatar-circle relative grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-full text-sm font-bold text-white"
+      className="relative grid aspect-square h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-full text-sm font-bold text-white"
       style={{ backgroundColor: person.color }}
     >
       {person.name.charAt(0)}
@@ -65,7 +64,7 @@ function Avatar({ person }) {
   );
 }
 
-function Chat({ mode = "entrepreneur" }) {
+function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
   const [activeConversation, setActiveConversation] = useState(null);
   const [messages, setMessages] = useState(initialMessages);
   const [draft, setDraft] = useState("");
@@ -92,7 +91,9 @@ function Chat({ mode = "entrepreneur" }) {
   return (
     <div className="chat-shell flex min-h-screen flex-col bg-white text-[#424a4c]">
       <nav className="flex h-[4.5rem] shrink-0 items-center justify-between border-b border-[#424a4c]/15 px-5 sm:px-8">
-        <div className="h-8 w-28" aria-label="Reserved logo space" />
+        <button type="button" onClick={onBackHome} className="text-sm font-bold text-[#006b73]" aria-label="Volver al panel">
+          Foundy
+        </button>
         <div className="flex items-center gap-3 sm:gap-5">
           <span className="hidden text-xs font-semibold text-[#424a4c]/55 sm:block">
             {investorMode ? "Investor inbox" : "Entrepreneur inbox"}
@@ -100,10 +101,13 @@ function Chat({ mode = "entrepreneur" }) {
           <button
             type="button"
             onClick={() => setNotice("Notifications are up to date.")}
-            className="chat-icon-button"
+            className="grid h-9 w-9 place-items-center rounded-full text-[#424a4c]/70 transition hover:bg-[#006b73]/[0.09] hover:text-[#006b73] focus-visible:outline-none"
             aria-label="Notifications"
           >
             ♢
+          </button>
+          <button type="button" onClick={onCerrarSesion} className="text-xs font-semibold text-[#006b73] hover:underline">
+            Logout
           </button>
         </div>
       </nav>
@@ -141,7 +145,7 @@ function Chat({ mode = "entrepreneur" }) {
                 <button
                   type="button"
                   onClick={() => setNewMessageOpen(true)}
-                  className="chat-icon-button text-xl text-[#00634b]"
+                  className="grid h-9 w-9 place-items-center rounded-full text-xl text-[#00634b] hover:bg-[#006b73]/[0.09]"
                   aria-label="New message"
                 >
                   +
@@ -227,7 +231,7 @@ function Chat({ mode = "entrepreneur" }) {
                     <button
                       type="button"
                       onClick={() => setMobileView("inbox")}
-                      className="chat-back-button sm:hidden"
+                      className="grid h-8 w-8 place-items-center rounded-full text-2xl text-[#424a4c] sm:hidden"
                       aria-label="Back to inbox"
                     >
                       ‹
@@ -246,7 +250,7 @@ function Chat({ mode = "entrepreneur" }) {
                     <button
                       type="button"
                       onClick={() => setNotice("Voice call is ready to start.")}
-                      className="chat-icon-button"
+                      className="grid h-9 w-9 place-items-center rounded-full text-[#424a4c]/70 hover:bg-[#006b73]/[0.09] hover:text-[#006b73]"
                       aria-label="Start voice call"
                     >
                       ⌕
@@ -256,7 +260,7 @@ function Chat({ mode = "entrepreneur" }) {
                       onClick={() =>
                         setNotice("More conversation options opened.")
                       }
-                      className="chat-icon-button"
+                      className="grid h-9 w-9 place-items-center rounded-full text-[#424a4c]/70 hover:bg-[#006b73]/[0.09] hover:text-[#006b73]"
                       aria-label="More options"
                     >
                       •••
@@ -297,7 +301,7 @@ function Chat({ mode = "entrepreneur" }) {
                   <button
                     type="button"
                     onClick={() => setNotice("Attach a file to your message.")}
-                    className="chat-icon-button text-lg"
+                    className="grid h-9 w-9 place-items-center rounded-full text-lg text-[#424a4c]/70 hover:bg-[#006b73]/[0.09] hover:text-[#006b73]"
                     aria-label="Attach file"
                   >
                     ⊕
@@ -362,7 +366,7 @@ function Chat({ mode = "entrepreneur" }) {
               <button
                 type="button"
                 onClick={() => setNewMessageOpen(false)}
-                className="chat-icon-button text-lg"
+                className="grid h-9 w-9 place-items-center rounded-full text-lg text-[#424a4c]/70 hover:bg-[#006b73]/[0.09] hover:text-[#006b73]"
                 aria-label="Close new message"
               >
                 ×

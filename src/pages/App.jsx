@@ -4,16 +4,13 @@ import Recuperacion from './recuperacion.jsx';
 import Registro from './registro.jsx';
 import Inicio from './inicio.jsx';
 import Landing from './landing.jsx';
-import FoundyCard from './foundyCard.jsx';
-
+import HomeInversionista from './HomeInversionista.jsx';
+import FoundyCard from './FoundyCard.jsx';
 import PerfilConfiguracion from './PerfilConfiguracion.jsx';
 import CrearProyecto from './emprendedor/CrearProyecto.jsx';
 import ChatEmprendedor from './chat/ChatEmprendedor.jsx';
 import ChatInversionista from './chat/ChatInversionista.jsx';
 function App() {
-  // LÍNEA TEMPORAL PARA PROBAR TU PANTALLA:
-  return <FoundyCard />;
-
   const [mostrarLanding, setMostrarLanding] = useState(true);
   const [esRegistro, setEsRegistro] = useState(false);
   const [esRecuperacion, setEsRecuperacion] = useState(false);
@@ -23,6 +20,7 @@ function App() {
   const [contrasena, setContrasena] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -45,6 +43,7 @@ function App() {
       }
       // Guarda los datos del usuario encontrado
       setUsuarioLogueado(data);
+      setPantallaLogueado('home');
     } catch {
       setErrorMsg('Ocurrió un error al intentar iniciar sesión.');
     } finally {
@@ -56,22 +55,14 @@ function App() {
     setPantallaLogueado('home');
     setUsuario('');
     setContrasena('');
+    setEsRegistro(false);
+    setEsRecuperacion(false);
+    setMostrarLanding(false);
   };
 
   const irAHome = () => setPantallaLogueado('home');
   const irAConfiguracion = () => setPantallaLogueado('settings');
 
-  // VISTA 1: Si hay un usuario logueado, mostramos la vista interna correspondiente
-  if (window.location.pathname === '/crear-proyecto') {
-    return <CrearProyecto nombreUsuario="Entrepreneur" />;
-  }
-  if (window.location.pathname === '/chat-emprendedor') {
-    return <ChatEmprendedor />;
-  }
-  if (window.location.pathname === '/chat-inversionista') {
-    return <ChatInversionista />;
-  }
-  // VISTA 1: Si hay un usuario logueado, mostramos inicio.jsx
   if (usuarioLogueado) {
     if (pantallaLogueado === 'settings') {
       return (
@@ -79,6 +70,33 @@ function App() {
           usuarioData={usuarioLogueado}
           onCerrarSesion={handleCerrarSesion}
           onBackHome={irAHome}
+          onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
+        />
+      );
+    }
+
+    if (pantallaLogueado === 'create-project') {
+      return <CrearProyecto nombreUsuario={usuarioLogueado.usuario} onCerrarSesion={handleCerrarSesion} onBackHome={irAHome} />;
+    }
+
+    if (pantallaLogueado === 'chat') {
+      const ChatPage = usuarioLogueado.tipo_usuario === 'Inversionista' ? ChatInversionista : ChatEmprendedor;
+      return <ChatPage onBackHome={irAHome} onCerrarSesion={handleCerrarSesion} />;
+    }
+
+    if (pantallaLogueado === 'foundy-card') {
+      return <FoundyCard onLogout={handleCerrarSesion} onBackHome={irAHome} onOpenSettings={irAConfiguracion} onOpenChat={() => setPantallaLogueado('chat')} />;
+    }
+
+    if (usuarioLogueado.tipo_usuario === 'Inversionista') {
+      return (
+        <HomeInversionista
+          usuarioData={usuarioLogueado}
+          onCerrarSesion={handleCerrarSesion}
+          onBackHome={irAHome}
+          onOpenSettings={irAConfiguracion}
+          onOpenChat={() => setPantallaLogueado('chat')}
+          onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
         />
       );
     }
@@ -89,6 +107,9 @@ function App() {
         onCerrarSesion={handleCerrarSesion}
         onOpenSettings={irAConfiguracion}
         onBackHome={irAHome}
+        onOpenCreateProject={() => setPantallaLogueado('create-project')}
+        onOpenChat={() => setPantallaLogueado('chat')}
+        onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
       />
     );
   }

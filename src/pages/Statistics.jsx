@@ -10,7 +10,7 @@ const menuItems = [
 
 const chartPoints = '0,126 22,124 44,121 66,118 88,112 110,113 132,106 154,101 176,99 198,91 220,98 242,87 264,65 286,67 308,40 330,29 352,38 374,51 396,34';
 
-function Statistics({ usuarioData, onCerrarSesion }) {
+function Statistics({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, onOpenCreateProject, onOpenChat, onOpenFoundyCard }) {
   const nombreUsuario = usuarioData?.usuario || 'usuario';
   const [menuAbierto, setMenuAbierto] = useState(true);
 
@@ -28,7 +28,7 @@ function Statistics({ usuarioData, onCerrarSesion }) {
             </div>
             <nav className="mt-5 flex flex-col gap-1.5">
               {menuItems.map((item) => (
-                <button key={item.label} type="button" className={`flex items-center gap-3 rounded-md px-3 py-2.5 text-left text-xs transition ${item.active ? 'bg-[#006b73] font-semibold text-white shadow-sm' : 'text-[#526164] hover:bg-[#e8f0f0] hover:text-[#006b73]'}`}>
+                <button key={item.label} type="button" onClick={item.label === 'Home' ? onBackHome : item.label === 'My investments' ? onOpenCreateProject : item.label === 'Messages' ? onOpenChat : item.label === 'Settings' ? onOpenSettings : undefined} className={`flex items-center gap-3 rounded-md px-3 py-2.5 text-left text-xs transition ${item.active ? 'bg-[#006b73] font-semibold text-white shadow-sm' : 'text-[#526164] hover:bg-[#e8f0f0] hover:text-[#006b73]'}`}>
                   <span className="w-4 text-center text-base leading-none" aria-hidden="true">{item.icon}</span>
                   {item.label}
                 </button>
@@ -44,9 +44,9 @@ function Statistics({ usuarioData, onCerrarSesion }) {
             <div className="flex h-full items-center gap-5 sm:gap-12">
               <button type="button" onClick={() => setMenuAbierto((abierto) => !abierto)} className="text-lg text-[#006b73]" aria-label={menuAbierto ? 'Ocultar menú' : 'Mostrar menú'} aria-expanded={menuAbierto}>☰</button>
               <nav className="hidden h-full items-center gap-7 text-[11px] sm:flex" aria-label="Secciones">
-                <a href="#dashboard" className="text-[#758082] hover:text-[#006b73]">Dashboard</a>
+                <button type="button" onClick={onBackHome} className="text-[#758082] hover:text-[#006b73]">Dashboard</button>
                 <a href="#estadisticas" className="border-b-2 border-[#006b73] py-[1.62rem] font-semibold text-[#006b73]">Statistics</a>
-                <a href="#proyectos" className="text-[#758082] hover:text-[#006b73]">Foundy card</a>
+                <button type="button" onClick={onOpenFoundyCard} className="text-[#758082] hover:text-[#006b73]">Foundy card</button>
               </nav>
             </div>
             <label className="flex h-8 w-36 items-center gap-2 rounded-full border border-[#dce2e2] bg-[#eef2f2] px-3 text-[#899496] sm:w-44"><span aria-hidden="true">⌕</span><input type="search" placeholder="Buscar" className="w-full bg-transparent text-xs outline-none placeholder:text-[#899496]" /></label>

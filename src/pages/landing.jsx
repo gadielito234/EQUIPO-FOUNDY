@@ -55,7 +55,7 @@ export default function Landing({ onLogin, onRegister }) {
                             Sign up
                         </button>
                         <button type="button" onClick={onLogin} className="rounded-full border border-white/80 px-5 py-2 text-xs font-semibold text-white transition hover:bg-white/10">
-                            Sign in
+                            Login
                         </button>
                     </div>
                 </nav>

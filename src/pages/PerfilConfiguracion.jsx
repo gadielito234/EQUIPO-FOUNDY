@@ -28,7 +28,7 @@ function Switch({ enabled, onChange }) {
   );
 }
 
-export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBackHome }) {
+export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBackHome, onOpenFoundyCard }) {
   const [transactionAlerts, setTransactionAlerts] = useState(true);
   const [marketingInsights, setMarketingInsights] = useState(false);
 
@@ -108,8 +108,8 @@ export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBac
 
               <nav className="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
                 <button type="button" className="transition hover:text-[#0d5c5d]">Dashboard</button>
-                <button type="button" className="transition hover:text-[#0d5c5d]">Statistics</button>
-                <button type="button" className="transition hover:text-[#0d5c5d]">Foundy card</button>
+                <button type="button" onClick={onBackHome} className="transition hover:text-[#0d5c5d]">Statistics</button>
+                <button type="button" onClick={onOpenFoundyCard} className="transition hover:text-[#0d5c5d]">Foundy card</button>
               </nav>
 
               <div className="flex items-center justify-between gap-3 md:justify-end">
