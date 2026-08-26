@@ -7,9 +7,8 @@ function Recuperacion({ onVolver, onContinuar }) {
     const [exito, setExito] = useState(false);
 
     const validarEmail = (email) => {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return regex.test(email);
-    };
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
 
     const handleSubmit = async (e) => {
         e.preventDefault();
