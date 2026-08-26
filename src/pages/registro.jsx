@@ -2,16 +2,14 @@ import { useState } from 'react';
 import { supabase } from '../services/supabase';
 function Register({ onSwitchToLogin }) {
     const [formData, setFormData] = useState({
+        dui: '',
         nombre: '',
         apellidos: '',
         usuario: '',
         tipo_usuario: '',
-        telefono: '',
-        dui: '',
         contrasena: '',
         confirmarContrasena: '',
         telefono: '',
-        dui: '',
     });
     const [loading, setLoading] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
@@ -55,8 +53,7 @@ function Register({ onSwitchToLogin }) {
                         usuario: formData.usuario,
                         tipo_usuario: formData.tipo_usuario,
                         telefono: formData.telefono,
-                        dui: formData.dui,
-c
+                        dui: formData.dui
                     },
                 ]);
             if (error) throw error;
