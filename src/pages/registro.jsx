@@ -6,12 +6,11 @@ function Register({ onSwitchToLogin }) {
         apellidos: '',
         usuario: '',
         tipo_usuario: '',
+        correo: '',
         telefono: '',
         dui: '',
         contrasena: '',
         confirmarContrasena: '',
-        telefono: '',
-        dui: '',
     });
     const [loading, setLoading] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
@@ -56,7 +55,7 @@ function Register({ onSwitchToLogin }) {
                         tipo_usuario: formData.tipo_usuario,
                         telefono: formData.telefono,
                         dui: formData.dui,
-c
+                        correo: formData.correo,
                     },
                 ]);
             if (error) throw error;
@@ -83,6 +82,7 @@ c
                         <div className="grid grid-cols-1 gap-x-4 gap-y-3.5 min-[701px]:grid-cols-2">
                             <label className="block text-[10px] leading-tight text-[#f6ffff]">Nombre<input className="mt-1.5 block h-[34px] w-full rounded bg-white px-[11px] text-[12px] text-[#1c2449] outline-none placeholder:text-[#a0a5ad] focus:ring-[3px] focus:ring-white/30" type="text" name="nombre" placeholder="Juan" value={formData.nombre} onChange={handleChange} required /></label>
                             <label className="block text-[10px] leading-tight text-[#f6ffff]">Apellidos<input className="mt-1.5 block h-[34px] w-full rounded bg-white px-[11px] text-[12px] text-[#1c2449] outline-none placeholder:text-[#a0a5ad] focus:ring-[3px] focus:ring-white/30" type="text" name="apellidos" placeholder="Pérez García" value={formData.apellidos} onChange={handleChange} required /></label>
+                             <label className="block text-[10px] leading-tight text-[#f6ffff]">Correo<input className="mt-1.5 block h-[34px] w-full rounded bg-white px-[11px] text-[12px] text-[#1c2449] outline-none placeholder:text-[#a0a5ad] focus:ring-[3px] focus:ring-white/30" type="text" name="correo" placeholder="@perezgarcia" value={formData.correo} onChange={handleChange} required /></label>
                             <label className="block text-[10px] leading-tight text-[#f6ffff]">Usuario<input className="mt-1.5 block h-[34px] w-full rounded bg-white px-[11px] text-[12px] text-[#1c2449] outline-none placeholder:text-[#a0a5ad] focus:ring-[3px] focus:ring-white/30" type="text" name="usuario" placeholder="juanperez" value={formData.usuario} onChange={handleChange} required /></label>
                             <label className="block text-[10px] leading-tight text-[#f6ffff]">Tipo de usuario<select className="mt-1.5 block h-[34px] w-full rounded bg-white px-[11px] text-[12px] text-[#1c2449] outline-none focus:ring-[3px] focus:ring-white/30" name="tipo_usuario" value={formData.tipo_usuario} onChange={handleChange} required><option value="">Selecciona una opción</option><option value="Emprendedor">Emprendedor</option><option value="Inversionista">Inversionista</option></select></label>
                             <label className="block text-[10px] leading-tight text-[#f6ffff]">Teléfono<input className="mt-1.5 block h-[34px] w-full rounded bg-white px-[11px] text-[12px] text-[#1c2449] outline-none placeholder:text-[#a0a5ad] focus:ring-[3px] focus:ring-white/30" type="tel" name="telefono" placeholder="5512345678" value={formData.telefono} onChange={handleChange} required /></label>
