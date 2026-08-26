@@ -122,10 +122,10 @@ function FoundyCardPage({ onLogout, onBackHome, onOpenSettings, onOpenChat }) {
           </div>
 
           <nav className="flex flex-1 items-center justify-center gap-[18px]" aria-label="Main navigation">
-            <button type="button" onClick={onBackHome} className="relative cursor-pointer border-0 bg-transparent px-0.5 py-2.5 pb-3 text-[0.9rem] font-medium text-[#5f6d7a]">
+            <button type="button" className="relative cursor-pointer border-0 bg-transparent px-0.5 py-2.5 pb-3 text-[0.9rem] font-medium text-[#5f6d7a]">
               Dashboard
             </button>
-            <button type="button" className="relative cursor-pointer border-0 bg-transparent px-0.5 py-2.5 pb-3 text-[0.9rem] font-medium text-[#5f6d7a]">
+            <button type="button" onClick={onBackHome} className="relative cursor-pointer border-0 bg-transparent px-0.5 py-2.5 pb-3 text-[0.9rem] font-medium text-[#5f6d7a]">
               Statistics
             </button>
             <button type="button" className="relative cursor-pointer border-0 bg-transparent px-0.5 py-2.5 pb-3 font-bold text-[#0f2d39] after:absolute after:bottom-[-2px] after:left-0 after:right-0 after:h-0.5 after:bg-[#0f2d39]">

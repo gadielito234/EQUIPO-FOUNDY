@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { supabase } from '../services/supabase';
 function Register({ onSwitchToLogin }) {
     const [formData, setFormData] = useState({
+        dui: '',
         nombre: '',
         apellidos: '',
         usuario: '',
