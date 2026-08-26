@@ -5,8 +5,6 @@ const sidebarItems = [
   { name: 'Settings', icon: '⚙' },
   { name: 'Notifications', icon: '◔' },
 ];
-function Home({ usuarioData, onCerrarSesion }) {
-
 const growthData = [
   { month: 'Jan', value: 28 },
   { month: 'Feb', value: 36 },
@@ -27,7 +25,7 @@ function Sidebar({ nombreUsuario, tipoUsuario, onCerrarSesion, onOpenSettings })
     <aside className="flex w-full shrink-0 flex-col bg-[#f7fafb] p-4 sm:w-64 lg:w-72">
       <div>
         <div className="flex items-center gap-3">
-          <div className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-[#0f8c8d] to-[#0d5c63] font-bold text-white">F</div>
+          <div className="grid h-10 w-10 place-items-center rounded-xl bg-linear-to-br from-[#0f8c8d] to-[#0d5c63] font-bold text-white">F</div>
           <span className="text-xl font-bold tracking-tight text-slate-900">Foundy</span>
         </div>
 
@@ -81,7 +79,7 @@ function DashboardHeader() {
 
 function WelcomeSection({ nombreUsuario }) {
   return (
-    <section className="mt-8 flex flex-col justify-between gap-6 rounded-2xl bg-gradient-to-br from-[#0f6866] to-[#123e4a] p-6 text-white sm:p-8 lg:flex-row lg:items-center">
+    <section className="mt-8 flex flex-col justify-between gap-6 rounded-2xl bg-linear-to-br from-[#0f6866] to-[#123e4a] p-6 text-white sm:p-8 lg:flex-row lg:items-center">
       <div>
         <p className="text-xs font-bold uppercase tracking-[0.18em] text-teal-100">Overview</p>
         <h2 className="mt-2 text-3xl font-bold">Welcome back, {nombreUsuario}.</h2>
@@ -229,5 +227,5 @@ function Home({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome }) {
     </div>
   );
 }
-}
+
 export default Home;

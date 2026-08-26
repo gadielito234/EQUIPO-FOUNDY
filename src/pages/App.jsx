@@ -62,6 +62,7 @@ function App() {
 
   const irAHome = () => setPantallaLogueado('home');
   const irAConfiguracion = () => setPantallaLogueado('settings');
+  const esInversionista = usuarioLogueado?.tipo_usuario === 'Inversionista';
 
   if (usuarioLogueado) {
     if (pantallaLogueado === 'settings') {
@@ -75,7 +76,7 @@ function App() {
       );
     }
 
-    if (pantallaLogueado === 'create-project') {
+    if (pantallaLogueado === 'create-project' && !esInversionista) {
       return <CrearProyecto nombreUsuario={usuarioLogueado.usuario} onCerrarSesion={handleCerrarSesion} onBackHome={irAHome} />;
     }
 
@@ -84,7 +85,7 @@ function App() {
       return <ChatPage onBackHome={irAHome} onCerrarSesion={handleCerrarSesion} />;
     }
 
-    if (pantallaLogueado === 'foundy-card') {
+    if (pantallaLogueado === 'foundy-card' && esInversionista) {
       return <FoundyCard onLogout={handleCerrarSesion} onBackHome={irAHome} onOpenSettings={irAConfiguracion} onOpenChat={() => setPantallaLogueado('chat')} />;
     }
 

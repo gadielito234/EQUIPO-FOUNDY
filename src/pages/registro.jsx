@@ -56,6 +56,7 @@ function Register({ onSwitchToLogin }) {
                         telefono: formData.telefono,
                         dui: formData.dui,
                         correo: formData.correo,
+                        contrasena: formData.contrasena,
                     },
                 ]);
             if (error) throw error;
