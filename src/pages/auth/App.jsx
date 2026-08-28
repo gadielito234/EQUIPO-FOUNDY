@@ -143,74 +143,47 @@ function App() {
       />
     );
   }
-  // VISTA 4: Por defecto, mostramos el Login
   return (
-    <div className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-[url('/images/maxresdefault.jpg')] bg-cover bg-center px-4 py-8 before:absolute before:inset-0 before:-z-10 before:bg-[rgba(7,27,35,0.42)] before:content-['']">
-      <div className="relative w-full max-w-sm rounded-xl bg-white p-8 shadow-[0_12px_30px_rgba(7,27,35,0.28)]">
-        <div className="mb-6 text-center">
-          <h2 className="text-2xl font-bold text-slate-900">Iniciar sesión</h2>
-          <p className="mt-2 text-sm text-slate-500">Ingresa tus datos para continuar</p>
+    <main className="min-h-screen bg-[#f4faf8] text-[#142d39] lg:grid lg:grid-cols-[0.9fr_1.1fr]">
+      <section className="relative flex min-h-screen flex-col overflow-hidden px-6 py-7 sm:px-10 lg:px-[clamp(2.5rem,7vw,7rem)] lg:py-10">
+        <div className="absolute -right-24 -top-24 h-64 w-64 rounded-full bg-[#b9e8dd]/45" aria-hidden="true" />
+        <div className="relative z-10 flex items-center justify-between">
+          <img className="h-9 w-auto object-contain brightness-0 invert" src="/images/foundy-logo.png" alt="Foundy" />
+          <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[#5d8888]">Bienvenido</span>
         </div>
-        
-        {errorMsg && (
-          <div className="mb-4 rounded-md bg-red-50 px-3 py-2 text-center text-sm text-red-700" role="alert">
-            {errorMsg}
+        <div className="relative z-10 mx-auto my-auto w-full max-w-md py-12">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#079184]">Tu espacio de oportunidades</p>
+          <h1 className="mt-3 text-4xl font-bold leading-[1.05] tracking-tight text-[#113b47] sm:text-5xl">Vuelve a conectar con tus ideas.</h1>
+          <p className="mt-5 text-sm leading-6 text-[#5d7277]">Ingresa a tu cuenta para continuar construyendo nuevas oportunidades.</p>
+          {errorMsg && <div className="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">{errorMsg}</div>}
+          <form className="mt-8" onSubmit={handleLogin}>
+            <label className="block text-xs font-semibold text-[#31515a]">
+              Usuario
+              <input type="text" className="mt-2 block h-12 w-full rounded-lg border border-[#d7e5e3] bg-white px-3.5 text-sm text-[#142d39] outline-none transition placeholder:text-[#9aabad] hover:border-[#8fc9c0] focus:border-[#079184] focus:ring-4 focus:ring-[#079184]/10" placeholder="Tu usuario" value={usuario} onChange={(e) => setUsuario(e.target.value)} required />
+            </label>
+            <label className="mt-5 block text-xs font-semibold text-[#31515a]">
+              Contraseña
+              <input type="password" className="mt-2 block h-12 w-full rounded-lg border border-[#d7e5e3] bg-white px-3.5 text-sm text-[#142d39] outline-none transition placeholder:text-[#9aabad] hover:border-[#8fc9c0] focus:border-[#079184] focus:ring-4 focus:ring-[#079184]/10" placeholder="••••••••" value={contrasena} onChange={(e) => setContrasena(e.target.value)} required />
+            </label>
+            <button type="submit" className="mt-8 h-12 w-full rounded-lg bg-[#087f78] text-sm font-bold text-white shadow-[0_8px_18px_rgba(8,127,120,0.2)] transition hover:-translate-y-0.5 hover:bg-[#066b67] focus:outline-none focus:ring-4 focus:ring-[#079184]/25 disabled:cursor-not-allowed disabled:opacity-60 disabled:transform-none" disabled={loading}>{loading ? 'Cargando...' : 'Iniciar sesión'}</button>
+          </form>
+          <div className="mt-6 flex flex-col gap-3 text-center text-sm text-[#6d7f83] sm:flex-row sm:justify-between">
+            <span>¿Olvidaste tu contraseña? <button type="button" className="font-bold text-[#087f78] hover:underline" onClick={() => setEsRecuperacion(true)}>Recupérala</button></span>
+            <span>¿No tienes cuenta? <button type="button" className="font-bold text-[#087f78] hover:underline" onClick={() => setEsRegistro(true)}>Regístrate</button></span>
           </div>
-        )}
-        <form onSubmit={handleLogin}>
-          <div className="mb-4">
-            <label className="mb-1 block text-sm font-medium text-slate-700">Usuario</label>
-            <input
-              type="text"
-              className="w-full rounded-md border border-slate-300 px-3 py-2.5 text-sm outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
-              placeholder="Tu usuario"
-              value={usuario}
-              onChange={(e) => setUsuario(e.target.value)}
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="mb-1 block text-sm font-medium text-slate-700">Contraseña</label>
-            <input
-              type="password"
-              className="w-full rounded-md border border-slate-300 px-3 py-2.5 text-sm outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
-              placeholder="••••••••"
-              value={contrasena}
-              onChange={(e) => setContrasena(e.target.value)}
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full rounded-md bg-teal-700 px-4 py-2.5 font-semibold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-60"
-            disabled={loading}
-          >
-            {loading ? 'Cargando...' : 'Iniciar sesión'}
-          </button>
-        </form>
-        <p className="mt-5 text-center text-sm text-slate-600">
-          ¿Olvidaste tu contraseña?{" "}
-          <button
-            type="button"
-            className="p-0 font-semibold text-teal-700 hover:underline"
-            onClick={() => setEsRecuperacion(true)}
-            
-          >
-            Recupérala aquí
-          </button>
-        </p>
-        <p className="mt-3 text-center text-sm text-slate-600">
-          ¿No tienes cuenta?{" "}
-          <button
-            type="button"
-            className="p-0 font-semibold text-teal-700 hover:underline"
-            onClick={() => setEsRegistro(true)}
-          >
-            Regístrate
-          </button>
-        </p>
-      </div>
-    </div>
+        </div>
+      </section>
+      <section className="relative hidden min-h-screen overflow-hidden bg-[#075d65] lg:block" aria-label="Conexiones y oportunidades de Foundy">
+        <img className="absolute inset-0 h-full w-full object-cover opacity-80" src="/images/maxresdefault.jpg" alt="Personas colaborando en un proyecto" />
+        <div className="absolute inset-0 bg-[#075d65]/55" />
+        <div className="absolute inset-x-12 bottom-14 max-w-lg text-white">
+          <div className="mb-7 h-1 w-16 bg-[#64d2b8]" />
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#b8f0df]">Conecta. Crece. Hazlo posible.</p>
+          <h2 className="mt-4 text-5xl font-bold leading-[1.02] tracking-tight">Las grandes ideas no crecen solas.</h2>
+          <p className="mt-5 max-w-sm text-base leading-7 text-white/80">Encuentra en Foundy las personas y oportunidades que pueden impulsar tu siguiente paso.</p>
+        </div>
+      </section>
+    </main>
   );
 }
 
