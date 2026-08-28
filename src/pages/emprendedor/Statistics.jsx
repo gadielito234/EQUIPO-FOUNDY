@@ -8,8 +8,6 @@ const menuItems = [
   { label: 'Notifications', icon: '♧' },
 ];
 
-const chartPoints = '0,126 22,124 44,121 66,118 88,112 110,113 132,106 154,101 176,99 198,91 220,98 242,87 264,65 286,67 308,40 330,29 352,38 374,51 396,34';
-
 function Statistics({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, onOpenCreateProject, onOpenChat, onOpenFoundyCard }) {
   const nombreUsuario = usuarioData?.usuario || 'usuario';
   const [menuAbierto, setMenuAbierto] = useState(true);

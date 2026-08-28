@@ -1,15 +1,15 @@
 import { useState } from 'react';
-import { supabase } from '../services/supabase.js';
+import { supabase } from '../../services/supabase.js';
 import Recuperacion from './recuperacion.jsx';
 import Registro from './registro.jsx';
-import Inicio from './inicio.jsx';
+import Inicio from '../emprendedor/inicio.jsx';
 import Landing from './landing.jsx';
-import HomeInversionista from './HomeInversionista.jsx';
-import FoundyCard from './FoundyCard.jsx';
-import PerfilConfiguracion from './PerfilConfiguracion.jsx';
-import CrearProyecto from './emprendedor/CrearProyecto.jsx';
-import ChatEmprendedor from './chat/ChatEmprendedor.jsx';
-import ChatInversionista from './chat/ChatInversionista.jsx';
+import HomeInversionista from '../inversionista/HomeInversionista.jsx';
+import FoundyCard from '../inversionista/FoundyCard.jsx';
+import PerfilConfiguracion from '../shared/PerfilConfiguracion.jsx';
+import CrearProyecto from '../emprendedor/CrearProyecto.jsx';
+import ChatEmprendedor from '../chat/ChatEmprendedor.jsx';
+import ChatInversionista from '../chat/ChatInversionista.jsx';
 function App() {
   const [mostrarLanding, setMostrarLanding] = useState(true);
   const [esRegistro, setEsRegistro] = useState(false);
