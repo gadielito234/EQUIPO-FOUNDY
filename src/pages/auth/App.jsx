@@ -5,6 +5,7 @@ import Registro from './registro.jsx';
 import Inicio from '../emprendedor/inicio.jsx';
 import Landing from './landing.jsx';
 import HomeInversionista from '../inversionista/HomeInversionista.jsx';
+import DashboardInversionista from '../inversionista/DashboardInversionista.jsx';
 import FoundyCard from '../inversionista/FoundyCard.jsx';
 import PerfilConfiguracion from '../shared/PerfilConfiguracion.jsx';
 import CrearProyecto from '../emprendedor/CrearProyecto.jsx';
@@ -31,14 +32,20 @@ function App() {
         .select('*')
         .eq('usuario', usuario)
         .single();
-      if (error || !data) {
+      if (error) {
+        if (error.code === 'PGRST116') {
+          setErrorMsg('El usuario no existe.');
+        } else {
+          setErrorMsg(error.message || 'No se pudo consultar el usuario. Verifica la conexión con Supabase.');
+        }
+        return;
+      }
+      if (!data) {
         setErrorMsg('El usuario no existe.');
-        setLoading(false);
         return;
       }
       if (data.contrasena !== contrasena) {
         setErrorMsg('Contraseña incorrecta.');
-        setLoading(false);
         return;
       }
       // Guarda los datos del usuario encontrado
@@ -60,7 +67,8 @@ function App() {
     setMostrarLanding(false);
   };
 
-  const irAHome = () => setPantallaLogueado('home');
+  const irAHome = () => setPantallaLogueado(esInversionista ? 'dashboard' : 'home');
+  const irADashboard = () => setPantallaLogueado('dashboard');
   const irAConfiguracion = () => setPantallaLogueado('settings');
   const esInversionista = usuarioLogueado?.tipo_usuario === 'Inversionista';
 
@@ -85,19 +93,34 @@ function App() {
       return <ChatPage onBackHome={irAHome} onCerrarSesion={handleCerrarSesion} />;
     }
 
-    if (pantallaLogueado === 'foundy-card' && esInversionista) {
-      return <FoundyCard onLogout={handleCerrarSesion} onBackHome={irAHome} onOpenSettings={irAConfiguracion} onOpenChat={() => setPantallaLogueado('chat')} />;
-    }
-
-    if (usuarioLogueado.tipo_usuario === 'Inversionista') {
+    if (pantallaLogueado === 'dashboard' || (pantallaLogueado === 'home' && esInversionista)) {
       return (
-        <HomeInversionista
+        <DashboardInversionista
           usuarioData={usuarioLogueado}
           onCerrarSesion={handleCerrarSesion}
           onBackHome={irAHome}
           onOpenSettings={irAConfiguracion}
           onOpenChat={() => setPantallaLogueado('chat')}
           onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
+          onVerDetalle={(negocio) => console.log('Detalle de oportunidad:', negocio)}
+        />
+      );
+    }
+
+    if (pantallaLogueado === 'foundy-card') {
+      return <FoundyCard usuarioData={usuarioLogueado} onLogout={handleCerrarSesion} onBackHome={irAHome} onOpenSettings={irAConfiguracion} onOpenChat={() => setPantallaLogueado('chat')} />;
+    }
+
+    if (esInversionista) {
+      return (
+        <DashboardInversionista
+          usuarioData={usuarioLogueado}
+          onCerrarSesion={handleCerrarSesion}
+          onBackHome={irAHome}
+          onOpenSettings={irAConfiguracion}
+          onOpenChat={() => setPantallaLogueado('chat')}
+          onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
+          onVerDetalle={(negocio) => console.log('Detalle de oportunidad:', negocio)}
         />
       );
     }

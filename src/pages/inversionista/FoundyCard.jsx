@@ -63,8 +63,13 @@ const updates = [
   },
 ];
 
-function FoundyCardPage({ onLogout, onBackHome, onOpenSettings, onOpenChat }) {
-  const [user] = useState(getStoredUser);
+function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenSettings, onOpenChat }) {
+  const [storedUser] = useState(getStoredUser);
+  const user = {
+    ...storedUser,
+    name: usuarioData?.usuario || storedUser.name,
+    avatar: usuarioData?.avatar || storedUser.avatar,
+  };
   const userName = user?.name || defaultUser.name;
   const initials = userName
     .split(' ')
@@ -74,7 +79,8 @@ function FoundyCardPage({ onLogout, onBackHome, onOpenSettings, onOpenChat }) {
     .toUpperCase();
 
   return (
-    <div className="flex min-h-screen bg-[#f4f6f8] text-[#0f2d39]">
+    <div className="min-h-screen bg-[#f4f6f8] text-[#0f2d39]">
+      <div className="flex min-h-screen">
       <aside className="flex w-64 min-w-60 flex-col border-r border-[#0b252b]/10 bg-[#f1f4f6] px-4 py-6">
         <div className="mb-7 flex flex-col items-center gap-3">
           <div className="h-[90px] w-[90px] overflow-hidden rounded-full border-[3px] border-[#084343]/15 bg-gradient-to-br from-[#dfeef1] to-[#cde8d9]">
@@ -115,41 +121,38 @@ function FoundyCardPage({ onLogout, onBackHome, onOpenSettings, onOpenChat }) {
         </div>
       </aside>
 
-      <main className="min-w-0 flex-1 px-6 py-6">
-        <header className="flex flex-wrap items-center justify-between gap-[18px] border-b border-[#0b252b]/[0.08] pb-[18px]">
-          <div aria-label="Foundy brand logo">
-            <img src="/images/foundy-logo.png" alt="Foundy logo" className="h-[38px] w-auto object-contain" />
+      <main className="min-w-0 flex-1 px-5 py-7 sm:px-8 lg:px-12">
+        <header className="relative z-40 flex h-[4.5rem] items-center justify-between border-b border-[#0b252b]/[0.08] bg-transparent px-0 sm:px-0">
+          <div className="flex h-full items-center gap-5 sm:gap-12">
+            <div aria-label="Foundy brand logo">
+              <img src="/images/foundy-logo.png" alt="Foundy logo" className="h-[38px] w-auto object-contain" />
+            </div>
           </div>
 
-          <nav className="flex flex-1 items-center justify-center gap-[18px]" aria-label="Main navigation">
-            <button type="button" className="relative cursor-pointer border-0 bg-transparent px-0.5 py-2.5 pb-3 text-[0.9rem] font-medium text-[#5f6d7a]">
-              Dashboard
-            </button>
-            <button type="button" onClick={onBackHome} className="relative cursor-pointer border-0 bg-transparent px-0.5 py-2.5 pb-3 text-[0.9rem] font-medium text-[#5f6d7a]">
-              Statistics
-            </button>
-            <button type="button" className="relative cursor-pointer border-0 bg-transparent px-0.5 py-2.5 pb-3 font-bold text-[#0f2d39] after:absolute after:bottom-[-2px] after:left-0 after:right-0 after:h-0.5 after:bg-[#0f2d39]">
-              Foundy card
-            </button>
+          <nav className="hidden items-center gap-7 text-[11px] sm:flex" aria-label="Main navigation">
+            <button type="button" onClick={onBackHome} className="text-[#758082] hover:text-[#006b73]">Dashboard</button>
+            <button type="button" onClick={onBackHome} className="text-[#758082] hover:text-[#006b73]">Statistics</button>
+            <button type="button" className="border-b-2 border-[#006b73] py-[1.62rem] font-semibold text-[#006b73]">Foundy card</button>
           </nav>
 
-          <label className="flex items-center gap-2 rounded-lg border border-[#0b252b]/10 bg-white/70 px-3 py-2" aria-label="Search">
-            <span className="text-[#6d7b88]">⌕</span>
-            <input type="text" placeholder="Search" className="w-28 bg-transparent text-sm outline-none" />
+          <label className="flex h-8 w-36 items-center gap-2 rounded-full border border-[#dce2e2] bg-[#eef2f2] px-3 text-[#899496] sm:w-44" aria-label="Search">
+            <span aria-hidden="true">⌕</span>
+            <input type="text" placeholder="Buscar" className="w-full bg-transparent text-xs outline-none placeholder:text-[#899496]" />
           </label>
         </header>
 
-        <section className="my-6 flex items-center justify-between gap-4 rounded-xl bg-[#dfeeed] px-6 py-5">
-          <div>
-            <span className="text-[0.7rem] font-bold tracking-[0.16em] text-[#1b7f61]">MEMBER DASHBOARD</span>
-            <h1 className="mt-1 text-2xl font-bold tracking-tight">Manage your Foundy Card and exclusive investment portfolio.</h1>
-          </div>
-          <button type="button" className="shrink-0 rounded-lg bg-[#1d5c4d] px-4 py-3 text-sm font-bold text-white hover:bg-[#15483d]">
-            + Invest Now
-          </button>
-        </section>
+        <div className="mx-auto max-w-6xl">
+          <section className="mt-7 flex items-center justify-between gap-4 rounded-xl bg-[#dfeeed] px-6 py-5">
+            <div>
+              <span className="text-[0.7rem] font-bold tracking-[0.16em] text-[#1b7f61]">MEMBER DASHBOARD</span>
+              <h1 className="mt-1 text-2xl font-bold tracking-tight">Manage your Foundy Card and exclusive investment portfolio.</h1>
+            </div>
+            <button type="button" className="shrink-0 rounded-lg bg-[#1d5c4d] px-4 py-3 text-sm font-bold text-white hover:bg-[#15483d]">
+              + Invest Now
+            </button>
+          </section>
 
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(280px,1fr)]">
+        <div className="mt-5 grid gap-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(280px,1fr)]">
           <section className="flex min-w-0 flex-col gap-5">
             <article className="min-h-[215px] rounded-2xl bg-gradient-to-br from-[#06494d] via-[#0d4c52] to-[#1a6d71] p-6 text-white shadow-[0_14px_24px_rgba(13,44,50,0.12)]">
               <div className="flex items-center justify-between">
@@ -249,7 +252,9 @@ function FoundyCardPage({ onLogout, onBackHome, onOpenSettings, onOpenChat }) {
             </section>
           </aside>
         </div>
+        </div>
       </main>
+      </div>
     </div>
   );
 }

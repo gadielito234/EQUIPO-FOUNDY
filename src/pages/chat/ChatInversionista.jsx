@@ -1,7 +1,13 @@
-import Chat from "./Chat.jsx";
+import Chat from "./Chat";
 
-function ChatInversionista(props) {
-  return <Chat {...props} mode="investor" />;
+function ChatInversionista({ onBackHome, onCerrarSesion }) {
+  return (
+    <Chat
+      mode="investor"
+      onBackHome={onBackHome}
+      onCerrarSesion={onCerrarSesion}
+    />
+  );
 }
 
 export default ChatInversionista;
