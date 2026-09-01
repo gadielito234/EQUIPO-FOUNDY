@@ -97,7 +97,7 @@ function HomeInversionista({ usuarioData, onCerrarSesion, onBackHome, onOpenSett
         <aside
           className={[
             'border-r border-[#d9d3c7] bg-[#f5f2eb] p-5 transition-all duration-200 ease-in-out',
-            sidebarOpen ? 'w-[260px]' : 'w-[92px]',
+            sidebarOpen ? 'w-65' : 'w-23',
           ].join(' ')}
         >
           <div className="mb-7 border-b border-[#0b5d61]/70 pb-4">
@@ -225,15 +225,15 @@ function HomeInversionista({ usuarioData, onCerrarSesion, onBackHome, onOpenSett
           <div className="px-4 py-5 sm:px-5 lg:px-6 xl:px-8">
             <section className="overflow-hidden rounded-[28px] bg-[#0b5d61] px-4 py-5 text-white shadow-[0_18px_36px_rgba(11,93,97,0.15)] sm:px-6 lg:px-7">
               <div className="grid items-center gap-6 lg:grid-cols-[0.72fr_1.28fr]">
-                <div className="relative mx-auto flex w-full max-w-[260px] items-center justify-center lg:mx-0 lg:max-w-none">
+                <div className="relative mx-auto flex w-full max-w-65 items-center justify-center lg:mx-0 lg:max-w-none">
                   <button
                     type="button"
-                    className="absolute left-[-12px] top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#d5e5e3] bg-[#ebf4f4] text-xl text-[#1d4b4c] shadow-sm"
+                    className="absolute -left-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#d5e5e3] bg-[#ebf4f4] text-xl text-[#1d4b4c] shadow-sm"
                     aria-label="Anterior"
                   >
                     ‹
                   </button>
-                  <div className="relative h-[210px] w-[210px] overflow-hidden rounded-full border-[5px] border-[#dff1ed] bg-[#e5f3f0] shadow-[0_12px_25px_rgba(0,0,0,0.15)] sm:h-[220px] sm:w-[220px]">
+                  <div className="relative h-52.5 w-52.5 overflow-hidden rounded-full border-[5px] border-[#dff1ed] bg-[#e5f3f0] shadow-[0_12px_25px_rgba(0,0,0,0.15)] sm:h-55 sm:w-55">
                     <img
                       src="/images/jorgeaparicio.jpeg"
                       alt="Jorge Aparicio"
@@ -242,7 +242,7 @@ function HomeInversionista({ usuarioData, onCerrarSesion, onBackHome, onOpenSett
                   </div>
                   <button
                     type="button"
-                    className="absolute right-[-12px] top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#d5e5e3] bg-[#ebf4f4] text-xl text-[#1d4b4c] shadow-sm"
+                    className="absolute -right-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#d5e5e3] bg-[#ebf4f4] text-xl text-[#1d4b4c] shadow-sm"
                     aria-label="Siguiente"
                   >
                     ›
@@ -258,7 +258,7 @@ function HomeInversionista({ usuarioData, onCerrarSesion, onBackHome, onOpenSett
                     {featuredOpportunity.title}
                   </h1>
 
-                  <p className="mt-3 max-w-[620px] text-sm leading-7 text-[#d5efee] sm:text-[1.05rem]">
+                  <p className="mt-3 max-w-155 text-sm leading-7 text-[#d5efee] sm:text-[1.05rem]">
                     {featuredOpportunity.objective}
                   </p>
 
@@ -309,7 +309,7 @@ function HomeInversionista({ usuarioData, onCerrarSesion, onBackHome, onOpenSett
 
             <section className="mt-8">
               <div className="mb-5 flex items-center justify-between gap-3">
-                <h2 className="text-[1.9rem] font-semibold tracking-[-0.05em] text-[#1d3f42] sm:text-[2.1rem]">
+                <h2 className="text-[1.9rem] font-semibold tracking-tighter text-[#1d3f42] sm:text-[2.1rem]">
                   Browse Opportunities
                 </h2>
                 <button type="button" className="text-base font-medium text-[#1d4b4c] hover:text-[#0d5d61]">
@@ -319,21 +319,21 @@ function HomeInversionista({ usuarioData, onCerrarSesion, onBackHome, onOpenSett
 
               <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
                 {filteredOpportunities.length === 0 ? (
-                  <div className="md:col-span-2 xl:col-span-4 rounded-[24px] border border-dashed border-[#cbd4d3] bg-[#f6f2eb] p-6 text-center text-[#446062]">
+                  <div className="md:col-span-2 xl:col-span-4 rounded-3xl border border-dashed border-[#cbd4d3] bg-[#f6f2eb] p-6 text-center text-[#446062]">
                     No se encontraron resultados para “{searchTerm}”.
                   </div>
                 ) : (
                   filteredOpportunities.map((item) => (
-                    <article key={item.title} className="flex h-full min-h-[520px] flex-col overflow-hidden rounded-[24px] border border-[#d7d0c4] bg-[#f8f4ef] shadow-sm">
+                    <article key={item.title} className="flex h-full min-h-130 flex-col overflow-hidden rounded-3xl border border-[#d7d0c4] bg-[#f8f4ef] shadow-sm">
                     <div className="relative">
-                      <img src={item.image} alt={item.title} className="h-[200px] w-full object-cover sm:h-[220px]" />
+                      <img src={item.image} alt={item.title} className="h-50 w-full object-cover sm:h-55" />
                       <span className="absolute left-4 top-4 rounded-full bg-[#edf5f2] px-3 py-1 text-xs font-medium text-[#1d4b4c] shadow-sm">
                         {item.category}
                       </span>
                     </div>
 
                     <div className="flex flex-1 flex-col p-4">
-                      <h3 className="min-h-[52px] text-[1.5rem] font-semibold leading-tight tracking-[-0.04em] text-[#1d3f42] sm:text-[1.75rem]">
+                      <h3 className="min-h-13 text-[1.5rem] font-semibold leading-tight tracking-[-0.04em] text-[#1d3f42] sm:text-[1.75rem]">
                           {item.title}
                         </h3>
                         <p className="mt-1 text-base text-[#5f7274]">{item.location}</p>
@@ -374,7 +374,7 @@ function HomeInversionista({ usuarioData, onCerrarSesion, onBackHome, onOpenSett
 
             <section className="mt-8 grid gap-5 lg:grid-cols-[0.9fr_1.4fr_0.9fr]">
               <div className="rounded-[22px] border border-[#d9d3c7] bg-[#edf3f2] p-5 shadow-sm">
-                <div className="rounded-[16px] border border-[#d7d0c4] bg-[#f6f1ea] p-3">
+                <div className="rounded-2xl border border-[#d7d0c4] bg-[#f6f1ea] p-3">
                   <div className="flex items-center justify-between text-[0.7rem] font-medium uppercase tracking-[0.12em] text-[#4f6365]">
                     <span>Active</span>
                     <span>70%</span>
@@ -394,7 +394,7 @@ function HomeInversionista({ usuarioData, onCerrarSesion, onBackHome, onOpenSett
                   {investmentGrowth.map(({ value, month }, index) => (
                     <div key={month} className="flex flex-1 flex-col items-center justify-end">
                       <div
-                        className={`w-full rounded-t-[8px] ${index === investmentGrowth.length - 1 ? 'bg-[#0b5d61]' : 'bg-[#dfeef2]'}`}
+                        className={`w-full rounded-t-lg ${index === investmentGrowth.length - 1 ? 'bg-[#0b5d61]' : 'bg-[#dfeef2]'}`}
                         style={{ height: `${value}%` }}
                         aria-label={`${month}: ${value}%`}
                         title={`${month}: ${value}%`}

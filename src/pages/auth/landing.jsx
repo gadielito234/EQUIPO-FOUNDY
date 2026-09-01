@@ -51,10 +51,10 @@ export default function Landing({ onLogin, onRegister }) {
                         ))}
                     </div>
                     <div className="flex items-center gap-2">
-                        <button type="button" onClick={onRegister} className="rounded-full bg-white px-5 py-2 text-xs font-semibold text-[#006b70] shadow-sm transition hover:bg-teal-50">
+                        <button type="button" onClick={onRegister} className="rounded-full bg-white px-5 py-2 text-xs font-semibold text-[#006b70] shadow-sm transition hover:bg-teal-50 transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500">
                             Sign up
                         </button>
-                        <button type="button" onClick={onLogin} className="rounded-full border border-white/80 px-5 py-2 text-xs font-semibold text-white transition hover:bg-white/10">
+                        <button type="button" onClick={onLogin} className="rounded-full border border-white/80 px-5 py-2 text-xs font-semibold text-white transition hover:bg-white/10 transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500">
                             Login
                         </button>
                     </div>

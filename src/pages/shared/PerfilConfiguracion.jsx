@@ -107,7 +107,7 @@ export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBac
               </div>
 
               <nav className="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
-                <button type="button" className="transition hover:text-[#0d5c5d]">Dashboard</button>
+                <button type="button" onClick={onBackHome} className="transition hover:text-[#0d5c5d]">Dashboard</button>
                 <button type="button" onClick={onBackHome} className="transition hover:text-[#0d5c5d]">Statistics</button>
                 <button type="button" onClick={onOpenFoundyCard} className="transition hover:text-[#0d5c5d]">Foundy card</button>
               </nav>
