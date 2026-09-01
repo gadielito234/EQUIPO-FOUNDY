@@ -7,7 +7,7 @@ import Landing from './landing.jsx';
 import HomeInversionista from './HomeInversionista.jsx';
 import FoundyCard from './FoundyCard.jsx';
 import PerfilConfiguracion from './PerfilConfiguracion.jsx';
-import CrearProyecto from './emprendedor/CrearProyecto.jsx';
+import EmprendedorContenido from './emprendedor/Emprendedor-contenido.jsx';
 import ChatEmprendedor from './chat/ChatEmprendedor.jsx';
 import ChatInversionista from './chat/ChatInversionista.jsx';
 function App() {
@@ -75,8 +75,17 @@ function App() {
       );
     }
 
-    if (pantallaLogueado === 'create-project') {
-      return <CrearProyecto nombreUsuario={usuarioLogueado.usuario} onCerrarSesion={handleCerrarSesion} onBackHome={irAHome} />;
+    if (pantallaLogueado === 'create-project' || pantallaLogueado === 'mis-proyectos') {
+      return (
+        <EmprendedorContenido
+          nombreUsuario={usuarioLogueado.usuario}
+          onCerrarSesion={handleCerrarSesion}
+          onBackHome={irAHome}
+          mostrarVista={pantallaLogueado === 'mis-proyectos' ? 'mis-proyectos' : 'crear'}
+          onOpenCreateProject={() => setPantallaLogueado('create-project')}
+          onOpenMyProjects={() => setPantallaLogueado('mis-proyectos')}
+        />
+      );
     }
 
     if (pantallaLogueado === 'chat') {
@@ -102,14 +111,13 @@ function App() {
     }
 
     return (
-      <Inicio
-        usuarioData={usuarioLogueado}
+      <EmprendedorContenido
+        nombreUsuario={usuarioLogueado.usuario}
         onCerrarSesion={handleCerrarSesion}
-        onOpenSettings={irAConfiguracion}
         onBackHome={irAHome}
+        mostrarVista="crear"
         onOpenCreateProject={() => setPantallaLogueado('create-project')}
-        onOpenChat={() => setPantallaLogueado('chat')}
-        onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
+        onOpenMyProjects={() => setPantallaLogueado('mis-proyectos')}
       />
     );
   }
