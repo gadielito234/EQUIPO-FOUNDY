@@ -1,8 +1,9 @@
 import { useState } from 'react';
+import { jsPDF } from 'jspdf';
 
 const menuItems = [
   { label: 'Home', icon: '⌂' },
-  { label: 'My investments', icon: '▣' },
+  { label: 'My investmentors', icon: '▣' },
   { label: 'Messages', icon: '▱' },
   { label: 'Settings', icon: '⚙' },
   { label: 'Notifications', icon: '♧' },
@@ -93,8 +94,125 @@ function Statistics({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, o
   const nombreUsuario = usuarioData?.usuario || 'usuario';
   const [menuAbierto, setMenuAbierto] = useState(true);
   const [mesSeleccionado, setMesSeleccionado] = useState(5); // JUN por defecto
+  const [periodoSeleccionado, setPeriodoSeleccionado] = useState('6 MONTHS');
 
-  const datosActivos = monthlyData[mesSeleccionado];
+  const getDatosPorPeriodo = (periodo) => {
+    switch (periodo) {
+      case '6 MONTHS':
+        return monthlyData.slice(1);
+      case '1 YEAR':
+        return monthlyData;
+      case 'ALL':
+        return monthlyData;
+      default:
+        return monthlyData;
+    }
+  };
+
+  const datosPorPeriodo = getDatosPorPeriodo(periodoSeleccionado);
+  const mesVisibleIndex = Math.min(mesSeleccionado, datosPorPeriodo.length - 1);
+  const datosActivos = datosPorPeriodo[mesVisibleIndex];
+
+  const handlePeriodoChange = (periodo) => {
+    setPeriodoSeleccionado(periodo);
+
+    const nuevoRango = getDatosPorPeriodo(periodo);
+    const ultimoMes = nuevoRango.length - 1;
+    const mesActual = monthlyData.findIndex((mes) => mes.month === nuevoRango[ultimoMes].month);
+    setMesSeleccionado(mesActual >= 0 ? mesActual : 0);
+  };
+
+  const handleExportReport = () => {
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const centerX = pageWidth / 2;
+
+    doc.setFillColor(244, 246, 247);
+    doc.rect(0, 0, pageWidth, 300, 'F');
+
+    doc.setTextColor(0, 76, 82);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(22);
+    doc.text('My Statistics', 14, 22);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(104, 117, 119);
+    doc.setFontSize(10);
+    doc.text('Track your progress and get insights into your performance.', 14, 30);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(255, 255, 255);
+    doc.setFillColor(20, 111, 120);
+    doc.roundedRect(14, 42, 58, 30, 4, 4, 'F');
+    doc.setFontSize(10);
+    doc.text('Total Investment', 20, 53);
+    doc.setFontSize(18);
+    doc.text(datosActivos.totalInvestment, 20, 66);
+
+    doc.setFillColor(255, 255, 255);
+    doc.setTextColor(39, 76, 82);
+    doc.roundedRect(84, 42, 58, 30, 4, 4, 'F');
+    doc.setFontSize(10);
+    doc.text('Avg. Annual ROI', 90, 53);
+    doc.setFontSize(18);
+    doc.text(datosActivos.roi, 90, 66);
+
+    doc.setFillColor(228, 243, 239);
+    doc.roundedRect(154, 42, 58, 30, 4, 4, 'F');
+    doc.setTextColor(50, 151, 125);
+    doc.setFontSize(10);
+    doc.text('Active Projects', 160, 53);
+    doc.setFontSize(18);
+    doc.text(datosActivos.activeProjects, 170, 66);
+
+    doc.setTextColor(0, 76, 82);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(13);
+    doc.text('Portfolio Growth', 14, 96);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.text('Your investment growth over time', 14, 102);
+    doc.text(`Selected month: ${monthlyData[mesSeleccionado].month}`, 14, 110);
+
+    doc.setFillColor(21, 126, 129);
+    doc.setDrawColor(21, 126, 129);
+    doc.line(14, 118, 192, 118);
+    doc.text('Growth trend', 14, 130);
+    doc.text(`Investment change: ${datosActivos.investmentChange}`, 14, 138);
+    doc.text(`ROI change: ${datosActivos.roiChange}`, 14, 146);
+    doc.text(`Projects change: ${datosActivos.projectsChange}`, 14, 154);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(13);
+    doc.text('Distribution', 14, 176);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.text('By project category', 14, 182);
+
+    let yOffset = 192;
+    datosActivos.distribution.forEach((item) => {
+      doc.setFillColor(...hexToRgb(item.color));
+      doc.roundedRect(14, yOffset, 78, 8, 2, 2, 'F');
+      doc.setTextColor(0, 76, 82);
+      doc.setFontSize(9);
+      doc.text(item.label, 22, yOffset + 6);
+      doc.text(`${item.pct}%`, 178, yOffset + 6);
+      yOffset += 12;
+    });
+
+    doc.setTextColor(0, 76, 82);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.text('Foundy • Generated report', centerX, 280, { align: 'center' });
+
+    doc.save('foundy-statistics-report.pdf');
+  };
+
+  const hexToRgb = (hex) => {
+    const cleanHex = hex.replace('#', '');
+    const bigint = Number.parseInt(cleanHex, 16);
+    return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
+  };
 
   // Construye el conic-gradient del donut dinámicamente según el mes activo
   const [d1, d2, d3] = datosActivos.distribution;
@@ -103,34 +221,33 @@ function Statistics({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, o
   return (
     <div className="min-h-screen bg-[#f4f6f7] text-[#31474a]">
       <div className="flex min-h-screen">
-          {menuAbierto && <aside className="fixed inset-y-0 left-0 z-30 flex w-56 flex-col border-r border-[#dfe5e5] bg-[#f8faf9] px-4 py-5 shadow-sm lg:static lg:shadow-none" aria-label="Menú principal">
-            <div className="flex items-center justify-between border-b border-[#e1e6e6] pb-5">
-              <img src="/images/foundy-logo.png" alt="Foundy" className="mx-auto h-8 w-auto object-contain brightness-0 opacity-75" />
-            </div>
-            <div className="border-b border-[#e1e6e6] py-5 text-center">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center overflow-hidden rounded-full border-2 border-[#006b73] bg-[#d6e7e6] text-xl text-[#006b73]">{nombreUsuario.charAt(0).toUpperCase()}</div>
-              <p className="mt-2 text-xs font-semibold text-[#27383a]">{nombreUsuario}</p>
-              <span className="mt-1 inline-block rounded bg-[#dfe6e6] px-2 py-0.5 text-[10px] text-[#637173]">Emprendedor</span>
-            </div>
-            <nav className="mt-5 flex flex-col gap-1.5">
-              {menuItems.map((item) => (
-                <button key={item.label} type="button" onClick={item.label === 'Home' ? onBackHome : item.label === 'My investments' ? onOpenCreateProject : item.label === 'Messages' ? onOpenChat : item.label === 'Settings' ? onOpenSettings : undefined} className={`flex items-center gap-3 rounded-md px-3 py-2.5 text-left text-xs transition ${item.active ? 'bg-[#006b73] font-semibold text-white shadow-sm' : 'text-[#526164] hover:bg-[#e8f0f0] hover:text-[#006b73]'}`}>
-                  <span className="w-4 text-center text-base leading-none" aria-hidden="true">{item.icon}</span>
-                  {item.label}
-                </button>
-              ))}
-            </nav>
-            <div className="mt-auto flex flex-col gap-1.5 border-t border-[#e1e6e6] pt-4">
-              <button type="button" className="flex items-center gap-3 rounded-md px-3 py-2.5 text-left text-xs text-[#526164] hover:bg-[#e8f0f0] hover:text-[#006b73]"><span className="w-4 text-center text-base">?</span>Support</button>
-              <button type="button" onClick={onCerrarSesion} className="flex items-center gap-3 rounded-md px-3 py-2.5 text-left text-xs text-[#526164] hover:bg-[#e8f0f0] hover:text-[#006b73]"><span className="w-4 text-center text-base">↪</span>Logout</button>
-            </div>
+        {menuAbierto && <aside className="fixed inset-y-0 left-0 z-30 flex w-56 flex-col border-r border-[#dfe5e5] bg-[#f8faf9] px-4 py-5 shadow-sm lg:static lg:shadow-none" aria-label="Menú principal">
+          <div className="flex items-center justify-between border-b border-[#e1e6e6] pb-5">
+            <img src="/images/foundy-logo.png" alt="Foundy" className="mx-auto h-8 w-auto object-contain brightness-0 opacity-75" />
+          </div>
+          <div className="border-b border-[#e1e6e6] py-5 text-center">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center overflow-hidden rounded-full border-2 border-[#006b73] bg-[#d6e7e6] text-xl text-[#006b73]">{nombreUsuario.charAt(0).toUpperCase()}</div>
+            <p className="mt-2 text-xs font-semibold text-[#27383a]">{nombreUsuario}</p>
+            <span className="mt-1 inline-block rounded bg-[#dfe6e6] px-2 py-0.5 text-[10px] text-[#637173]">Emprendedor</span>
+          </div>
+          <nav className="mt-5 flex flex-col gap-1.5">
+            {menuItems.map((item) => (
+              <button key={item.label} type="button" onClick={item.label === 'Home' ? onBackHome : item.label === 'My investments' ? onOpenCreateProject : item.label === 'Messages' ? onOpenChat : item.label === 'Settings' ? onOpenSettings : undefined} className={`flex items-center gap-3 rounded-md px-3 py-2.5 text-left text-xs transition ${item.active ? 'bg-[#006b73] font-semibold text-white shadow-sm' : 'text-[#526164] hover:bg-[#e8f0f0] hover:text-[#006b73]'}`}>
+                <span className="w-4 text-center text-base leading-none" aria-hidden="true">{item.icon}</span>
+                {item.label}
+              </button>
+            ))}
+          </nav>
+          <div className="mt-auto flex flex-col gap-1.5 border-t border-[#e1e6e6] pt-4">
+            <button type="button" className="flex items-center gap-3 rounded-md px-3 py-2.5 text-left text-xs text-[#526164] hover:bg-[#e8f0f0] hover:text-[#006b73]"><span className="w-4 text-center text-base">?</span>Support</button>
+            <button type="button" onClick={onCerrarSesion} className="flex items-center gap-3 rounded-md px-3 py-2.5 text-left text-xs text-[#526164] hover:bg-[#e8f0f0] hover:text-[#006b73]"><span className="w-4 text-center text-base">↪</span>Logout</button>
+          </div>
         </aside>}
         <div className="min-w-0 flex-1">
           <header className="relative z-40 flex h-[4.5rem] items-center justify-between border-b border-[#dfe5e5] bg-[#f8faf9] px-6 sm:px-10">
             <div className="flex h-full items-center gap-5 sm:gap-12">
               <button type="button" onClick={() => setMenuAbierto((abierto) => !abierto)} className="text-lg text-[#006b73]" aria-label={menuAbierto ? 'Ocultar menú' : 'Mostrar menú'} aria-expanded={menuAbierto}>☰</button>
               <nav className="hidden h-full items-center gap-7 text-[11px] sm:flex" aria-label="Secciones">
-                <button type="button" onClick={onBackHome} className="text-[#758082] hover:text-[#006b73]">Dashboard</button>
                 <a href="#estadisticas" className="border-b-2 border-[#006b73] py-[1.62rem] font-semibold text-[#006b73]">Statistics</a>
                 <button type="button" onClick={onOpenFoundyCard} className="text-[#758082] hover:text-[#006b73]">Foundy card</button>
               </nav>
@@ -140,7 +257,7 @@ function Statistics({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, o
           <main id="dashboard" className="mx-auto max-w-6xl px-5 py-7 sm:px-8 lg:px-12">
             <section className="flex flex-col justify-between gap-5 sm:flex-row sm:items-start">
               <div><h1 className="text-2xl font-bold tracking-tight text-[#004e56]">My Statistics</h1><p className="mt-1 max-w-lg text-xs leading-5 text-[#687577]">Track your progress and get insights into your performance.</p></div>
-              <div className="flex items-center gap-2 self-start"><button type="button" className="rounded-md border border-[#cbd7d7] bg-white px-3 py-2 text-[11px] font-medium text-[#506063]">This week ▾</button><button type="button" className="rounded-md bg-[#006b73] px-3 py-2 text-[11px] font-semibold text-white shadow-sm">Export report</button></div>
+              <div className="flex items-center gap-2 self-start"><button type="button" onClick={handleExportReport} className="rounded-md bg-[#006b73] px-3 py-2 text-[11px] font-semibold text-white shadow-sm transition hover:bg-[#005c61]">Export report</button></div>
             </section>
 
             <section id="estadisticas" className="mt-7 grid gap-4 sm:grid-cols-3">
@@ -165,43 +282,79 @@ function Statistics({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, o
               <article className="rounded-lg border border-[#e8eeee] bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.03)]">
                 <div className="flex items-start justify-between">
                   <div><h2 className="text-sm font-semibold text-[#293a3d]">Portfolio Growth</h2><p className="mt-1 text-[10px] text-[#899395]">Your investment growth over time</p></div>
-                  <div className="flex gap-1 rounded border border-[#e0e7e7] p-1 text-[8px] text-[#617173]"><button type="button" className="rounded bg-[#e6f1f0] px-2 py-1 font-semibold text-[#006b73]">6 MONTHS</button><button type="button" className="px-2 py-1">1 YEAR</button><button type="button" className="px-2 py-1">ALL</button></div>
+                  <div className="flex gap-1 rounded border border-[#e0e7e7] p-1 text-[8px] text-[#617173]">
+                    {['6 MONTHS', '1 YEAR', 'ALL'].map((periodo) => (
+                      <button
+                        key={periodo}
+                        type="button"
+                        onClick={() => handlePeriodoChange(periodo)}
+                        className={periodoSeleccionado === periodo ? 'rounded bg-[#e6f1f0] px-2 py-1 font-semibold text-[#006b73]' : 'px-2 py-1'}
+                      >
+                        {periodo}
+                      </button>
+                    ))}
+                  </div>
                 </div>
                 <div className="relative mt-8 h-40 border-b border-[#e4e9e9] bg-[linear-gradient(to_bottom,transparent_24%,#edf2f2_25%,transparent_26%,transparent_49%,#edf2f2_50%,transparent_51%,transparent_74%,#edf2f2_75%,transparent_76%)]">
                   <svg viewBox="0 0 396 140" preserveAspectRatio="none" className="absolute inset-0 h-full w-full overflow-visible" role="img" aria-label="Crecimiento del portafolio durante el año">
-                    <path d="M0 126 C11 124 44 119 66 116 C88 113 110 107 132 106 C154 105 176 115 198 111 C220 107 242 92 264 80 C286 68 308 44 330 40 C352 36 385 53 396 55 L396 140 L0 140 Z" fill="url(#growthFill)" />
-                    <path d="M0 126 C11 124 44 119 66 116 C88 113 110 107 132 106 C154 105 176 115 198 111 C220 107 242 92 264 80 C286 68 308 44 330 40 C352 36 385 53 396 55" fill="none" stroke="#138b88" strokeWidth="2" vectorEffect="non-scaling-stroke" />
+                    <path d={(() => {
+                      const puntos = datosPorPeriodo.map((punto) => ({
+                        x: punto.cx,
+                        y: punto.cy,
+                      }));
+
+                      if (!puntos.length) return '';
+
+                      const path = puntos.map((punto, index) => `${index === 0 ? 'M' : 'L'} ${punto.x} ${punto.y}`).join(' ');
+                      return `${path} L 396 140 L 0 140 Z`;
+                    })()} fill="url(#growthFill)" />
+                    <path d={(() => {
+                      const puntos = datosPorPeriodo.map((punto) => ({
+                        x: punto.cx,
+                        y: punto.cy,
+                      }));
+
+                      if (!puntos.length) return '';
+
+                      return puntos.map((punto, index) => `${index === 0 ? 'M' : 'L'} ${punto.x} ${punto.y}`).join(' ');
+                    })()} fill="none" stroke="#138b88" strokeWidth="2" vectorEffect="non-scaling-stroke" />
                     <defs><linearGradient id="growthFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#65bcb2" stopOpacity="0.27" /><stop offset="100%" stopColor="#65bcb2" stopOpacity="0.02" /></linearGradient></defs>
 
-                    {monthlyData.map((punto, index) => (
-                      <circle
-                        key={punto.month}
-                        cx={punto.cx}
-                        cy={punto.cy}
-                        r={index === mesSeleccionado ? 5 : 3.5}
-                        fill={index === mesSeleccionado ? '#fff' : '#138b88'}
-                        stroke="#138b88"
-                        strokeWidth="2"
-                        vectorEffect="non-scaling-stroke"
-                        onClick={() => setMesSeleccionado(index)}
-                        className="cursor-pointer transition-all"
-                        role="button"
-                        aria-label={`Ver estadísticas de ${punto.month}`}
-                      />
-                    ))}
+                    {datosPorPeriodo.map((punto, index) => {
+                      const indiceEnMonthlyData = monthlyData.findIndex((mes) => mes.month === punto.month);
+                      return (
+                        <circle
+                          key={punto.month}
+                          cx={punto.cx}
+                          cy={punto.cy}
+                          r={indiceEnMonthlyData === mesSeleccionado ? 5 : 3.5}
+                          fill={indiceEnMonthlyData === mesSeleccionado ? '#fff' : '#138b88'}
+                          stroke="#138b88"
+                          strokeWidth="2"
+                          vectorEffect="non-scaling-stroke"
+                          onClick={() => setMesSeleccionado(indiceEnMonthlyData)}
+                          className="cursor-pointer transition-all"
+                          role="button"
+                          aria-label={`Ver estadísticas de ${punto.month}`}
+                        />
+                      );
+                    })}
                   </svg>
                 </div>
                 <div className="mt-2 flex justify-between px-1 text-[9px] text-[#899395]">
-                  {monthlyData.map((punto, index) => (
-                    <button
-                      key={punto.month}
-                      type="button"
-                      onClick={() => setMesSeleccionado(index)}
-                      className={index === mesSeleccionado ? 'font-semibold text-[#006b73]' : 'hover:text-[#527573]'}
-                    >
-                      {punto.month}
-                    </button>
-                  ))}
+                  {datosPorPeriodo.map((punto) => {
+                    const indiceEnMonthlyData = monthlyData.findIndex((mes) => mes.month === punto.month);
+                    return (
+                      <button
+                        key={punto.month}
+                        type="button"
+                        onClick={() => setMesSeleccionado(indiceEnMonthlyData)}
+                        className={indiceEnMonthlyData === mesSeleccionado ? 'font-semibold text-[#006b73]' : 'hover:text-[#527573]'}
+                      >
+                        {punto.month}
+                      </button>
+                    );
+                  })}
                 </div>
               </article>
 
