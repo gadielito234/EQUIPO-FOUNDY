@@ -144,7 +144,7 @@ function Statistics({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, o
             </section>
 
             <section id="estadisticas" className="mt-7 grid gap-4 sm:grid-cols-3">
-              <article className="rounded-lg border border-[#e8eeee] bg-[#146f78] p-4 text-white shadow-[0_8px_18px_rgba(0,90,95,0.12)]">
+              <article className="rounded-lg border border-[#146f78] bg-gray p-4 text-white shadow-[0_8px_18px_rgba(0,90,95,0.12)]">
                 <p className="text-[11px] text-[#d8f2ee]">Total Investment</p>
                 <p className="mt-2 text-2xl font-semibold tracking-tight">{datosActivos.totalInvestment}</p>
                 <p className="mt-2 text-[10px] font-semibold text-[#c0e9df]">{datosActivos.investmentChange}</p>

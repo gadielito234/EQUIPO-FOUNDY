@@ -4,8 +4,8 @@ import Recuperacion from './recuperacion.jsx';
 import Registro from './registro.jsx';
 import Inicio from '../emprendedor/inicio.jsx';
 import Landing from './landing.jsx';
-import HomeInversionista from '../inversionista/HomeInversionista.jsx';
 import DashboardInversionista from '../inversionista/DashboardInversionista.jsx';
+import Investments from '../inversionista/investments.jsx';
 import FoundyCard from '../inversionista/FoundyCard.jsx';
 import PerfilConfiguracion from '../shared/PerfilConfiguracion.jsx';
 import CrearProyecto from '../emprendedor/CrearProyecto.jsx';
@@ -68,7 +68,6 @@ function App() {
   };
 
   const irAHome = () => setPantallaLogueado(esInversionista ? 'dashboard' : 'home');
-  const irADashboard = () => setPantallaLogueado('dashboard');
   const irAConfiguracion = () => setPantallaLogueado('settings');
   const esInversionista = usuarioLogueado?.tipo_usuario === 'Inversionista';
 
@@ -93,6 +92,19 @@ function App() {
       return <ChatPage onBackHome={irAHome} onCerrarSesion={handleCerrarSesion} />;
     }
 
+    if (pantallaLogueado === 'investments' && esInversionista) {
+      return (
+        <Investments
+          usuarioData={usuarioLogueado}
+          onCerrarSesion={handleCerrarSesion}
+          onBackHome={irAHome}
+          onOpenSettings={irAConfiguracion}
+          onOpenChat={() => setPantallaLogueado('chat')}
+          onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
+        />
+      );
+    }
+
     if (pantallaLogueado === 'dashboard' || (pantallaLogueado === 'home' && esInversionista)) {
       return (
         <DashboardInversionista
@@ -101,6 +113,7 @@ function App() {
           onBackHome={irAHome}
           onOpenSettings={irAConfiguracion}
           onOpenChat={() => setPantallaLogueado('chat')}
+          onOpenInvestments={() => setPantallaLogueado('investments')}
           onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
           onVerDetalle={(negocio) => console.log('Detalle de oportunidad:', negocio)}
         />
@@ -119,6 +132,7 @@ function App() {
           onBackHome={irAHome}
           onOpenSettings={irAConfiguracion}
           onOpenChat={() => setPantallaLogueado('chat')}
+          onOpenInvestments={() => setPantallaLogueado('investments')}
           onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
           onVerDetalle={(negocio) => console.log('Detalle de oportunidad:', negocio)}
         />
