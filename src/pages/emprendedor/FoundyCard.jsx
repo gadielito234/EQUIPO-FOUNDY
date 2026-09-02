@@ -63,7 +63,7 @@ const updates = [
   },
 ];
 
-function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenSettings, onOpenChat }) {
+function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenSettings, onOpenChat, onOpenNotifications }) {
   const [storedUser] = useState(getStoredUser);
   const user = {
     ...storedUser,
@@ -99,7 +99,7 @@ function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenSettings, onO
               <button
                 key={item.label}
                 type="button"
-                onClick={item.label === 'Home' ? onBackHome : item.label === 'Messages' ? onOpenChat : item.label === 'Settings' ? onOpenSettings : undefined}
+                onClick={item.label === 'Home' ? onBackHome : item.label === 'Messages' ? onOpenChat : item.label === 'Settings' ? onOpenSettings : item.label === 'Notifications' ? () => onOpenNotifications?.() : undefined}
                 className={`flex w-full cursor-pointer items-center gap-3 rounded-[10px] border border-dashed border-transparent bg-transparent px-3 py-[11px] text-left text-[0.96rem] font-medium transition hover:border-[#084343]/20 hover:bg-[#084343]/[0.04] ${index === 0 ? 'border-[#084343]/20 bg-[#084343]/[0.04]' : ''}`}
               >
                 <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-[#09303c]/[0.08] bg-white/60 text-[#0f2d39]"><IconComponent size={20} /></span>

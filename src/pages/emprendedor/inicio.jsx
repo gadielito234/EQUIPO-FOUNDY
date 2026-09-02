@@ -1,5 +1,5 @@
 import Statistics from './Statistics.jsx';
-function Inicio({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, onOpenCreateProject, onOpenChat, onOpenFoundyCard }) {
+function Inicio({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, onOpenCreateProject, onOpenChat, onOpenFoundyCard, onOpenNotifications }) {
     return (
         <Statistics
             usuarioData={usuarioData}
@@ -9,6 +9,7 @@ function Inicio({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, onOpe
             onOpenCreateProject={onOpenCreateProject}
             onOpenChat={onOpenChat}
             onOpenFoundyCard={onOpenFoundyCard}
+            onOpenNotifications={onOpenNotifications}
         />
     );
 }

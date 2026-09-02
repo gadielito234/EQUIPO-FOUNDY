@@ -90,7 +90,7 @@ const monthlyData = [
   },
 ];
 
-function Statistics({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, onOpenCreateProject, onOpenChat, onOpenFoundyCard }) {
+function Statistics({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, onOpenCreateProject, onOpenChat, onOpenFoundyCard, onOpenNotifications }) {
   const nombreUsuario = usuarioData?.usuario || 'usuario';
   const [menuAbierto, setMenuAbierto] = useState(true);
   const [mesSeleccionado, setMesSeleccionado] = useState(5); // JUN por defecto
@@ -230,9 +230,10 @@ function Statistics({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, o
             <p className="mt-2 text-xs font-semibold text-[#27383a]">{nombreUsuario}</p>
             <span className="mt-1 inline-block rounded bg-[#dfe6e6] px-2 py-0.5 text-[10px] text-[#637173]">Emprendedor</span>
           </div>
+          {/* Cada opción delega la navegación en App para conservar una sola fuente de estado. */}
           <nav className="mt-5 flex flex-col gap-1.5">
             {menuItems.map((item) => (
-              <button key={item.label} type="button" onClick={item.label === 'Home' ? onBackHome : item.label === 'My investments' ? onOpenCreateProject : item.label === 'Messages' ? onOpenChat : item.label === 'Settings' ? onOpenSettings : undefined} className={`flex items-center gap-3 rounded-md px-3 py-2.5 text-left text-xs transition ${item.active ? 'bg-[#006b73] font-semibold text-white shadow-sm' : 'text-[#526164] hover:bg-[#e8f0f0] hover:text-[#006b73]'}`}>
+              <button key={item.label} type="button" onClick={item.label === 'Home' ? onBackHome : item.label === 'My investmentors' ? onOpenCreateProject : item.label === 'Messages' ? onOpenChat : item.label === 'Settings' ? onOpenSettings : item.label === 'Notifications' ? onOpenNotifications : undefined} className={`flex items-center gap-3 rounded-md px-3 py-2.5 text-left text-xs transition ${item.active ? 'bg-[#006b73] font-semibold text-white shadow-sm' : 'text-[#526164] hover:bg-[#e8f0f0] hover:text-[#006b73]'}`}>
                 <span className="w-4 text-center text-base leading-none" aria-hidden="true">{item.icon}</span>
                 {item.label}
               </button>

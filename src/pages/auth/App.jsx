@@ -11,6 +11,7 @@ import PerfilConfiguracion from '../shared/PerfilConfiguracion.jsx';
 import CrearProyecto from '../emprendedor/CrearProyecto.jsx';
 import ChatEmprendedor from '../chat/ChatEmprendedor.jsx';
 import ChatInversionista from '../chat/ChatInversionista.jsx';
+import Notifications from '../shared/Notifications.jsx';
 function App() {
   const [mostrarLanding, setMostrarLanding] = useState(true);
   const [esRegistro, setEsRegistro] = useState(false);
@@ -72,6 +73,11 @@ function App() {
   const esInversionista = usuarioLogueado?.tipo_usuario === 'Inversionista';
 
   if (usuarioLogueado) {
+    // Las notificaciones se habilitan primero para emprendedores.
+    if (pantallaLogueado === 'notifications' && !esInversionista) {
+      return <Notifications user={usuarioLogueado} onBack={irAHome} />;
+    }
+
     if (pantallaLogueado === 'settings') {
       return (
         <PerfilConfiguracion
@@ -148,6 +154,7 @@ function App() {
         onOpenCreateProject={() => setPantallaLogueado('create-project')}
         onOpenChat={() => setPantallaLogueado('chat')}
         onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
+        onOpenNotifications={() => setPantallaLogueado('notifications')}
       />
     );
   }

@@ -11,12 +11,20 @@ function makeStub() {
 	const chainable = () => ({
 		select: () => chainable(),
 		eq: () => chainable(),
+		order: async () => ({ data: [], error: null }),
+		update: () => chainable(),
 		single: async () => noop(),
 		maybeSingle: async () => ({ data: null }),
 		insert: async () => ({ error: { message: 'Supabase no configurado' } }),
 	});
 	return {
 		from: () => chainable(),
+		// Provee un canal inerte para que las vistas realtime no fallen en local.
+		channel: () => {
+			const channel = { on: () => channel, subscribe: () => undefined };
+			return channel;
+		},
+		removeChannel: async () => ({ error: null }),
 	};
 }
 
