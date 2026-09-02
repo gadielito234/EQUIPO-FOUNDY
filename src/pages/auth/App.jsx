@@ -104,7 +104,7 @@ function App() {
 
     if (pantallaLogueado === 'create-project' && !esInversionista) {
       return renderWithDashboardLayout(
-        <CrearProyecto nombreUsuario={usuarioLogueado.usuario} onCerrarSesion={handleCerrarSesion} onBackHome={irAHome} />,
+        <CrearProyecto usuarioData={usuarioLogueado} onCerrarSesion={handleCerrarSesion} onBackHome={irAHome} />,
         { activeNav: 'projects', showSearch: false }
       );
     }

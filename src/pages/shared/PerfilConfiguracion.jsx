@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { supabase } from '../../services/supabase.js';
 
 const sidebarItems = [
   { name: 'Home', active: false },
@@ -31,9 +32,50 @@ function Switch({ enabled, onChange }) {
 export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBackHome, onOpenFoundyCard }) {
   const [transactionAlerts, setTransactionAlerts] = useState(true);
   const [marketingInsights, setMarketingInsights] = useState(false);
+  const [email, setEmail] = useState(usuarioData?.correo || '');
+  const [displayName, setDisplayName] = useState(usuarioData?.usuario || '');
+  const [saving, setSaving] = useState(false);
+  const [notice, setNotice] = useState('');
 
-  const displayName = usuarioData?.usuario || 'Maya Johnson';
   const profilePicture = usuarioData?.avatar || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=500&q=80';
+
+  useEffect(() => {
+    const loadPreferences = async () => {
+      const { data, error } = await supabase
+        .from('preferencias_usuario')
+        .select('alertas_transacciones, sugerencias_marketing')
+        .eq('dui', usuarioData?.dui)
+        .maybeSingle();
+      if (error) {
+        setNotice(`No se pudieron cargar las preferencias: ${error.message}`);
+        return;
+      }
+      if (data) {
+        setTransactionAlerts(data.alertas_transacciones);
+        setMarketingInsights(data.sugerencias_marketing);
+      }
+    };
+    if (usuarioData?.dui) loadPreferences();
+  }, [usuarioData?.dui]);
+
+  const saveProfile = async () => {
+    setSaving(true);
+    const { error } = await supabase
+      .from('Usuario')
+      .update({ correo: email, usuario: displayName })
+      .eq('dui', usuarioData?.dui);
+    setSaving(false);
+    setNotice(error ? `No se pudo guardar el perfil: ${error.message}` : 'Perfil actualizado.');
+  };
+
+  const savePreference = async (field, value, setter) => {
+    setter(value);
+    const { error } = await supabase.from('preferencias_usuario').upsert({
+      dui: usuarioData?.dui,
+      [field]: value,
+    });
+    if (error) setNotice(`No se pudo guardar la preferencia: ${error.message}`);
+  };
 
   const handleDeactivate = () => {
     const confirmed = window.confirm('Are you sure you want to deactivate your account? This action cannot be undone.');
@@ -175,7 +217,8 @@ export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBac
                     <span className="mb-2 block">Email Address</span>
                     <input
                       type="email"
-                      defaultValue="jane@foundy.com"
+                      value={email}
+                      onChange={(event) => setEmail(event.target.value)}
                       className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-800 outline-none transition focus:border-[#1ca38b] focus:bg-white focus:ring-2 focus:ring-[#dff5f0]"
                     />
                   </label>
@@ -184,7 +227,8 @@ export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBac
                     <span className="mb-2 block">Display Name</span>
                     <input
                       type="text"
-                      defaultValue={displayName}
+                      value={displayName}
+                      onChange={(event) => setDisplayName(event.target.value)}
                       className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-800 outline-none transition focus:border-[#1ca38b] focus:bg-white focus:ring-2 focus:ring-[#dff5f0]"
                     />
                   </label>
@@ -199,6 +243,9 @@ export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBac
                     </div>
                   </label>
                 </div>
+                <button type="button" onClick={saveProfile} disabled={saving} className="mt-5 rounded-xl bg-[#0d5c5d] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#0a4b4d] disabled:opacity-60">
+                  {saving ? 'Saving...' : 'Save changes'}
+                </button>
               </section>
 
               <section className="rounded-[20px] bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:p-6">
@@ -218,7 +265,7 @@ export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBac
                       <p className="text-base font-semibold text-slate-800">Transaction Alerts</p>
                       <p className="mt-1 text-sm text-slate-500">Get notified when payments or transfers are made.</p>
                     </div>
-                    <Switch enabled={transactionAlerts} onChange={setTransactionAlerts} />
+                    <Switch enabled={transactionAlerts} onChange={(value) => savePreference('alertas_transacciones', value, setTransactionAlerts)} />
                   </div>
 
                   <div className="flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
@@ -226,7 +273,7 @@ export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBac
                       <p className="text-base font-semibold text-slate-800">Marketing Insights</p>
                       <p className="mt-1 text-sm text-slate-500">Receive helpful campaign and growth suggestions.</p>
                     </div>
-                    <Switch enabled={marketingInsights} onChange={setMarketingInsights} />
+                    <Switch enabled={marketingInsights} onChange={(value) => savePreference('sugerencias_marketing', value, setMarketingInsights)} />
                   </div>
                 </div>
               </section>
@@ -285,6 +332,7 @@ export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBac
           </footer>
         </div>
       </div>
+      {notice && <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-lg bg-[#173f43] px-4 py-3 text-xs font-semibold text-white shadow-lg">{notice}</div>}
     </div>
   );
 }

@@ -26,6 +26,8 @@ function DashboardInversionista({ usuarioData, onCerrarSesion, onOpenSettings, o
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedOpportunity, setSelectedOpportunity] = useState(null);
+    const [montoInversion, setMontoInversion] = useState('');
+    const [invirtiendo, setInvirtiendo] = useState(false);
     const [notice, setNotice] = useState('');
     const [opportunities, setOpportunities] = useState([]);
     const name = usuarioData?.usuario || 'David Diaz';
@@ -61,6 +63,49 @@ function DashboardInversionista({ usuarioData, onCerrarSesion, onOpenSettings, o
         else showNotice(label === 'Notifications' ? 'No tienes notificaciones nuevas.' : 'Tus inversiones aparecerán aquí.');
     };
 
+    const confirmarInversion = async () => {
+        const monto = Number(montoInversion);
+        if (!selectedOpportunity || !Number.isFinite(monto) || monto <= 0) {
+            showNotice('Ingresa un monto válido para invertir.');
+            return;
+        }
+        setInvirtiendo(true);
+        const objetivo = Number.parseFloat(String(selectedOpportunity.goal).replace(/[^0-9.]/g, '')) || 0;
+        const participacion = objetivo > 0 ? (monto / objetivo) * 100 : 0;
+        const { data: inversion, error: inversionError } = await supabase
+            .from('inversion')
+            .insert({
+                fecha: new Date().toISOString().slice(0, 10),
+                monto,
+                participacion,
+                id_proyecto: selectedOpportunity.id,
+                id_inversionista: usuarioData?.dui,
+            })
+            .select('id_inversion')
+            .single();
+        if (inversionError) {
+            setInvirtiendo(false);
+            showNotice(`No se pudo registrar la inversión: ${inversionError.message}`);
+            return;
+        }
+        const { error: pagoError } = await supabase.from('pago').insert({
+            fecha: new Date().toISOString().slice(0, 10),
+            monto,
+            estado: 'pendiente',
+            metodo: 'Pendiente',
+            id_inversionista: usuarioData?.dui,
+            id_inversion: inversion.id_inversion,
+        });
+        setInvirtiendo(false);
+        if (pagoError) {
+            showNotice(`Inversión registrada, pero el pago no pudo guardarse: ${pagoError.message}`);
+            return;
+        }
+        setSelectedOpportunity(null);
+        setMontoInversion('');
+        showNotice('Inversión registrada y pago pendiente creado.');
+    };
+
     return (
         <div className="min-h-screen bg-[#efeee7] text-[#1e4043]">
             <div className="flex min-h-screen">
@@ -85,7 +130,7 @@ function DashboardInversionista({ usuarioData, onCerrarSesion, onOpenSettings, o
             </div>
 
             {notice && <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-lg bg-[#173f43] px-4 py-3 text-xs font-semibold text-white shadow-lg">{notice}</div>}
-            {selectedOpportunity && <div className="fixed inset-0 z-50 grid place-items-center bg-[#173f43]/40 p-4" role="dialog" aria-modal="true"><div className="w-full max-w-md rounded-xl bg-[#f8f4ef] p-5 shadow-2xl"><div className="flex items-start justify-between"><div><p className="text-[10px] font-bold uppercase tracking-wider text-[#1b7f61]">Investment opportunity</p><h2 className="mt-1 text-lg font-semibold text-[#1d3f42]">{selectedOpportunity.title}</h2></div><button type="button" onClick={() => setSelectedOpportunity(null)} className="text-[#526164]" aria-label="Cerrar"><X size={18} /></button></div><p className="mt-4 text-sm leading-6 text-[#5d6d6d]">{selectedOpportunity.objective}</p><div className="mt-5 flex gap-2"><button type="button" onClick={() => { const title = selectedOpportunity.title; setSelectedOpportunity(null); showNotice(`Solicitud para ${title} enviada.`); }} className="flex-1 rounded-md bg-[#006b73] px-4 py-2 text-xs font-bold uppercase text-white hover:bg-[#005159]">Confirmar inversión</button><button type="button" onClick={() => setSelectedOpportunity(null)} className="rounded-md border border-[#ccd6d3] px-4 py-2 text-xs font-semibold text-[#526164]">Cerrar</button></div></div></div>}
+            {selectedOpportunity && <div className="fixed inset-0 z-50 grid place-items-center bg-[#173f43]/40 p-4" role="dialog" aria-modal="true"><div className="w-full max-w-md rounded-xl bg-[#f8f4ef] p-5 shadow-2xl"><div className="flex items-start justify-between"><div><p className="text-[10px] font-bold uppercase tracking-wider text-[#1b7f61]">Investment opportunity</p><h2 className="mt-1 text-lg font-semibold text-[#1d3f42]">{selectedOpportunity.title}</h2></div><button type="button" onClick={() => setSelectedOpportunity(null)} className="text-[#526164]" aria-label="Cerrar"><X size={18} /></button></div><p className="mt-4 text-sm leading-6 text-[#5d6d6d]">{selectedOpportunity.objective}</p><label className="mt-4 block text-xs font-semibold text-[#526164]">Monto a invertir<input type="number" min="1" value={montoInversion} onChange={(event) => setMontoInversion(event.target.value)} className="mt-2 w-full rounded-md border border-[#ccd6d3] bg-white px-3 py-2 text-sm outline-none focus:border-[#006b73]" placeholder="500" /></label><div className="mt-5 flex gap-2"><button type="button" onClick={confirmarInversion} disabled={invirtiendo} className="flex-1 rounded-md bg-[#006b73] px-4 py-2 text-xs font-bold uppercase text-white hover:bg-[#005159] disabled:opacity-60">{invirtiendo ? 'Guardando...' : 'Confirmar inversión'}</button><button type="button" onClick={() => { setSelectedOpportunity(null); setMontoInversion(''); }} className="rounded-md border border-[#ccd6d3] px-4 py-2 text-xs font-semibold text-[#526164]">Cerrar</button></div></div></div>}
         </div>
     );
 }

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "../../services/supabase.js";
 
 const menu = ["Create project", "My projects", "Opportunities", "Messages"];
@@ -8,13 +8,31 @@ const initialProject = {
   descripcion: "",
   monto: "",  
   retorno: "",
+  id_categoria: "",
 };
 
-function CrearProyecto({ nombreUsuario = "Entrepreneur", onCerrarSesion, onBackHome }) {
+function CrearProyecto({ usuarioData, onCerrarSesion, onBackHome }) {
   const [proyecto, setProyecto] = useState(initialProject);
   const [imagenes, setImagenes] = useState([]);
   const [alerta, setAlerta] = useState(null);
+  const [categorias, setCategorias] = useState([]);
   const inputImagenes = useRef(null);
+  const nombreUsuario = usuarioData?.usuario || "Entrepreneur";
+
+  useEffect(() => {
+    const cargarCategorias = async () => {
+      const { data, error } = await supabase
+        .from("categoria")
+        .select("id_categoria, nombre")
+        .order("nombre");
+      if (error) {
+        setAlerta({ tipo: "warning", texto: `Could not load categories: ${error.message}` });
+        return;
+      }
+      setCategorias(data || []);
+    };
+    cargarCategorias();
+  }, []);
 
   const actualizarCampo = (event) => {
     setProyecto({ ...proyecto, [event.target.name]: event.target.value });
@@ -47,26 +65,27 @@ function CrearProyecto({ nombreUsuario = "Entrepreneur", onCerrarSesion, onBackH
       });
       return;
     }
-    if (publicar) {
-      const fechaInicio = new Date();
-      const meses = Number.parseInt(proyecto.retorno, 10) || 1;
-      const fechaFin = new Date(fechaInicio);
-      fechaFin.setMonth(fechaFin.getMonth() + meses);
-      const { error } = await supabase.from("proyecto").insert([{
-        nombre: proyecto.nombre.trim(),
-        descripcion: proyecto.descripcion.trim(),
-        monto_objetivo: proyecto.monto ? Number(proyecto.monto) : 0,
-        inversion: 0,
-        estado: "publicado",
-        fecha_inicio: fechaInicio.toISOString().slice(0, 10),
-        fecha_fin: fechaFin.toISOString().slice(0, 10),
-      }]);
-      if (error) {
-        setAlerta({ tipo: "warning", texto: `Could not publish project: ${error.message}` });
-        return;
-      }
-      window.dispatchEvent(new Event("foundy-project-published"));
+    const fechaInicio = new Date();
+    const meses = Number.parseInt(proyecto.retorno, 10) || 1;
+    const fechaFin = new Date(fechaInicio);
+    fechaFin.setMonth(fechaFin.getMonth() + meses);
+    const { error } = await supabase.from("proyecto").insert([{
+      nombre: proyecto.nombre.trim(),
+      descripcion: proyecto.descripcion.trim(),
+      monto_objetivo: proyecto.monto ? Number(proyecto.monto) : 0,
+      monto_recaudado: 0,
+      inversion: 0,
+      estado: publicar ? "publicado" : "borrador",
+      fecha_inicio: fechaInicio.toISOString().slice(0, 10),
+      fecha_fin: fechaFin.toISOString().slice(0, 10),
+      dui: usuarioData?.dui,
+      id_categoria: proyecto.id_categoria || null,
+    }]);
+    if (error) {
+      setAlerta({ tipo: "warning", texto: `Could not save project: ${error.message}` });
+      return;
     }
+    if (publicar) window.dispatchEvent(new Event("foundy-project-published"));
     setAlerta({
       tipo: "success",
       texto: publicar
@@ -257,6 +276,22 @@ function CrearProyecto({ nombreUsuario = "Entrepreneur", onCerrarSesion, onBackH
                   required
                 />
                 <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                  <label className="text-xs font-bold uppercase tracking-wide text-slate-600">
+                    Category
+                    <select
+                      name="id_categoria"
+                      value={proyecto.id_categoria}
+                      onChange={actualizarCampo}
+                      className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-normal normal-case outline-none focus:border-[#168b88] focus:bg-white focus:ring-4 focus:ring-[#168b88]/10"
+                    >
+                      <option value="">Select a category</option>
+                      {categorias.map((categoria) => (
+                        <option key={categoria.id_categoria} value={categoria.id_categoria}>
+                          {categoria.nombre}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
                   <label className="text-xs font-bold uppercase tracking-wide text-slate-600">
                     Requested amount
                     <input
