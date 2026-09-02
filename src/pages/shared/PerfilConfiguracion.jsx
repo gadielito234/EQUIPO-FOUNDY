@@ -28,7 +28,7 @@ function Switch({ enabled, onChange }) {
   );
 }
 
-export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBackHome, onOpenFoundyCard, onOpenChat }) {
+export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBackHome, onOpenFoundyCard }) {
   const [transactionAlerts, setTransactionAlerts] = useState(true);
   const [marketingInsights, setMarketingInsights] = useState(false);
 
@@ -44,13 +44,6 @@ export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBac
   };
 
   return (
-    <>
-      <div className="space-y-6">
-        <section className="rounded-[20px] bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:p-6">
-          <h2 className="text-2xl font-bold text-slate-800">Profile Photo</h2>
-          <div className="mt-6 flex flex-col items-center gap-5 rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-5 py-8 text-center sm:flex-row sm:justify-between sm:text-left">
-            <div className="flex items-center gap-4">
-              <img src={profilePicture} alt={displayName} className="h-24 w-24 rounded-full object-cover ring-4 ring-white shadow-sm" />
     <div className="min-h-screen bg-[#f4f6f4] text-slate-800">
       <div className="mx-auto flex min-h-screen max-w-[1600px] flex-col lg:flex-row">
         <aside className="w-full border-b border-slate-200 bg-[#f8faf8] lg:w-70 lg:border-b-0 lg:border-r lg:border-slate-200">
@@ -67,51 +60,42 @@ export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBac
                 className="h-14 w-14 rounded-full object-cover ring-2 ring-[#dfece7]"
               />
               <div>
-                <p className="text-base font-semibold text-slate-700">Update your profile picture</p>
-                <p className="mt-1 max-w-md text-sm text-slate-500">A great photo helps people recognize you and builds trust with your network.</p>
+                <p className="text-base font-semibold text-slate-800">{displayName}</p>
+                <p className="text-xs text-slate-500">Entrepreneur</p>
               </div>
             </div>
-
-            <div className="flex flex-wrap gap-3">
-              <button type="button" className="rounded-full bg-[#0d5c5d] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0a4b4d]">
-                Upload New
-              </button>
-              <button type="button" className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">
-                Remove
-              </button>
-            </div>
           </div>
-        </section>
 
-        <section className="rounded-[20px] bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:p-6">
-          <h2 className="text-2xl font-bold text-slate-800">Personal Information</h2>
+          <nav className="space-y-2 px-3 pb-4">
+            {sidebarItems.map((item) => (
+              <button
+                key={item.name}
+                type="button"
+                onClick={item.name === 'Home' ? onBackHome : undefined}
+                className={`flex w-full items-center justify-between rounded-xl px-4 py-3 text-left text-sm font-medium transition ${
+                  item.active
+                    ? 'bg-[#eaf7f4] text-[#0d5c5d] shadow-sm ring-1 ring-[#d5eee9]'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                }`}
+              >
+                <span>{item.name}</span>
+                {item.active && <span className="h-2.5 w-2.5 rounded-full bg-[#0d5c5d]" />}
+              </button>
+            ))}
+          </nav>
 
-          <div className="mt-6 grid gap-5 md:grid-cols-2">
-            <label className="block text-sm font-medium text-slate-700 md:col-span-2">
-              <span className="mb-2 block">Email Address</span>
-              <input
-                type="email"
-                defaultValue="jane@foundy.com"
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-800 outline-none transition focus:border-[#1ca38b] focus:bg-white focus:ring-2 focus:ring-[#dff5f0]"
-              />
-            </label>
-
-            <label className="block text-sm font-medium text-slate-700 md:col-span-2">
-              <span className="mb-2 block">Display Name</span>
-              <input
-                type="text"
-                defaultValue={displayName}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-800 outline-none transition focus:border-[#1ca38b] focus:bg-white focus:ring-2 focus:ring-[#dff5f0]"
-              />
-            </label>
-
-            <label className="block text-sm font-medium text-slate-700 md:col-span-2">
-              <span className="mb-2 block">Password</span>
-              <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
-                <input type="password" defaultValue="password123" className="w-full bg-transparent text-slate-800 outline-none" />
-                <button type="button" className="text-sm font-semibold text-[#0d5c5d] transition hover:text-[#0a4b4d]">
-                  Change
-                </button>
+          <div className="mt-6 space-y-2 border-t border-slate-200 px-3 pt-5">
+            <button type="button" className="flex w-full items-center rounded-xl px-4 py-3 text-left text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">
+              Support
+            </button>
+            <button
+              type="button"
+              onClick={onCerrarSesion}
+              className="flex w-full items-center rounded-xl px-4 py-3 text-left text-sm font-medium text-red-600 transition hover:bg-red-50"
+            >
+              Logout
+            </button>
+          </div>
         </aside>
 
         <div className="flex min-h-screen flex-1 flex-col">
@@ -121,7 +105,7 @@ export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBac
                 <button
                   type="button"
                   onClick={onBackHome}
-                  className="flex h-10 items-center gap-2 rounded-lg px-2 text-sm font-bold text-[#0d5c5d] transition hover:bg-[#0d5c5d]/[0.09] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0d5c5d]/30"
+                  className="flex h-10 items-center gap-2 rounded-lg px-2 text-sm font-bold text-[#0d5c5d] transition hover:bg-[#0d5c5d]/9 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0d5c5d]/30"
                   aria-label="Volver al panel"
                   title="Volver al panel"
                 >
@@ -156,56 +140,151 @@ export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBac
                   className="h-11 w-11 rounded-full object-cover ring-2 ring-[#dfece7]"
                 />
               </div>
-            </label>
-          </div>
-        </section>
-
-        <section className="rounded-[20px] bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:p-6">
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <h2 className="text-2xl font-bold text-slate-800">Notifications</h2>
-              <p className="mt-1 text-sm text-slate-500">Choose which alerts you want to receive.</p>
             </div>
-            <button type="button" className="rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">
-              Manage All
-            </button>
-          </div>
+          </header>
 
-          <div className="mt-6 space-y-5">
-            <div className="flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
+          <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+            <div className="space-y-6">
+              <section className="rounded-[20px] bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:p-6">
+                <h2 className="text-2xl font-bold text-slate-800">Profile Photo</h2>
+                <div className="mt-6 flex flex-col items-center gap-5 rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-5 py-8 text-center sm:flex-row sm:justify-between sm:text-left">
+                  <div className="flex items-center gap-4">
+                    <img src={profilePicture} alt={displayName} className="h-24 w-24 rounded-full object-cover ring-4 ring-white shadow-sm" />
+                    <div>
+                      <p className="text-base font-semibold text-slate-700">Update your profile picture</p>
+                      <p className="mt-1 max-w-md text-sm text-slate-500">A great photo helps people recognize you and builds trust with your network.</p>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap gap-3">
+                    <button type="button" className="rounded-full bg-[#0d5c5d] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0a4b4d]">
+                      Upload New
+                    </button>
+                    <button type="button" className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              </section>
+
+              <section className="rounded-[20px] bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:p-6">
+                <h2 className="text-2xl font-bold text-slate-800">Personal Information</h2>
+
+                <div className="mt-6 grid gap-5 md:grid-cols-2">
+                  <label className="block text-sm font-medium text-slate-700 md:col-span-2">
+                    <span className="mb-2 block">Email Address</span>
+                    <input
+                      type="email"
+                      defaultValue="jane@foundy.com"
+                      className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-800 outline-none transition focus:border-[#1ca38b] focus:bg-white focus:ring-2 focus:ring-[#dff5f0]"
+                    />
+                  </label>
+
+                  <label className="block text-sm font-medium text-slate-700 md:col-span-2">
+                    <span className="mb-2 block">Display Name</span>
+                    <input
+                      type="text"
+                      defaultValue={displayName}
+                      className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-800 outline-none transition focus:border-[#1ca38b] focus:bg-white focus:ring-2 focus:ring-[#dff5f0]"
+                    />
+                  </label>
+
+                  <label className="block text-sm font-medium text-slate-700 md:col-span-2">
+                    <span className="mb-2 block">Password</span>
+                    <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+                      <input type="password" defaultValue="password123" className="w-full bg-transparent text-slate-800 outline-none" />
+                      <button type="button" className="text-sm font-semibold text-[#0d5c5d] transition hover:text-[#0a4b4d]">
+                        Change
+                      </button>
+                    </div>
+                  </label>
+                </div>
+              </section>
+
+              <section className="rounded-[20px] bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:p-6">
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <h2 className="text-2xl font-bold text-slate-800">Notifications</h2>
+                    <p className="mt-1 text-sm text-slate-500">Choose which alerts you want to receive.</p>
+                  </div>
+                  <button type="button" className="rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">
+                    Manage All
+                  </button>
+                </div>
+
+                <div className="mt-6 space-y-5">
+                  <div className="flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
+                    <div>
+                      <p className="text-base font-semibold text-slate-800">Transaction Alerts</p>
+                      <p className="mt-1 text-sm text-slate-500">Get notified when payments or transfers are made.</p>
+                    </div>
+                    <Switch enabled={transactionAlerts} onChange={setTransactionAlerts} />
+                  </div>
+
+                  <div className="flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
+                    <div>
+                      <p className="text-base font-semibold text-slate-800">Marketing Insights</p>
+                      <p className="mt-1 text-sm text-slate-500">Receive helpful campaign and growth suggestions.</p>
+                    </div>
+                    <Switch enabled={marketingInsights} onChange={setMarketingInsights} />
+                  </div>
+                </div>
+              </section>
+
+              <section className="rounded-[20px] border border-red-200 bg-red-50 p-5 shadow-sm sm:p-6">
+                <h2 className="text-2xl font-bold text-red-700">Danger Zone</h2>
+                <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="max-w-lg text-sm leading-6 text-red-700/80">
+                    Deactivating your account will disable your access and hide your profile from other users.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={handleDeactivate}
+                    className="rounded-full bg-red-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700"
+                  >
+                    Deactivate
+                  </button>
+                </div>
+              </section>
+            </div>
+          </main>
+
+          <footer className="bg-[#0d3f44] text-white">
+            <div className="mx-auto grid max-w-7xl gap-8 px-6 py-10 md:grid-cols-3">
               <div>
-                <p className="text-base font-semibold text-slate-800">Transaction Alerts</p>
-                <p className="mt-1 text-sm text-slate-500">Get notified when payments or transfers are made.</p>
+                <div className="flex items-center gap-3">
+                  <img src="/images/foundy-logo.png" alt="Foundy" className="h-8 w-auto object-contain brightness-0 invert" />
+                  <span className="text-xl font-bold">Foundy</span>
+                </div>
+                <p className="mt-4 max-w-sm text-sm leading-6 text-teal-100">
+                  Foundy connects entrepreneurs, investors, and partners to bring brighter ideas to life.
+                </p>
               </div>
-              <Switch enabled={transactionAlerts} onChange={setTransactionAlerts} />
-            </div>
 
-            <div className="flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
               <div>
-                <p className="text-base font-semibold text-slate-800">Marketing Insights</p>
-                <p className="mt-1 text-sm text-slate-500">Receive helpful campaign and growth suggestions.</p>
+                <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-teal-100">Social Media</h3>
+                <div className="mt-4 space-y-2 text-sm text-teal-50">
+                  <p>Instagram</p>
+                  <p>LinkedIn</p>
+                  <p>Twitter</p>
+                </div>
               </div>
-              <Switch enabled={marketingInsights} onChange={setMarketingInsights} />
-            </div>
-          </div>
-        </section>
 
-        <section className="rounded-[20px] border border-red-200 bg-red-50 p-5 shadow-sm sm:p-6">
-          <h2 className="text-2xl font-bold text-red-700">Danger Zone</h2>
-          <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <p className="max-w-lg text-sm leading-6 text-red-700/80">
-              Deactivating your account will disable your access and hide your profile from other users.
-            </p>
-            <button
-              type="button"
-              onClick={handleDeactivate}
-              className="rounded-full bg-red-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700"
-            >
-              Deactivate
-            </button>
-          </div>
-        </section>
+              <div>
+                <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-teal-100">Contact Us</h3>
+                <div className="mt-4 space-y-2 text-sm text-teal-50">
+                  <p>hello@foundy.com</p>
+                  <p>+503 2500 0000</p>
+                  <p>San Salvador, El Salvador</p>
+                </div>
+              </div>
+            </div>
+            <div className="border-t border-white/10 px-6 py-5 text-center text-xs text-teal-100">
+              © 2026 Foundy. All rights reserved.
+            </div>
+          </footer>
+        </div>
       </div>
-    </>
+    </div>
   );
 }

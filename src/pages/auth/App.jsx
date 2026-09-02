@@ -124,11 +124,8 @@ function App() {
       );
     }
 
-    if (usuarioLogueado.tipo_usuario === 'Inversionista') {
-      return renderWithDashboardLayout(
-        <HomeInversionista
     if (pantallaLogueado === 'investments' && esInversionista) {
-      return (
+      return renderWithDashboardLayout(
         <Investments
           usuarioData={usuarioLogueado}
           onCerrarSesion={handleCerrarSesion}
@@ -136,12 +133,13 @@ function App() {
           onOpenSettings={irAConfiguracion}
           onOpenChat={() => setPantallaLogueado('chat')}
           onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
-        />
+        />,
+        { activeNav: 'investments', showSearch: true }
       );
     }
 
     if (pantallaLogueado === 'dashboard' || (pantallaLogueado === 'home' && esInversionista)) {
-      return (
+      return renderWithDashboardLayout(
         <DashboardInversionista
           usuarioData={usuarioLogueado}
           onCerrarSesion={handleCerrarSesion}
@@ -151,28 +149,15 @@ function App() {
           onOpenInvestments={() => setPantallaLogueado('investments')}
           onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
           onVerDetalle={(negocio) => console.log('Detalle de oportunidad:', negocio)}
-        />
+        />,
+        { activeNav: 'dashboard', showSearch: true }
       );
     }
 
     if (pantallaLogueado === 'foundy-card') {
-      return <FoundyCard usuarioData={usuarioLogueado} onLogout={handleCerrarSesion} onBackHome={irAHome} onOpenSettings={irAConfiguracion} onOpenChat={() => setPantallaLogueado('chat')} />;
-    }
-
-    if (esInversionista) {
-      return (
-        <DashboardInversionista
-          usuarioData={usuarioLogueado}
-          onCerrarSesion={handleCerrarSesion}
-          onBackHome={irAHome}
-          onOpenSettings={irAConfiguracion}
-          onOpenChat={() => setPantallaLogueado('chat')}
-          onOpenInvestments={() => setPantallaLogueado('investments')}
-          onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
-        />,
-        { activeNav: 'dashboard', showSearch: true }
-          onVerDetalle={(negocio) => console.log('Detalle de oportunidad:', negocio)}
-        />
+      return renderWithDashboardLayout(
+        <FoundyCard usuarioData={usuarioLogueado} onLogout={handleCerrarSesion} onBackHome={irAHome} onOpenSettings={irAConfiguracion} onOpenChat={() => setPantallaLogueado('chat')} />,
+        { activeNav: 'foundy-card', showSearch: true }
       );
     }
 
