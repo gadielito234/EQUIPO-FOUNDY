@@ -42,6 +42,16 @@ function Register({ onSwitchToLogin }) {
             setLoading(false);
             return;
         }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.correo)) {
+            setErrorMsg('Ingresa un correo electrónico válido.');
+            setLoading(false);
+            return;
+        }
+        if (!formData.tipo_usuario) {
+            setErrorMsg('Selecciona un tipo de usuario.');
+            setLoading(false);
+            return;
+        }
         if (!/^\d{8}$/.test(formData.telefono)) {
             setErrorMsg('El teléfono debe tener exactamente 8 números.');
             setLoading(false);
@@ -62,13 +72,15 @@ function Register({ onSwitchToLogin }) {
             setLoading(false);
             return;
         }
+        const duiNumerico = Number(formData.dui.replace('-', ''));
         try {
             // 1. Verificar si el usuario ya existe
-            const { data: usuarioExistente } = await supabase
+            const { data: usuarioExistente, error: consultaError } = await supabase
                 .from('Usuario')
                 .select('dui')
-                .eq('dui', formData.dui)
+                .eq('dui', duiNumerico)
                 .maybeSingle();
+            if (consultaError) throw consultaError;
             if (usuarioExistente) {
                 setErrorMsg('El usuario ya está registrado.');
                 setLoading(false);
@@ -84,7 +96,7 @@ function Register({ onSwitchToLogin }) {
                         usuario: formData.usuario,
                         tipo_usuario: formData.tipo_usuario,
                         telefono: formData.telefono,
-                        dui: formData.dui,
+                        dui: duiNumerico,
                         correo: formData.correo,
                         contrasena: formData.contrasena,
                     },
@@ -94,6 +106,8 @@ function Register({ onSwitchToLogin }) {
             setTimeout(() => {
                 if (onSwitchToLogin) onSwitchToLogin();
             }, 2000);
+        } catch (error) {
+            setErrorMsg(error.message || 'No se pudo guardar el usuario. Verifica la conexión con Supabase.');
         }
         finally {
             setLoading(false);
@@ -115,7 +129,7 @@ function Register({ onSwitchToLogin }) {
                     <p className="mt-5 max-w-md text-sm leading-6 text-[#5d7277]">Crea tu perfil y conecta con las oportunidades que pueden llevar tu idea más lejos.</p>
                     {errorMsg && <div className="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">{errorMsg}</div>}
                     {successMsg && <div className="mt-6 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700" role="status">{successMsg}</div>}
-                    <form className="mt-8" onSubmit={handleRegister}>
+                    <form className="mt-8" onSubmit={handleRegister} noValidate>
                         <div className="grid gap-x-5 gap-y-5 sm:grid-cols-2">
                             <label className="text-xs font-semibold text-[#31515a]">Nombre<input className={fieldClass} type="text" name="nombre" minLength={2} maxLength={50} pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+" placeholder="Juan" value={formData.nombre} onChange={handleChange} required /></label>
                             <label className="text-xs font-semibold text-[#31515a]">Apellidos<input className={fieldClass} type="text" name="apellidos" minLength={2} maxLength={50} pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+" placeholder="Pérez García" value={formData.apellidos} onChange={handleChange} required /></label>

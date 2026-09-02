@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { supabase } from "../../services/supabase.js";
 
 const menu = ["Create project", "My projects", "Opportunities", "Messages"];
 
@@ -37,7 +38,7 @@ function CrearProyecto({ nombreUsuario = "Entrepreneur", onCerrarSesion, onBackH
     setAlerta(null);
   };
 
-  const guardarProyecto = (event, publicar = false) => {
+  const guardarProyecto = async (event, publicar = false) => {
     event.preventDefault();
     if (!proyecto.nombre.trim() || !proyecto.descripcion.trim()) {
       setAlerta({
@@ -45,6 +46,26 @@ function CrearProyecto({ nombreUsuario = "Entrepreneur", onCerrarSesion, onBackH
         texto: "Complete the project name and description.",
       });
       return;
+    }
+    if (publicar) {
+      const fechaInicio = new Date();
+      const meses = Number.parseInt(proyecto.retorno, 10) || 1;
+      const fechaFin = new Date(fechaInicio);
+      fechaFin.setMonth(fechaFin.getMonth() + meses);
+      const { error } = await supabase.from("proyecto").insert([{
+        nombre: proyecto.nombre.trim(),
+        descripcion: proyecto.descripcion.trim(),
+        monto_objetivo: proyecto.monto ? Number(proyecto.monto) : 0,
+        inversion: 0,
+        estado: "publicado",
+        fecha_inicio: fechaInicio.toISOString().slice(0, 10),
+        fecha_fin: fechaFin.toISOString().slice(0, 10),
+      }]);
+      if (error) {
+        setAlerta({ tipo: "warning", texto: `Could not publish project: ${error.message}` });
+        return;
+      }
+      window.dispatchEvent(new Event("foundy-project-published"));
     }
     setAlerta({
       tipo: "success",

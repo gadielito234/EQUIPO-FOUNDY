@@ -97,6 +97,35 @@ export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBac
                 <button type="button" className="text-sm font-semibold text-[#0d5c5d] transition hover:text-[#0a4b4d]">
                   Change
                 </button>
+        </aside>
+
+        <div className="flex min-h-screen flex-1 flex-col">
+          <header className="border-b border-slate-200 bg-white/90 backdrop-blur-sm">
+            <div className="flex flex-col gap-4 px-4 py-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+              <div className="flex items-center gap-3">
+                <img src="/images/foundy-logo.png" alt="Foundy" className="h-8 w-auto object-contain" />
+                <span className="text-xl font-bold text-[#0d5c5d]">Foundy</span>
+              </div>
+
+              <nav className="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
+                <button type="button" onClick={onBackHome} className="transition hover:text-[#0d5c5d]">Dashboard</button>
+                <button type="button" onClick={onBackHome} className="transition hover:text-[#0d5c5d]">Statistics</button>
+                <button type="button" onClick={onOpenFoundyCard} className="transition hover:text-[#0d5c5d]">Foundy card</button>
+              </nav>
+
+              <div className="flex items-center justify-between gap-3 md:justify-end">
+                <label className="hidden min-w-[220px] items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-500 md:flex">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4">
+                    <circle cx="11" cy="11" r="6" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M16 16L21 21" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  <input type="text" placeholder="Search" className="w-full border-0 bg-transparent text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none" />
+                </label>
+                <img
+                  src={profilePicture}
+                  alt={displayName}
+                  className="h-11 w-11 rounded-full object-cover ring-2 ring-[#dfece7]"
+                />
               </div>
             </label>
           </div>
