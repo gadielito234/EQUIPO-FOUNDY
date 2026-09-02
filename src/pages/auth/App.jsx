@@ -11,6 +11,8 @@ import PerfilConfiguracion from '../shared/PerfilConfiguracion.jsx';
 import CrearProyecto from '../emprendedor/CrearProyecto.jsx';
 import ChatEmprendedor from '../chat/ChatEmprendedor.jsx';
 import ChatInversionista from '../chat/ChatInversionista.jsx';
+import DashboardLayout from '../shared/DashboardLayout.jsx';
+
 function App() {
   const [mostrarLanding, setMostrarLanding] = useState(true);
   const [esRegistro, setEsRegistro] = useState(false);
@@ -71,27 +73,60 @@ function App() {
   const irAConfiguracion = () => setPantallaLogueado('settings');
   const esInversionista = usuarioLogueado?.tipo_usuario === 'Inversionista';
 
+  const renderWithDashboardLayout = (content, options = {}) => (
+    <DashboardLayout
+      usuarioData={usuarioLogueado}
+      onCerrarSesion={handleCerrarSesion}
+      onBackHome={irAHome}
+      onOpenSettings={irAConfiguracion}
+      onOpenChat={() => setPantallaLogueado('chat')}
+      onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
+      activeNav={options.activeNav || 'dashboard'}
+      showSearch={options.showSearch ?? true}
+    >
+      {content}
+    </DashboardLayout>
+  );
+
   if (usuarioLogueado) {
     if (pantallaLogueado === 'settings') {
-      return (
+      return renderWithDashboardLayout(
         <PerfilConfiguracion
           usuarioData={usuarioLogueado}
           onCerrarSesion={handleCerrarSesion}
           onBackHome={irAHome}
           onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
-        />
+          onOpenChat={() => setPantallaLogueado('chat')}
+        />,
+        { activeNav: 'settings', showSearch: true }
       );
     }
 
     if (pantallaLogueado === 'create-project' && !esInversionista) {
-      return <CrearProyecto nombreUsuario={usuarioLogueado.usuario} onCerrarSesion={handleCerrarSesion} onBackHome={irAHome} />;
+      return renderWithDashboardLayout(
+        <CrearProyecto nombreUsuario={usuarioLogueado.usuario} onCerrarSesion={handleCerrarSesion} onBackHome={irAHome} />,
+        { activeNav: 'projects', showSearch: false }
+      );
     }
 
     if (pantallaLogueado === 'chat') {
       const ChatPage = usuarioLogueado.tipo_usuario === 'Inversionista' ? ChatInversionista : ChatEmprendedor;
-      return <ChatPage onBackHome={irAHome} onCerrarSesion={handleCerrarSesion} />;
+      return renderWithDashboardLayout(
+        <ChatPage onBackHome={irAHome} onCerrarSesion={handleCerrarSesion} />,
+        { activeNav: 'messages', showSearch: false }
+      );
     }
 
+    if (pantallaLogueado === 'foundy-card' && esInversionista) {
+      return renderWithDashboardLayout(
+        <FoundyCard onLogout={handleCerrarSesion} onBackHome={irAHome} onOpenSettings={irAConfiguracion} onOpenChat={() => setPantallaLogueado('chat')} />,
+        { activeNav: 'foundy-card', showSearch: true }
+      );
+    }
+
+    if (usuarioLogueado.tipo_usuario === 'Inversionista') {
+      return renderWithDashboardLayout(
+        <HomeInversionista
     if (pantallaLogueado === 'investments' && esInversionista) {
       return (
         <Investments
@@ -134,12 +169,14 @@ function App() {
           onOpenChat={() => setPantallaLogueado('chat')}
           onOpenInvestments={() => setPantallaLogueado('investments')}
           onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
+        />,
+        { activeNav: 'dashboard', showSearch: true }
           onVerDetalle={(negocio) => console.log('Detalle de oportunidad:', negocio)}
         />
       );
     }
 
-    return (
+    return renderWithDashboardLayout(
       <Inicio
         usuarioData={usuarioLogueado}
         onCerrarSesion={handleCerrarSesion}
@@ -148,7 +185,8 @@ function App() {
         onOpenCreateProject={() => setPantallaLogueado('create-project')}
         onOpenChat={() => setPantallaLogueado('chat')}
         onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
-      />
+      />,
+      { activeNav: 'dashboard', showSearch: true }
     );
   }
   if (mostrarLanding) {
