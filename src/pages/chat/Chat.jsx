@@ -90,9 +90,20 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
 
   return (
     <div className="chat-shell flex min-h-screen flex-col bg-white text-[#424a4c]">
-      <nav className="flex h-[4.5rem] shrink-0 items-center justify-between border-b border-[#424a4c]/15 px-5 sm:px-8">
-        <button type="button" onClick={onBackHome} className="text-sm font-bold text-[#006b73]" aria-label="Volver al panel">
-          Foundy
+      <nav className="flex h-18 shrink-0 items-center justify-between border-b border-[#424a4c]/15 px-5 sm:px-8">
+        <button
+          type="button"
+          onClick={onBackHome}
+          className="flex h-10 items-center gap-2 rounded-lg px cde-2 text-sm font-bold text-[#006b73] transition hover:bg-[#006b73]/9 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#006b73]/30"
+          aria-label="Volver al panel"
+          title="Volver al panel"
+        >
+          <img
+            src="https://tse2.mm.bing.net/th/id/OIP.w171eC9ZBI8OTweGWM7G0gHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
+            alt=""
+            className="h-7 w-7 object-contain"
+          />
+          <span className="hidden sm:inline">Volver</span>
         </button>
         <div className="flex items-center gap-3 sm:gap-5">
           <span className="hidden text-xs font-semibold text-[#424a4c]/55 sm:block">
@@ -101,7 +112,7 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
           <button
             type="button"
             onClick={() => setNotice("Notifications are up to date.")}
-            className="grid h-9 w-9 place-items-center rounded-full text-[#424a4c]/70 transition hover:bg-[#006b73]/[0.09] hover:text-[#006b73] focus-visible:outline-none"
+            className="grid h-9 w-9 place-items-center rounded-full text-[#424a4c]/70 transition hover:bg-[#006b73]/9 hover:text-[#006b73] focus-visible:outline-none"
             aria-label="Notifications"
           >
             ♢
@@ -111,10 +122,10 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
           </button>
         </div>
       </nav>
-      <main className="mx-auto flex min-h-0 w-full max-w-[1380px] flex-1 flex-col px-3 py-3 sm:px-5 sm:py-5 lg:px-8">
+      <main className="mx-auto flex min-h-0 w-full max-w-345 flex-1 flex-col px-3 py-3 sm:px-5 sm:py-5 lg:px-8">
         {notice && (
           <div
-            className="mb-3 flex items-center justify-between rounded-lg bg-[#006b73]/[0.06] px-4 py-2.5 text-xs text-[#006b73]"
+            className="mb-3 flex items-center justify-between rounded-lg bg-[#006b73]/6 px-4 py-2.5 text-xs text-[#006b73]"
             role="status"
           >
             <span>{notice}</span>
@@ -145,7 +156,7 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
                 <button
                   type="button"
                   onClick={() => setNewMessageOpen(true)}
-                  className="grid h-9 w-9 place-items-center rounded-full text-xl text-[#00634b] hover:bg-[#006b73]/[0.09]"
+                  className="grid h-9 w-9 place-items-center rounded-full text-xl text-[#00634b] hover:bg-[#006b73]/9"
                   aria-label="New message"
                 >
                   +
@@ -155,7 +166,7 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder="Search conversations"
-                className="mt-4 w-full rounded-lg border-0 bg-[#424a4c]/[0.06] px-3 py-2.5 text-xs outline-none focus:bg-white focus:ring-2 focus:ring-[#006b73]/20"
+                className="mt-4 w-full rounded-lg border-0 bg-[#424a4c]/6 px-3 py-2.5 text-xs outline-none focus:bg-white focus:ring-2 focus:ring-[#006b73]/20"
               />
               <div
                 className="mt-5 flex items-center gap-4 overflow-hidden"
@@ -226,7 +237,7 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
           >
             {activeConversation ? (
               <>
-                <header className="flex h-[4.5rem] shrink-0 items-center justify-between border-b border-[#424a4c]/10 px-4 sm:px-6">
+                <header className="flex h-18 shrink-0 items-center justify-between border-b border-[#424a4c]/10 px-4 sm:px-6">
                   <div className="flex items-center gap-2 sm:gap-3">
                     <button
                       type="button"
@@ -250,7 +261,7 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
                     <button
                       type="button"
                       onClick={() => setNotice("Voice call is ready to start.")}
-                      className="grid h-9 w-9 place-items-center rounded-full text-[#424a4c]/70 hover:bg-[#006b73]/[0.09] hover:text-[#006b73]"
+                      className="grid h-9 w-9 place-items-center rounded-full text-[#424a4c]/70 hover:bg-[#006b73]/9 hover:text-[#006b73]"
                       aria-label="Start voice call"
                     >
                       ⌕
@@ -260,7 +271,7 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
                       onClick={() =>
                         setNotice("More conversation options opened.")
                       }
-                      className="grid h-9 w-9 place-items-center rounded-full text-[#424a4c]/70 hover:bg-[#006b73]/[0.09] hover:text-[#006b73]"
+                      className="grid h-9 w-9 place-items-center rounded-full text-[#424a4c]/70 hover:bg-[#006b73]/9 hover:text-[#006b73]"
                       aria-label="More options"
                     >
                       •••
@@ -301,7 +312,7 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
                   <button
                     type="button"
                     onClick={() => setNotice("Attach a file to your message.")}
-                    className="grid h-9 w-9 place-items-center rounded-full text-lg text-[#424a4c]/70 hover:bg-[#006b73]/[0.09] hover:text-[#006b73]"
+                    className="grid h-9 w-9 place-items-center rounded-full text-lg text-[#424a4c]/70 hover:bg-[#006b73]/9 hover:text-[#006b73]"
                     aria-label="Attach file"
                   >
                     ⊕
@@ -310,7 +321,7 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
                     value={draft}
                     onChange={(event) => setDraft(event.target.value)}
                     placeholder="Type a message..."
-                    className="min-w-0 flex-1 rounded-full border border-[#424a4c]/15 bg-[#424a4c]/[0.04] px-4 py-3 text-xs outline-none focus:border-[#006b73] focus:bg-white focus:ring-2 focus:ring-[#006b73]/15"
+                    className="min-w-0 flex-1 rounded-full border border-[#424a4c]/15 bg-[#424a4c]/4 px-4 py-3 text-xs outline-none focus:border-[#006b73] focus:bg-white focus:ring-2 focus:ring-[#006b73]/15"
                   />
                   <button
                     type="submit"
@@ -323,7 +334,7 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
               </>
             ) : (
               <div className="chat-empty-state flex flex-1 flex-col items-center justify-center px-6 text-center">
-                <div className="mb-6 grid h-24 w-24 place-items-center rounded-full border-2 border-[#424a4c]/70 bg-[#006b73]/[0.03] text-4xl text-[#424a4c]">
+                <div className="mb-6 grid h-24 w-24 place-items-center rounded-full border-2 border-[#424a4c]/70 bg-[#006b73]/3 text-4xl text-[#424a4c]">
                   ✈
                 </div>
                 <h2 className="text-xl font-semibold text-[#424a4c]">
@@ -366,7 +377,7 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
               <button
                 type="button"
                 onClick={() => setNewMessageOpen(false)}
-                className="grid h-9 w-9 place-items-center rounded-full text-lg text-[#424a4c]/70 hover:bg-[#006b73]/[0.09] hover:text-[#006b73]"
+                className="grid h-9 w-9 place-items-center rounded-full text-lg text-[#424a4c]/70 hover:bg-[#006b73]/9 hover:text-[#006b73]"
                 aria-label="Close new message"
               >
                 ×
@@ -398,7 +409,7 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
                     setMobileView("chat");
                     setRecipientSearch("");
                   }}
-                  className="flex w-full items-center gap-3 rounded-lg p-3 text-left hover:bg-[#006b73]/[0.06]"
+                  className="flex w-full items-center gap-3 rounded-lg p-3 text-left hover:bg-[#006b73]/6"
                 >
                   <Avatar person={conversations[0]} />
                   <span>

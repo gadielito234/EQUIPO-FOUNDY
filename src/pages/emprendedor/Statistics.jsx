@@ -244,8 +244,9 @@ function Statistics({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, o
           </div>
         </aside>}
         <div className="min-w-0 flex-1">
-          <header className="relative z-40 flex h-[4.5rem] items-center justify-between border-b border-[#dfe5e5] bg-[#f8faf9] px-6 sm:px-10">
+          <header className="relative z-40 flex h-18 items-center justify-between border-b border-[#dfe5e5] bg-[#f8faf9] px-6 sm:px-10">
             <div className="flex h-full items-center gap-5 sm:gap-12">
+              <button type="button" onClick={onBackHome} className="grid h-9 w-9 place-items-center rounded-lg transition hover:bg-[#006b73]/9 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#006b73]/30" aria-label="Volver al panel" title="Volver al panel"><img src="https://tse2.mm.bing.net/th/id/OIP.w171eC9ZBI8OTweGWM7G0gHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" alt="" className="h-7 w-7 object-contain" /></button>
               <button type="button" onClick={() => setMenuAbierto((abierto) => !abierto)} className="text-lg text-[#006b73]" aria-label={menuAbierto ? 'Ocultar menú' : 'Mostrar menú'} aria-expanded={menuAbierto}>☰</button>
               <nav className="hidden h-full items-center gap-7 text-[11px] sm:flex" aria-label="Secciones">
                 <a href="#estadisticas" className="border-b-2 border-[#006b73] py-[1.62rem] font-semibold text-[#006b73]">Statistics</a>
@@ -320,7 +321,7 @@ function Statistics({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, o
                     })()} fill="none" stroke="#138b88" strokeWidth="2" vectorEffect="non-scaling-stroke" />
                     <defs><linearGradient id="growthFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#65bcb2" stopOpacity="0.27" /><stop offset="100%" stopColor="#65bcb2" stopOpacity="0.02" /></linearGradient></defs>
 
-                    {datosPorPeriodo.map((punto, index) => {
+                    {datosPorPeriodo.map((punto) => {
                       const indiceEnMonthlyData = monthlyData.findIndex((mes) => mes.month === punto.month);
                       return (
                         <circle

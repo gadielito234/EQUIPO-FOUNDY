@@ -6,7 +6,7 @@ const menu = ["Create project", "My projects", "Opportunities", "Messages"];
 const initialProject = {
   nombre: "",
   descripcion: "",
-  monto: "",
+  monto: "",  
   retorno: "",
 };
 
@@ -81,8 +81,19 @@ function CrearProyecto({ nombreUsuario = "Entrepreneur", onCerrarSesion, onBackH
     <div className="min-h-screen bg-[#f5f7f6] text-slate-800">
       <nav className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 px-4 py-3 backdrop-blur sm:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-4">
-          <button type="button" onClick={onBackHome} className="h-7 w-28 text-left text-lg font-black text-[#006b73]" aria-label="Volver al panel">
-            Foundy
+          <button
+            type="button"
+            onClick={onBackHome}
+            className="flex h-10 items-center gap-2 rounded-lg px-2 text-sm font-bold text-[#006b73] transition hover:bg-[#006b73]/9 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#006b73]/30"
+            aria-label="Volver al panel"
+            title="Volver al panel"
+          >
+            <img
+              src="https://tse2.mm.bing.net/th/id/OIP.w171eC9ZBI8OTweGWM7G0gHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
+              alt=""
+              className="h-7 w-7 object-contain"
+            />
+            <span>Volver</span>
           </button>
           <div className="hidden items-center gap-8 text-sm font-medium text-slate-500 md:flex">
             <a href="#crear-proyecto" className="text-[#006b73]">
@@ -107,7 +118,7 @@ function CrearProyecto({ nombreUsuario = "Entrepreneur", onCerrarSesion, onBackH
         </div>
       </nav>
 
-      <div className="mx-auto flex max-w-[1500px]">
+      <div className="mx-auto flex max-w-375">
         <aside className="hidden w-60 shrink-0 border-r border-slate-200 bg-white px-4 py-7 lg:block">
           <div className="mb-8 px-3">
             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
@@ -276,7 +287,7 @@ function CrearProyecto({ nombreUsuario = "Entrepreneur", onCerrarSesion, onBackH
                   <button
                     type="button"
                     onClick={() => inputImagenes.current?.click()}
-                    className="flex min-h-32 w-full flex-col items-center justify-center rounded-xl border border-dashed border-[#006b73]/45 bg-[#006b73]/[0.03] px-4 py-6 text-center transition hover:border-[#00634b] hover:bg-[#00634b]/[0.04]"
+                    className="flex min-h-32 w-full flex-col items-center justify-center rounded-xl border border-dashed border-[#006b73]/45 bg-[#006b73]/3 px-4 py-6 text-center transition hover:border-[#00634b] hover:bg-[#00634b]/4"
                   >
                     <span className="grid h-9 w-9 place-items-center rounded-full border border-[#006b73] text-xl text-[#006b73]">
                       +
@@ -377,7 +388,7 @@ function CrearProyecto({ nombreUsuario = "Entrepreneur", onCerrarSesion, onBackH
                     Calculate investment
                   </button>
                 </div>
-                <div className="mt-7 rounded-xl border border-[#424a4c]/10 bg-[#424a4c]/[0.04] p-4">
+                <div className="mt-7 rounded-xl border border-[#424a4c]/10 bg-[#424a4c]/4 p-4">
                   <div className="flex gap-2">
                     <span className="grid h-6 w-6 shrink-0 place-items-center rounded-md bg-[#006b73] text-[10px] font-bold text-white">
                       AI
