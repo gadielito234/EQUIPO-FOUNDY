@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import EntrepreneurLayout from '../shared/EntrepreneurLayout.jsx';
+import { Home, FolderKanban, Mail, Settings, Bell, HelpCircle, LogOut } from 'lucide-react';
 
 const defaultUser = {
   name: 'Sara Hernández',
@@ -26,6 +26,14 @@ const getStoredUser = () => {
 
   return defaultUser;
 };
+
+const sidebarMenu = [
+  { label: 'Home', icon: Home },
+  { label: 'My projects', icon: FolderKanban },
+  { label: 'Messages', icon: Mail },
+  { label: 'Settings', icon: Settings },
+  { label: 'Notifications', icon: Bell },
+];
 
 const chartBars = [
   { label: 'Jan', value: 28 },
@@ -55,7 +63,7 @@ const updates = [
   },
 ];
 
-function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenProjects, onOpenSettings, onOpenChat, onOpenCreateProject, onOpenFoundyCard }) {
+function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenSettings, onOpenChat }) {
   const [storedUser] = useState(getStoredUser);
   const user = {
     ...storedUser,
@@ -71,8 +79,68 @@ function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenProjects, onO
     .toUpperCase();
 
   return (
-    <EntrepreneurLayout active="home" user={userName} onBackHome={onBackHome} onOpenCreateProject={onOpenCreateProject} onOpenProjects={onOpenProjects} onOpenStatistics={onBackHome} onOpenChat={onOpenChat} onOpenSettings={onOpenSettings} onOpenFoundyCard={onOpenFoundyCard} onCerrarSesion={onLogout}>
-      <main className="min-w-0 px-5 py-7 sm:px-8 lg:px-12">
+    <div className="min-h-screen bg-[#f4f6f8] text-[#0f2d39]">
+      <div className="flex min-h-screen">
+      <aside className="flex w-64 min-w-60 flex-col border-r border-[#0b252b]/10 bg-[#f1f4f6] px-4 py-6">
+        <div className="mb-7 flex flex-col items-center gap-3">
+          <div className="h-[90px] w-[90px] overflow-hidden rounded-full border-[3px] border-[#084343]/15 bg-gradient-to-br from-[#dfeef1] to-[#cde8d9]">
+            <img src={user.avatar || defaultUser.avatar} alt={userName} className="h-full w-full object-cover" />
+          </div>
+          <button type="button" className="cursor-pointer rounded-full border border-[#dfe7eb] bg-white/70 px-[18px] py-[7px] text-[0.86rem] font-semibold">
+            {userName}
+          </button>
+        </div>
+
+        <nav className="flex w-full flex-col gap-2.5" aria-label="Sidebar navigation">
+          {sidebarMenu.map((item, index) => {
+            const IconComponent = item.icon;
+
+            return (
+              <button
+                key={item.label}
+                type="button"
+                onClick={item.label === 'Home' ? onBackHome : item.label === 'Messages' ? onOpenChat : item.label === 'Settings' ? onOpenSettings : undefined}
+                className={`flex w-full cursor-pointer items-center gap-3 rounded-[10px] border border-dashed border-transparent bg-transparent px-3 py-[11px] text-left text-[0.96rem] font-medium transition hover:border-[#084343]/20 hover:bg-[#084343]/[0.04] ${index === 0 ? 'border-[#084343]/20 bg-[#084343]/[0.04]' : ''}`}
+              >
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-[#09303c]/[0.08] bg-white/60 text-[#0f2d39]"><IconComponent size={20} /></span>
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
+        </nav>
+
+        <div className="mt-auto flex w-full flex-col gap-2.5">
+          <button type="button" className="mt-2 flex w-full cursor-pointer items-center gap-3 border-t border-[#0b252b]/[0.08] bg-transparent px-3 pt-3 text-left text-[#4a5865]">
+            <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-[#09303c]/[0.08] bg-white/60"><HelpCircle size={20} /></span>
+            <span>Support</span>
+          </button>
+          <button type="button" onClick={onLogout} className="mt-0 flex w-full cursor-pointer items-center gap-3 border-t border-[#0b252b]/[0.08] bg-transparent px-3 pt-3 text-left text-[#4a5865]">
+            <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-[#09303c]/[0.08] bg-white/60"><LogOut size={20} /></span>
+            <span>Logout</span>
+          </button>
+        </div>
+      </aside>
+
+      <main className="min-w-0 flex-1 px-5 py-7 sm:px-8 lg:px-12">
+        <header className="relative z-40 flex h-[4.5rem] items-center justify-between border-b border-[#0b252b]/[0.08] bg-transparent px-0 sm:px-0">
+          <div className="flex h-full items-center gap-5 sm:gap-12">
+            <div aria-label="Foundy brand logo">
+              <img src="/images/foundy-logo.png" alt="Foundy logo" className="h-[38px] w-auto object-contain" />
+            </div>
+          </div>
+
+          <nav className="hidden items-center gap-7 text-[11px] sm:flex" aria-label="Main navigation">
+            <button type="button" onClick={onBackHome} className="text-[#758082] hover:text-[#006b73]">Dashboard</button>
+            <button type="button" onClick={onBackHome} className="text-[#758082] hover:text-[#006b73]">Statistics</button>
+            <button type="button" className="border-b-2 border-[#006b73] py-[1.62rem] font-semibold text-[#006b73]">Foundy card</button>
+          </nav>
+
+          <label className="flex h-8 w-36 items-center gap-2 rounded-full border border-[#dce2e2] bg-[#eef2f2] px-3 text-[#899496] sm:w-44" aria-label="Search">
+            <span aria-hidden="true">⌕</span>
+            <input type="text" placeholder="Buscar" className="w-full bg-transparent text-xs outline-none placeholder:text-[#899496]" />
+          </label>
+        </header>
+
         <div className="mx-auto max-w-6xl">
           <section className="mt-7 flex items-center justify-between gap-4 rounded-xl bg-[#dfeeed] px-6 py-5">
             <div>
@@ -186,7 +254,8 @@ function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenProjects, onO
         </div>
         </div>
       </main>
-    </EntrepreneurLayout>
+      </div>
+    </div>
   );
 }
 

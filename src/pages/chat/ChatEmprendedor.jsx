@@ -1,7 +1,19 @@
-import Chat from "./Chat.jsx";
+import Chat from "./Chat";
 
-function ChatEmprendedor(props) {
-  return <Chat {...props} mode="entrepreneur" />;
+function ChatEmprendedor({ usuarioData, onBackHome, onOpenProjects, onCerrarSesion, onOpenCreateProject, onOpenStatistics, onOpenSettings, onOpenFoundyCard }) {
+  return (
+    <Chat
+      mode="entrepreneur"
+      user={usuarioData?.usuario || "Entrepreneur"}
+      onBackHome={onBackHome}
+      onCerrarSesion={onCerrarSesion}
+      onOpenCreateProject={onOpenCreateProject}
+      onOpenProjects={onOpenProjects}
+      onOpenStatistics={onOpenStatistics}
+      onOpenSettings={onOpenSettings}
+      onOpenFoundyCard={onOpenFoundyCard}
+    />
+  );
 }
 
 export default ChatEmprendedor;

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import EntrepreneurLayout from "../shared/EntrepreneurLayout.jsx";
 
 const conversations = [
   {
@@ -64,7 +65,7 @@ function Avatar({ person }) {
   );
 }
 
-function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
+function Chat({ user = "Entrepreneur", onBackHome, onOpenProjects, onCerrarSesion, onOpenCreateProject, onOpenStatistics, onOpenSettings, onOpenFoundyCard }) {
   const [activeConversation, setActiveConversation] = useState(null);
   const [messages, setMessages] = useState(initialMessages);
   const [draft, setDraft] = useState("");
@@ -73,7 +74,6 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
   const [mobileView, setMobileView] = useState("inbox");
   const [newMessageOpen, setNewMessageOpen] = useState(false);
   const [recipientSearch, setRecipientSearch] = useState("");
-  const investorMode = mode === "investor";
   const filtered = conversations.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase()),
   );
@@ -89,28 +89,8 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
   };
 
   return (
-    <div className="chat-shell flex min-h-screen flex-col bg-white text-[#424a4c]">
-      <nav className="flex h-[4.5rem] shrink-0 items-center justify-between border-b border-[#424a4c]/15 px-5 sm:px-8">
-        <button type="button" onClick={onBackHome} className="text-sm font-bold text-[#006b73]" aria-label="Volver al panel">
-          Foundy
-        </button>
-        <div className="flex items-center gap-3 sm:gap-5">
-          <span className="hidden text-xs font-semibold text-[#424a4c]/55 sm:block">
-            {investorMode ? "Investor inbox" : "Entrepreneur inbox"}
-          </span>
-          <button
-            type="button"
-            onClick={() => setNotice("Notifications are up to date.")}
-            className="grid h-9 w-9 place-items-center rounded-full text-[#424a4c]/70 transition hover:bg-[#006b73]/[0.09] hover:text-[#006b73] focus-visible:outline-none"
-            aria-label="Notifications"
-          >
-            ♢
-          </button>
-          <button type="button" onClick={onCerrarSesion} className="text-xs font-semibold text-[#006b73] hover:underline">
-            Logout
-          </button>
-        </div>
-      </nav>
+    <EntrepreneurLayout active="chat" user={user} onBackHome={onBackHome} onOpenProjects={onOpenProjects} onOpenCreateProject={onOpenCreateProject} onOpenStatistics={onOpenStatistics} onOpenChat={() => {}} onOpenSettings={onOpenSettings} onOpenFoundyCard={onOpenFoundyCard} onCerrarSesion={onCerrarSesion} onNotice={setNotice}>
+      <div className="chat-shell flex min-h-[calc(100vh-4rem)] flex-col bg-white text-[#424a4c]">
       <main className="mx-auto flex min-h-0 w-full max-w-[1380px] flex-1 flex-col px-3 py-3 sm:px-5 sm:py-5 lg:px-8">
         {notice && (
           <div
@@ -419,7 +399,8 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
           </section>
         </div>
       )}
-    </div>
+      </div>
+    </EntrepreneurLayout>
   );
 }
 

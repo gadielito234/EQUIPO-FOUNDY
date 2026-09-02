@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
-
-const menu = ["Create project", "My projects", "Opportunities", "Messages"];
+import { supabase } from "../../services/supabase.js";
+import EntrepreneurLayout from "../shared/EntrepreneurLayout.jsx";
 
 const initialProject = {
   nombre: "",
@@ -9,8 +9,8 @@ const initialProject = {
   retorno: "",
 };
 
-function CrearProyecto({ nombreUsuario = "Entrepreneur", onCerrarSesion, onBackHome }) {
-  const [proyecto, setProyecto] = useState(initialProject);
+function CrearProyecto({ nombreUsuario = "Entrepreneur", usuarioData, proyectoInicial, proyectoId, onCerrarSesion, onBackHome, onOpenProjects, onOpenChat, onOpenSettings, onOpenStatistics, onOpenFoundyCard }) {
+  const [proyecto, setProyecto] = useState(proyectoInicial || initialProject);
   const [imagenes, setImagenes] = useState([]);
   const [alerta, setAlerta] = useState(null);
   const inputImagenes = useRef(null);
@@ -37,7 +37,7 @@ function CrearProyecto({ nombreUsuario = "Entrepreneur", onCerrarSesion, onBackH
     setAlerta(null);
   };
 
-  const guardarProyecto = (event, publicar = false) => {
+  const guardarProyecto = async (event, publicar = false) => {
     event.preventDefault();
     if (!proyecto.nombre.trim() || !proyecto.descripcion.trim()) {
       setAlerta({
@@ -46,89 +46,71 @@ function CrearProyecto({ nombreUsuario = "Entrepreneur", onCerrarSesion, onBackH
       });
       return;
     }
+    const fechaInicio = proyecto.fecha_inicio || new Date().toISOString().slice(0, 10);
+    const meses = Number.parseInt(proyecto.retorno, 10) || 1;
+    const fechaFin = proyecto.fecha_fin || (() => {
+      const fecha = new Date(fechaInicio);
+      fecha.setMonth(fecha.getMonth() + meses);
+      return fecha.toISOString().slice(0, 10);
+    })();
+    const payload = {
+      nombre: proyecto.nombre.trim(),
+      descripcion: proyecto.descripcion.trim(),
+      monto_objetivo: proyecto.monto ? Number(proyecto.monto) : 0,
+      inversion: Number(proyecto.inversion || 0),
+      estado: publicar ? "publicado" : "borrador",
+      fecha_inicio: fechaInicio,
+      fecha_fin: fechaFin,
+      ...(usuarioData?.id_usuario ? { id_usuario: usuarioData.id_usuario } : {}),
+    };
+    let error;
+    let savedProject = { ...payload, id_proyecto: proyectoId || Date.now() };
+    try {
+      if (proyectoId) {
+        ({ error } = await supabase.from("proyecto").update(payload).eq("id_proyecto", proyectoId));
+      } else {
+        const response = await supabase.from("proyecto").insert([payload]).select().single();
+        error = response.error;
+        savedProject = response.data || savedProject;
+      }
+    } catch (saveError) {
+      error = saveError;
+    }
+    if (error && usuarioData?.id_usuario) {
+      const basePayload = { ...payload };
+      delete basePayload.id_usuario;
+      try {
+        if (proyectoId) {
+          ({ error } = await supabase.from("proyecto").update(basePayload).eq("id_proyecto", proyectoId));
+        } else {
+          const response = await supabase.from("proyecto").insert([basePayload]).select().single();
+          error = response.error;
+          savedProject = response.data || savedProject;
+        }
+      } catch (saveError) {
+        error = saveError;
+      }
+    }
+    const key = `foundy-projects-${usuarioData?.id_usuario || usuarioData?.usuario || nombreUsuario}`;
+    const localProjects = JSON.parse(localStorage.getItem(key) || "[]");
+    const nextProjects = proyectoId ? localProjects.map((item) => item.id_proyecto === proyectoId ? savedProject : item) : [...localProjects, savedProject];
+    localStorage.setItem(key, JSON.stringify(nextProjects));
+    if (error && !String(error.message || error).includes("Supabase no configurado")) {
+      setAlerta({ tipo: "warning", texto: `Could not save project: ${error.message || error}` });
+      return;
+    }
+    window.dispatchEvent(new Event("foundy-project-published"));
     setAlerta({
       tipo: "success",
-      texto: publicar
-        ? "Project published successfully."
-        : "Project saved as a draft.",
+      texto: proyectoId ? "Project updated successfully." : "Project saved successfully.",
     });
+    onOpenProjects?.();
   };
 
   const ayudaIA = (texto) => setAlerta({ tipo: "info", texto });
 
   return (
-    <div className="min-h-screen bg-[#f5f7f6] text-slate-800">
-      <nav className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 px-4 py-3 backdrop-blur sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between gap-4">
-          <button type="button" onClick={onBackHome} className="h-7 w-28 text-left text-lg font-black text-[#006b73]" aria-label="Volver al panel">
-            Foundy
-          </button>
-          <div className="hidden items-center gap-8 text-sm font-medium text-slate-500 md:flex">
-            <a href="#crear-proyecto" className="text-[#006b73]">
-              Espacio de trabajo
-            </a>
-            <a href="#ayuda" className="text-[#424a4c] hover:text-[#006b73]">
-              Centro de ayuda
-            </a>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="hidden text-sm text-slate-500 sm:block">
-              Hello, {nombreUsuario}
-            </span>
-            <button
-              type="button"
-              onClick={onCerrarSesion}
-              className="rounded-lg border border-[#424a4c]/30 px-3 py-2 text-xs font-semibold text-[#424a4c] transition hover:border-[#006b73] hover:text-[#006b73]"
-            >
-              Log out
-            </button>
-          </div>
-        </div>
-      </nav>
-
-      <div className="mx-auto flex max-w-[1500px]">
-        <aside className="hidden w-60 shrink-0 border-r border-slate-200 bg-white px-4 py-7 lg:block">
-          <div className="mb-8 px-3">
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
-              Entrepreneur dashboard
-            </p>
-            <p className="mt-2 text-sm font-semibold text-slate-700">
-              Build your next opportunity
-            </p>
-          </div>
-          <nav className="space-y-1" aria-label="Entrepreneur menu">
-            {menu.map((item, index) => (
-              <a
-                key={item}
-                href={index === 0 ? "#crear-proyecto" : "#"}
-                className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition ${index === 0 ? "bg-[#006b73] text-white" : "text-[#424a4c] hover:bg-[#00634b]/10 hover:text-[#00634b]"}`}
-              >
-                <span className="grid h-7 w-7 place-items-center rounded-lg bg-white text-base font-bold shadow-sm">
-                  {index === 0 ? "+" : index + 1}
-                </span>
-                {item}
-              </a>
-            ))}
-          </nav>
-          <div id="ayuda" className="mt-10 rounded-2xl bg-[#f8f1e7] p-4">
-            <p className="text-xs font-bold text-[#8a5a24]">Need guidance?</p>
-            <p className="mt-2 text-xs leading-5 text-slate-500">
-              AI can help you shape your idea.
-            </p>
-            <button
-              type="button"
-              onClick={() =>
-                ayudaIA(
-                  "Tell me about your idea in the description and I will help you improve it.",
-                )
-              }
-              className="mt-3 text-xs font-bold text-[#00634b] hover:underline"
-            >
-              Get help →
-            </button>
-          </div>
-        </aside>
-
+    <EntrepreneurLayout active="create-project" user={nombreUsuario} onBackHome={onBackHome} onOpenProjects={onOpenProjects} onOpenStatistics={onOpenStatistics} onOpenChat={onOpenChat} onOpenSettings={onOpenSettings} onOpenFoundyCard={onOpenFoundyCard} onCerrarSesion={onCerrarSesion} onNotice={ayudaIA}>
         <main
           id="crear-proyecto"
           className="min-w-0 flex-1 px-4 py-8 sm:px-6 lg:px-10 lg:py-12"
@@ -140,7 +122,7 @@ function CrearProyecto({ nombreUsuario = "Entrepreneur", onCerrarSesion, onBackH
                   New project
                 </p>
                 <h1 className="text-3xl font-black tracking-tight text-[#424a4c] sm:text-4xl">
-                  Create something that matters.
+                  {proyectoId ? "Update your project." : "Create something that matters."}
                 </h1>
                 <p className="mt-2 max-w-xl text-sm leading-6 text-[#424a4c]/75">
                   Share your idea with the community and find the connections
@@ -374,13 +356,12 @@ function CrearProyecto({ nombreUsuario = "Entrepreneur", onCerrarSesion, onBackH
             </div>
           </div>
         </main>
-      </div>
       <footer className="border-t border-slate-200 bg-white px-6 py-5 text-center text-xs text-slate-400">
         <span className="font-bold text-[#006b73]">foundy.</span> Your idea
         deserves to grow. <span className="mx-2 hidden sm:inline">·</span>
         <span className="block sm:inline">© 2026</span>
       </footer>
-    </div>
+    </EntrepreneurLayout>
   );
 }
 

@@ -28,7 +28,6 @@ try {
 	// Evitar que un error en la creación de cliente rompa la app en desarrollo
 	// y exportar un stub que devuelva respuestas seguras.
 	// En producción debes configurar correctamente las variables de entorno.
-	// eslint-disable-next-line no-console
 	console.warn('Supabase no configurado — usando stub:', err.message || err);
 	supabase = makeStub();
 }
