@@ -51,6 +51,21 @@ export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBac
           <div className="mt-6 flex flex-col items-center gap-5 rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-5 py-8 text-center sm:flex-row sm:justify-between sm:text-left">
             <div className="flex items-center gap-4">
               <img src={profilePicture} alt={displayName} className="h-24 w-24 rounded-full object-cover ring-4 ring-white shadow-sm" />
+    <div className="min-h-screen bg-[#f4f6f4] text-slate-800">
+      <div className="mx-auto flex min-h-screen max-w-[1600px] flex-col lg:flex-row">
+        <aside className="w-full border-b border-slate-200 bg-[#f8faf8] lg:w-70 lg:border-b-0 lg:border-r lg:border-slate-200">
+          <div className="flex items-center gap-3 px-6 py-6">
+            <img src="/images/foundy-logo.png" alt="Foundy" className="h-8 w-auto object-contain" />
+            <span className="text-2xl font-bold tracking-tight text-[#0f4d4d]">Foundy</span>
+          </div>
+
+          <div className="px-5 pb-5">
+            <div className="flex items-center gap-3 rounded-2xl bg-white p-3 shadow-sm ring-1 ring-slate-200">
+              <img
+                src={profilePicture}
+                alt={displayName}
+                className="h-14 w-14 rounded-full object-cover ring-2 ring-[#dfece7]"
+              />
               <div>
                 <p className="text-base font-semibold text-slate-700">Update your profile picture</p>
                 <p className="mt-1 max-w-md text-sm text-slate-500">A great photo helps people recognize you and builds trust with your network.</p>
@@ -103,6 +118,20 @@ export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBac
           <header className="border-b border-slate-200 bg-white/90 backdrop-blur-sm">
             <div className="flex flex-col gap-4 px-4 py-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
               <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={onBackHome}
+                  className="flex h-10 items-center gap-2 rounded-lg px-2 text-sm font-bold text-[#0d5c5d] transition hover:bg-[#0d5c5d]/[0.09] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0d5c5d]/30"
+                  aria-label="Volver al panel"
+                  title="Volver al panel"
+                >
+                  <img
+                    src="https://tse2.mm.bing.net/th/id/OIP.w171eC9ZBI8OTweGWM7G0gHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
+                    alt=""
+                    className="h-7 w-7 object-contain"
+                  />
+                  <span className="hidden sm:inline">Volver</span>
+                </button>
                 <img src="/images/foundy-logo.png" alt="Foundy" className="h-8 w-auto object-contain" />
                 <span className="text-xl font-bold text-[#0d5c5d]">Foundy</span>
               </div>
@@ -114,7 +143,7 @@ export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBac
               </nav>
 
               <div className="flex items-center justify-between gap-3 md:justify-end">
-                <label className="hidden min-w-[220px] items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-500 md:flex">
+                <label className="hidden min-w-55 items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-500 md:flex">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4">
                     <circle cx="11" cy="11" r="6" strokeLinecap="round" strokeLinejoin="round" />
                     <path d="M16 16L21 21" strokeLinecap="round" strokeLinejoin="round" />
