@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { supabase } from "../../services/supabase.js";
+import AIConsultingPanel from "../../components/ai/AIConsultingPanel.jsx";
 
 const menu = ["Create project", "My projects", "Opportunities", "Messages"];
 
@@ -75,8 +76,6 @@ function CrearProyecto({ nombreUsuario = "Entrepreneur", onCerrarSesion, onBackH
     });
   };
 
-  const ayudaIA = (texto) => setAlerta({ tipo: "info", texto });
-
   return (
     <div className="min-h-screen bg-[#f5f7f6] text-slate-800">
       <nav className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 px-4 py-3 backdrop-blur sm:px-6 lg:px-8">
@@ -149,14 +148,10 @@ function CrearProyecto({ nombreUsuario = "Entrepreneur", onCerrarSesion, onBackH
             </p>
             <button
               type="button"
-              onClick={() =>
-                ayudaIA(
-                  "Tell me about your idea in the description and I will help you improve it.",
-                )
-              }
+              onClick={() => document.getElementById("ai-consulting")?.scrollIntoView({ behavior: "smooth" })}
               className="mt-3 text-xs font-bold text-[#00634b] hover:underline"
             >
-              Get help →
+              Get help
             </button>
           </div>
         </aside>
@@ -336,73 +331,9 @@ function CrearProyecto({ nombreUsuario = "Entrepreneur", onCerrarSesion, onBackH
                 </div>
               </form>
 
-              <aside className="h-fit rounded-2xl border border-[#424a4c]/15 bg-white p-5 shadow-[0_12px_35px_rgba(20,65,65,0.06)] sm:p-6">
-                <div className="mb-5 flex items-center justify-between">
-                  <div>
-                    <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#006b73]">
-                      Assistant
-                    </p>
-                    <h2 className="mt-1 text-lg font-black text-[#424a4c]">
-                      AI Consulting
-                    </h2>
-                    <p className="text-[11px] text-[#424a4c]/60">
-                      MADE FOR YOU
-                    </p>
-                  </div>
-                  <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#006b73] text-xs font-black text-white">
-                    AI
-                  </span>
-                </div>
-                <div className="space-y-2">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      ayudaIA(
-                        "Name generation ready: add a name related to the problem your project solves.",
-                      )
-                    }
-                    className="w-full rounded-xl bg-[#006b73] px-4 py-3 text-left text-xs font-bold text-white transition hover:bg-[#00545b]"
-                  >
-                    Generate name
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      ayudaIA(
-                        "To improve it, mention the problem, your solution, and the audience you serve.",
-                      )
-                    }
-                    className="w-full rounded-xl bg-[#00634b] px-4 py-3 text-left text-xs font-bold text-white transition hover:bg-[#004c3a]"
-                  >
-                    Improve description
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      ayudaIA(
-                        "Complete the requested amount and return timeline to calculate an estimate.",
-                      )
-                    }
-                    className="w-full rounded-xl bg-[#424a4c] px-4 py-3 text-left text-xs font-bold text-white transition hover:bg-[#343a3c]"
-                  >
-                    Calculate investment
-                  </button>
-                </div>
-                <div className="mt-7 rounded-xl border border-[#424a4c]/10 bg-[#424a4c]/4 p-4">
-                  <div className="flex gap-2">
-                    <span className="grid h-6 w-6 shrink-0 place-items-center rounded-md bg-[#006b73] text-[10px] font-bold text-white">
-                      AI
-                    </span>
-                    <p className="m-0 text-xs leading-5 text-[#424a4c]/75">
-                      Hello, how can I help you with your project?
-                    </p>
-                  </div>
-                  <div className="mt-5 flex items-center justify-between rounded-lg border border-[#424a4c]/15 bg-white px-3 py-2 text-[11px] text-[#424a4c]/60">
-                    <span>Write here...</span>
-                    <span className="text-[#00634b]">➤</span>
-                  </div>
-                </div>
-              </aside>
+              <div id="ai-consulting">
+                <AIConsultingPanel project={proyecto} onMessage={setAlerta} />
+              </div>
             </div>
           </div>
         </main>
