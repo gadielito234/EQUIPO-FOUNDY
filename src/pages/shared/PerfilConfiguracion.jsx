@@ -29,7 +29,7 @@ function Switch({ enabled, onChange }) {
   );
 }
 
-export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBackHome, onOpenFoundyCard }) {
+export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBackHome, onOpenFoundyCard, showSidebar = true }) {
   const [transactionAlerts, setTransactionAlerts] = useState(true);
   const [marketingInsights, setMarketingInsights] = useState(false);
   const [email, setEmail] = useState(usuarioData?.correo || '');
@@ -88,7 +88,7 @@ export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBac
   return (
     <div className="min-h-screen bg-[#f4f6f4] text-slate-800">
       <div className="mx-auto flex min-h-screen max-w-[1600px] flex-col lg:flex-row">
-        <aside className="w-full border-b border-slate-200 bg-[#f8faf8] lg:w-70 lg:border-b-0 lg:border-r lg:border-slate-200">
+        {showSidebar && <aside className="w-full border-b border-slate-200 bg-[#f8faf8] lg:w-70 lg:border-b-0 lg:border-r lg:border-slate-200">
           <div className="flex items-center gap-3 px-6 py-6">
             <img src="/images/foundy-logo.png" alt="Foundy" className="h-8 w-auto object-contain" />
             <span className="text-2xl font-bold tracking-tight text-[#0f4d4d]">Foundy</span>
@@ -138,7 +138,7 @@ export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBac
               Logout
             </button>
           </div>
-        </aside>
+        </aside>}
 
         <div className="flex min-h-screen flex-1 flex-col">
           <header className="border-b border-slate-200 bg-white/90 backdrop-blur-sm">

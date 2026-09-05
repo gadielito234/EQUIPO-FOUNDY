@@ -21,7 +21,7 @@ const navigationItems = [
     { label: 'Notificaciones', icon: Bell },
 ];
 
-function Inicio({ usuarioData, onCerrarSesion, onOpenSettings, onOpenCreateProject, onOpenChat, onOpenFoundyCard }) {
+function Inicio({ usuarioData, onCerrarSesion, onOpenSettings, onOpenCreateProject, onOpenChat, onOpenFoundyCard, showSidebar = true }) {
     const nombreUsuario = usuarioData?.usuario || 'Emprendedor';
     const inicial = nombreUsuario.charAt(0).toUpperCase();
 
@@ -35,7 +35,7 @@ function Inicio({ usuarioData, onCerrarSesion, onOpenSettings, onOpenCreateProje
     return (
                 <div className="min-h-screen bg-[#f3f8f6] text-[#173d43]">
                     <div className="flex min-h-screen">
-                        <aside className="hidden w-64 shrink-0 flex-col border-r border-[#d9e7e3] bg-white px-4 py-6 lg:flex">
+                        {showSidebar && <aside className="hidden w-64 shrink-0 flex-col border-r border-[#d9e7e3] bg-white px-4 py-6 lg:flex">
                             <div className="flex items-center gap-3 px-3">
                                 <img src="/images/foundy-logo.png" alt="Foundy" className="h-8 w-auto object-contain" />
                                 <span className="text-xl font-bold text-[#0d5c5d]">Foundy</span>
@@ -67,7 +67,7 @@ function Inicio({ usuarioData, onCerrarSesion, onOpenSettings, onOpenCreateProje
                                 <button type="button" className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-sm text-[#5d7376] hover:bg-[#edf6f3] hover:text-[#0d5c5d]"><HelpCircle size={17} />Ayuda</button>
                                 <button type="button" onClick={onCerrarSesion} className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-sm text-[#5d7376] hover:bg-red-50 hover:text-red-700"><LogOut size={17} />Cerrar sesión</button>
                             </div>
-                        </aside>
+                        </aside>}
 
                         <main className="min-w-0 flex-1">
                             <header className="flex h-18 items-center justify-between border-b border-[#d9e7e3] bg-white px-5 sm:px-8">

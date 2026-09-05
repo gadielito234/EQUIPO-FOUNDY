@@ -83,6 +83,7 @@ function App() {
       onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
       activeNav={options.activeNav || 'dashboard'}
       showSearch={options.showSearch ?? true}
+      showStatistics={esInversionista}
     >
       {content}
     </DashboardLayout>
@@ -96,6 +97,7 @@ function App() {
           onCerrarSesion={handleCerrarSesion}
           onBackHome={irAHome}
           onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
+          showSidebar={false}
           onOpenChat={() => setPantallaLogueado('chat')}
         />,
         { activeNav: 'settings', showSearch: true }
@@ -144,6 +146,7 @@ function App() {
           usuarioData={usuarioLogueado}
           onCerrarSesion={handleCerrarSesion}
           onBackHome={irAHome}
+          showSidebar={false}
           onOpenSettings={irAConfiguracion}
           onOpenChat={() => setPantallaLogueado('chat')}
           onOpenInvestments={() => setPantallaLogueado('investments')}
@@ -165,6 +168,7 @@ function App() {
       <Inicio
         usuarioData={usuarioLogueado}
         onCerrarSesion={handleCerrarSesion}
+        showSidebar={false}
         onOpenSettings={irAConfiguracion}
         onBackHome={irAHome}
         onOpenCreateProject={() => setPantallaLogueado('create-project')}

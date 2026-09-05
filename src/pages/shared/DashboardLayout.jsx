@@ -37,10 +37,12 @@ export default function DashboardLayout({
   topNav = defaultTopNav,
   searchPlaceholder = 'Buscar',
   showSearch = true,
+  showStatistics = true,
   footerContent,
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const nombreUsuario = usuarioData?.usuario || 'Usuario';
+  const visibleTopNav = topNav.filter(({ key }) => showStatistics || key !== 'statistics');
 
   const handleSidebarAction = (label) => {
     if (label === 'Home') onBackHome?.();
@@ -185,7 +187,7 @@ export default function DashboardLayout({
           <header className="border-b-[3px] border-[#0b5d61] bg-[#f5f2eb] px-6 py-4">
             <div className="flex items-center justify-between gap-4">
               <nav className="flex items-center gap-8 text-sm font-medium text-[#506466]">
-                {topNav.map(({ label, key }) => (
+                {visibleTopNav.map(({ label, key }) => (
                   <button
                     key={key || label}
                     type="button"
