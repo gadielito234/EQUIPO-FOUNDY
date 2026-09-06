@@ -63,7 +63,7 @@ const updates = [
   },
 ];
 
-function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenSettings, onOpenChat }) {
+function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenSettings, onOpenChat, showSidebar = true }) {
   const [storedUser] = useState(getStoredUser);
   const user = {
     ...storedUser,
@@ -81,7 +81,7 @@ function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenSettings, onO
   return (
     <div className="min-h-screen bg-[#f4f6f8] text-[#0f2d39]">
       <div className="flex min-h-screen">
-      <aside className="flex w-64 min-w-60 flex-col border-r border-[#0b252b]/10 bg-[#f1f4f6] px-4 py-6">
+      {showSidebar && <aside className="flex w-64 min-w-60 flex-col border-r border-[#0b252b]/10 bg-[#f1f4f6] px-4 py-6">
         <div className="mb-7 flex flex-col items-center gap-3">
           <div className="h-22.5 w-22.5 overflow-hidden rounded-full border-[3px] border-[#084343]/15 bg-linear-to-br from-[#dfeef1] to-[#cde8d9]">
             <img src={user.avatar || defaultUser.avatar} alt={userName} className="h-full w-full object-cover" />
@@ -110,7 +110,7 @@ function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenSettings, onO
         </nav>
 
         <div className="mt-auto flex w-full flex-col gap-2.5">
-          <button type="button" className="mt-2 flex w-full cursor-pointer items-center gap-3 border-t border-[#0b252b]/8 bg-transparent px-3 pt-3 text-left text-[#4a5865]">
+          <button type="button" onClick={onOpenChat} className="mt-2 flex w-full cursor-pointer items-center gap-3 border-t border-[#0b252b]/8 bg-transparent px-3 pt-3 text-left text-[#4a5865]">
             <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-[#09303c]/8 bg-white/60"><HelpCircle size={20} /></span>
             <span>Support</span>
           </button>
@@ -119,10 +119,10 @@ function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenSettings, onO
             <span>Logout</span>
           </button>
         </div>
-      </aside>
+      </aside>}
 
       <main className="min-w-0 flex-1 px-5 py-7 sm:px-8 lg:px-12">
-        <header className="relative z-40 flex h-18 items-center justify-between border-b border-[#0b252b]/8 bg-transparent px-0 sm:px-0">
+        <header className={showSidebar ? 'relative z-40 flex h-18 items-center justify-between border-b border-[#0b252b]/8 bg-transparent px-0 sm:px-0' : 'hidden'}>
           <div className="flex h-full items-center gap-5 sm:gap-12">
             <button
               type="button"
@@ -161,7 +161,7 @@ function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenSettings, onO
               <span className="text-[0.7rem] font-bold tracking-[0.16em] text-[#1b7f61]">MEMBER DASHBOARD</span>
               <h1 className="mt-1 text-2xl font-bold tracking-tight">Manage your Foundy Card and exclusive investment portfolio.</h1>
             </div>
-            <button type="button" className="shrink-0 rounded-lg bg-[#1d5c4d] px-4 py-3 text-sm font-bold text-white hover:bg-[#15483d]">
+            <button type="button" onClick={onBackHome} className="shrink-0 rounded-lg bg-[#1d5c4d] px-4 py-3 text-sm font-bold text-white hover:bg-[#15483d]">
               + Invest Now
             </button>
           </section>
@@ -239,7 +239,7 @@ function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenSettings, onO
             <section className="rounded-xl border border-[#0b252b]/10 bg-white p-5 shadow-[0_14px_24px_rgba(13,44,50,0.06)]">
               <div className="flex items-center justify-between">
                 <h2 className="font-bold">Entrepreneur Updates</h2>
-                <button type="button" className="text-xs font-bold text-[#1b7f61]">View All</button>
+                <button type="button" onClick={onBackHome} className="text-xs font-bold text-[#1b7f61]">View All</button>
               </div>
 
               <div className="mt-4 divide-y divide-[#0b252b]/10">

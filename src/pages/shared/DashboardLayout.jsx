@@ -31,7 +31,9 @@ export default function DashboardLayout({
   onBackHome,
   onOpenSettings,
   onOpenChat,
+  onOpenInvestments,
   onOpenFoundyCard,
+  onOpenNotifications,
   activeNav = 'dashboard',
   sidebarItems = defaultSidebarItems,
   topNav = defaultTopNav,
@@ -44,15 +46,18 @@ export default function DashboardLayout({
   const nombreUsuario = usuarioData?.usuario || 'Usuario';
   const visibleTopNav = topNav.filter(({ key }) => showStatistics || key !== 'statistics');
 
-  const handleSidebarAction = (label) => {
-    if (label === 'Home') onBackHome?.();
-    if (label === 'Messages') onOpenChat?.();
-    if (label === 'Settings') onOpenSettings?.();
+  const handleSidebarAction = (key) => {
+    if (key === 'home') onBackHome?.();
+    if (key === 'projects' || key === 'investments') onOpenInvestments?.();
+    if (key === 'messages') onOpenChat?.();
+    if (key === 'settings') onOpenSettings?.();
+    if (key === 'notifications') onOpenNotifications?.();
   };
 
-  const handleTopNavAction = (label) => {
-    if (label === 'Dashboard' || label === 'Statistics') onBackHome?.();
-    if (label === 'Foundy card') onOpenFoundyCard?.();
+  const handleTopNavAction = (key) => {
+    if (key === 'dashboard' || key === 'statistics') onBackHome?.();
+    if (key === 'investments') onOpenInvestments?.();
+    if (key === 'foundy-card') onOpenFoundyCard?.();
   };
 
   return (
@@ -108,7 +113,7 @@ export default function DashboardLayout({
                 <button
                   key={key || label}
                   type="button"
-                  onClick={() => handleSidebarAction(label)}
+                  onClick={() => handleSidebarAction(key)}
                   className={[
                     'group flex w-full items-center rounded-xl px-2 py-2.5 text-left text-sm transition-all duration-200',
                     isActive ? 'bg-[#0b5d61] text-white shadow-sm' : 'text-[#4f5d5f] hover:bg-[#efeae2] hover:text-[#183f43]',
@@ -186,12 +191,12 @@ export default function DashboardLayout({
         <main className="flex-1">
           <header className="border-b-[3px] border-[#0b5d61] bg-[#f5f2eb] px-6 py-4">
             <div className="flex items-center justify-between gap-4">
-              <nav className="flex items-center gap-8 text-sm font-medium text-[#506466]">
+              <nav className="flex min-w-0 flex-1 items-center gap-8 overflow-x-auto whitespace-nowrap pr-2 text-sm font-medium text-[#506466]">
                 {visibleTopNav.map(({ label, key }) => (
                   <button
                     key={key || label}
                     type="button"
-                    onClick={() => handleTopNavAction(label)}
+                    onClick={() => handleTopNavAction(key)}
                     className={[
                       'relative pb-1',
                       activeNav === key ? 'border-b-2 border-[#0d5d61] text-[#0d5d61]' : 'hover:text-[#0d5d61]',
@@ -204,7 +209,7 @@ export default function DashboardLayout({
 
               {showSearch && (
                 <div className="flex items-center justify-end">
-                  <div className="flex items-center gap-2 rounded-full border border-[#c9d1ce] bg-[#f0f3f0] px-3 py-2 text-sm text-[#5f7274] shadow-sm">
+                  <div className="flex shrink-0 items-center gap-2 rounded-full border border-[#c9d1ce] bg-[#f0f3f0] px-3 py-2 text-sm text-[#5f7274] shadow-sm">
                     <Search className="h-4 w-4" />
                     <input
                       type="text"
@@ -234,17 +239,17 @@ export default function DashboardLayout({
                   <div>
                     <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-white">Explora</h2>
                     <div className="mt-4 space-y-3 text-sm text-teal-100">
-                      <button type="button" className="block hover:text-white">Home</button>
-                      <button type="button" className="block hover:text-white">My investments</button>
-                      <button type="button" className="block hover:text-white">Messages</button>
+                      <button type="button" onClick={onBackHome} className="block hover:text-white">Home</button>
+                      <button type="button" onClick={onOpenInvestments} className="block hover:text-white">My investments</button>
+                      <button type="button" onClick={onOpenChat} className="block hover:text-white">Messages</button>
                     </div>
                   </div>
 
                   <div>
                     <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-white">Cuenta</h2>
                     <div className="mt-4 space-y-3 text-sm text-teal-100">
-                      <button type="button" className="block hover:text-white">Sign in</button>
-                      <button type="button" className="block hover:text-white">Sign up</button>
+                      <button type="button" onClick={onBackHome} className="block hover:text-white">Sign in</button>
+                      <button type="button" onClick={onBackHome} className="block hover:text-white">Sign up</button>
                     </div>
                   </div>
                 </div>

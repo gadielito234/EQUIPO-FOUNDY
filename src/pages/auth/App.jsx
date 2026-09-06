@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Bell, Home, MessageSquareText, Settings, Wallet } from 'lucide-react';
 import { supabase } from '../../services/supabase.js';
 import Recuperacion from './recuperacion.jsx';
 import Registro from './registro.jsx';
@@ -80,8 +81,22 @@ function App() {
       onBackHome={irAHome}
       onOpenSettings={irAConfiguracion}
       onOpenChat={() => setPantallaLogueado('chat')}
+      onOpenInvestments={() => setPantallaLogueado('investments')}
       onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
+      onOpenNotifications={() => console.log('No hay notificaciones nuevas.')}
       activeNav={options.activeNav || 'dashboard'}
+      sidebarItems={esInversionista ? [
+        { label: 'Home', icon: Home, key: 'home' },
+        { label: 'My investments', icon: Wallet, key: 'investments' },
+        { label: 'Messages', icon: MessageSquareText, key: 'messages' },
+        { label: 'Settings', icon: Settings, key: 'settings' },
+        { label: 'Notifications', icon: Bell, key: 'notifications' },
+      ] : undefined}
+      topNav={esInversionista ? [
+        { label: 'Dashboard', key: 'dashboard' },
+        { label: 'My investments', key: 'investments' },
+        { label: 'Foundy card', key: 'foundy-card' },
+      ] : undefined}
       showSearch={options.showSearch ?? true}
       showStatistics={esInversionista}
     >
@@ -94,9 +109,11 @@ function App() {
       return renderWithDashboardLayout(
         <PerfilConfiguracion
           usuarioData={usuarioLogueado}
+          showSidebar={false}
           onCerrarSesion={handleCerrarSesion}
           onBackHome={irAHome}
           onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
+          showSidebar={false}
           showSidebar={false}
           onOpenChat={() => setPantallaLogueado('chat')}
         />,
@@ -121,7 +138,7 @@ function App() {
 
     if (pantallaLogueado === 'foundy-card' && esInversionista) {
       return renderWithDashboardLayout(
-        <FoundyCard onLogout={handleCerrarSesion} onBackHome={irAHome} onOpenSettings={irAConfiguracion} onOpenChat={() => setPantallaLogueado('chat')} />,
+        <FoundyCard showSidebar={false} onLogout={handleCerrarSesion} onBackHome={irAHome} onOpenSettings={irAConfiguracion} onOpenChat={() => setPantallaLogueado('chat')} />,
         { activeNav: 'foundy-card', showSearch: true }
       );
     }
@@ -135,6 +152,7 @@ function App() {
           onOpenSettings={irAConfiguracion}
           onOpenChat={() => setPantallaLogueado('chat')}
           onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
+          showSidebar={false}
         />,
         { activeNav: 'investments', showSearch: true }
       );
@@ -159,7 +177,7 @@ function App() {
 
     if (pantallaLogueado === 'foundy-card') {
       return renderWithDashboardLayout(
-        <FoundyCard usuarioData={usuarioLogueado} onLogout={handleCerrarSesion} onBackHome={irAHome} onOpenSettings={irAConfiguracion} onOpenChat={() => setPantallaLogueado('chat')} />,
+        <FoundyCard showSidebar={false} usuarioData={usuarioLogueado} onLogout={handleCerrarSesion} onBackHome={irAHome} onOpenSettings={irAConfiguracion} onOpenChat={() => setPantallaLogueado('chat')} />,
         { activeNav: 'foundy-card', showSearch: true }
       );
     }

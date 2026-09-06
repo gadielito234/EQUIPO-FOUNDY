@@ -141,7 +141,7 @@ export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBac
         </aside>}
 
         <div className="flex min-h-screen flex-1 flex-col">
-          <header className="border-b border-slate-200 bg-white/90 backdrop-blur-sm">
+          <header className={showSidebar ? 'border-b border-slate-200 bg-white/90 backdrop-blur-sm' : 'hidden'}>
             <div className="flex flex-col gap-4 px-4 py-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
               <div className="flex items-center gap-3">
                 <button

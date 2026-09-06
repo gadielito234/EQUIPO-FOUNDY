@@ -70,9 +70,9 @@ const investmentGrowth = [
   { month: 'Jul', value: 90 },
 ];
 
-function HomeInversionista({ usuarioData, onCerrarSesion, onBackHome, onOpenSettings, onOpenChat, onOpenFoundyCard }) {
-  const nombreUsuario = usuarioData?.usuario || 'David Diaz';
-  const [searchTerm, setSearchTerm] = useState('');
+function HomeInversionista() {
+  const nombreUsuario = 'David Diaz';
+  const [searchTerm] = useState('');
 
   const filteredOpportunities = opportunities.filter((item) => {
     if (!searchTerm.trim()) return true;
