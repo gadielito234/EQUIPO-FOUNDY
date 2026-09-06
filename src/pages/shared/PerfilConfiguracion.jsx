@@ -296,40 +296,6 @@ export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBac
             </div>
           </main>
 
-          <footer className="bg-[#0d3f44] text-white">
-            <div className="mx-auto grid max-w-7xl gap-8 px-6 py-10 md:grid-cols-3">
-              <div>
-                <div className="flex items-center gap-3">
-                  <img src="/images/foundy-logo.png" alt="Foundy" className="h-8 w-auto object-contain brightness-0 invert" />
-                  <span className="text-xl font-bold">Foundy</span>
-                </div>
-                <p className="mt-4 max-w-sm text-sm leading-6 text-teal-100">
-                  Foundy connects entrepreneurs, investors, and partners to bring brighter ideas to life.
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-teal-100">Social Media</h3>
-                <div className="mt-4 space-y-2 text-sm text-teal-50">
-                  <p>Instagram</p>
-                  <p>LinkedIn</p>
-                  <p>Twitter</p>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-teal-100">Contact Us</h3>
-                <div className="mt-4 space-y-2 text-sm text-teal-50">
-                  <p>hello@foundy.com</p>
-                  <p>+503 2500 0000</p>
-                  <p>San Salvador, El Salvador</p>
-                </div>
-              </div>
-            </div>
-            <div className="border-t border-white/10 px-6 py-5 text-center text-xs text-teal-100">
-              © 2026 Foundy. All rights reserved.
-            </div>
-          </footer>
         </div>
       </div>
       {notice && <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-lg bg-[#173f43] px-4 py-3 text-xs font-semibold text-white shadow-lg">{notice}</div>}
