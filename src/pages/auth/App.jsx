@@ -12,6 +12,9 @@ import CrearProyecto from '../emprendedor/CrearProyecto.jsx';
 import ChatEmprendedor from '../chat/ChatEmprendedor.jsx';
 import ChatInversionista from '../chat/ChatInversionista.jsx';
 import DashboardLayout from '../shared/DashboardLayout.jsx';
+import Statistics from '../emprendedor/Statistics.jsx';
+import Notifications from '../inversionista/Notifications.jsx';
+import Support from '../shared/Support.jsx';
 
 function App() {
   const [mostrarLanding, setMostrarLanding] = useState(true);
@@ -81,15 +84,50 @@ function App() {
       onOpenSettings={irAConfiguracion}
       onOpenChat={() => setPantallaLogueado('chat')}
       onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
+      onOpenStatistics={() => setPantallaLogueado('statistics')}
+      onOpenProjects={() => setPantallaLogueado('create-project')}
+      onOpenInvestments={() => setPantallaLogueado('investments')}
+      onOpenNotifications={() => setPantallaLogueado('notifications')}
+      onOpenSupport={() => setPantallaLogueado('support')}
+      investorMode={esInversionista}
       activeNav={options.activeNav || 'dashboard'}
       showSearch={options.showSearch ?? true}
-      showStatistics={esInversionista}
+      showStatistics
     >
       {content}
     </DashboardLayout>
   );
 
   if (usuarioLogueado) {
+    if (pantallaLogueado === 'notifications') {
+      return renderWithDashboardLayout(
+        <Notifications user={usuarioLogueado} role={usuarioLogueado?.tipo_usuario} onBack={() => setPantallaLogueado(esInversionista ? 'dashboard' : 'home')} />,
+        { activeNav: 'notifications', showSearch: false }
+      );
+    }
+
+    if (pantallaLogueado === 'support') {
+      return renderWithDashboardLayout(
+        <Support onBack={irAHome} onOpenChat={() => setPantallaLogueado('chat')} />,
+        { activeNav: 'support', showSearch: false }
+      );
+    }
+
+    if (pantallaLogueado === 'statistics') {
+      return renderWithDashboardLayout(
+        <Statistics
+          usuarioData={usuarioLogueado}
+          onCerrarSesion={handleCerrarSesion}
+          onBackHome={irAHome}
+          onOpenSettings={irAConfiguracion}
+          onOpenChat={() => setPantallaLogueado('chat')}
+          onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
+          embeddedLayout
+        />,
+        { activeNav: 'statistics', showSearch: true }
+      );
+    }
+
     if (pantallaLogueado === 'settings') {
       return renderWithDashboardLayout(
         <PerfilConfiguracion
@@ -98,6 +136,7 @@ function App() {
           onBackHome={irAHome}
           onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
           showSidebar={false}
+          embeddedLayout
           onOpenChat={() => setPantallaLogueado('chat')}
         />,
         { activeNav: 'settings', showSearch: true }
@@ -106,7 +145,7 @@ function App() {
 
     if (pantallaLogueado === 'create-project' && !esInversionista) {
       return renderWithDashboardLayout(
-        <CrearProyecto usuarioData={usuarioLogueado} onCerrarSesion={handleCerrarSesion} onBackHome={irAHome} />,
+        <CrearProyecto usuarioData={usuarioLogueado} onCerrarSesion={handleCerrarSesion} onBackHome={irAHome} embeddedLayout />,
         { activeNav: 'projects', showSearch: false }
       );
     }
@@ -114,14 +153,14 @@ function App() {
     if (pantallaLogueado === 'chat') {
       const ChatPage = usuarioLogueado.tipo_usuario === 'Inversionista' ? ChatInversionista : ChatEmprendedor;
       return renderWithDashboardLayout(
-        <ChatPage onBackHome={irAHome} onCerrarSesion={handleCerrarSesion} />,
+        <ChatPage onBackHome={irAHome} onCerrarSesion={handleCerrarSesion} embeddedLayout />,
         { activeNav: 'messages', showSearch: false }
       );
     }
 
     if (pantallaLogueado === 'foundy-card' && esInversionista) {
       return renderWithDashboardLayout(
-        <FoundyCard onLogout={handleCerrarSesion} onBackHome={irAHome} onOpenSettings={irAConfiguracion} onOpenChat={() => setPantallaLogueado('chat')} />,
+        <FoundyCard onLogout={handleCerrarSesion} onBackHome={irAHome} onOpenSettings={irAConfiguracion} onOpenChat={() => setPantallaLogueado('chat')} embeddedLayout />,
         { activeNav: 'foundy-card', showSearch: true }
       );
     }
@@ -130,6 +169,7 @@ function App() {
       return renderWithDashboardLayout(
         <Investments
           usuarioData={usuarioLogueado}
+          embeddedLayout
           onCerrarSesion={handleCerrarSesion}
           onBackHome={irAHome}
           onOpenSettings={irAConfiguracion}
@@ -147,6 +187,7 @@ function App() {
           onCerrarSesion={handleCerrarSesion}
           onBackHome={irAHome}
           showSidebar={false}
+          embeddedLayout
           onOpenSettings={irAConfiguracion}
           onOpenChat={() => setPantallaLogueado('chat')}
           onOpenInvestments={() => setPantallaLogueado('investments')}
@@ -159,7 +200,7 @@ function App() {
 
     if (pantallaLogueado === 'foundy-card') {
       return renderWithDashboardLayout(
-        <FoundyCard usuarioData={usuarioLogueado} onLogout={handleCerrarSesion} onBackHome={irAHome} onOpenSettings={irAConfiguracion} onOpenChat={() => setPantallaLogueado('chat')} />,
+        <FoundyCard usuarioData={usuarioLogueado} onLogout={handleCerrarSesion} onBackHome={irAHome} onOpenSettings={irAConfiguracion} onOpenChat={() => setPantallaLogueado('chat')} embeddedLayout />,
         { activeNav: 'foundy-card', showSearch: true }
       );
     }

@@ -64,7 +64,7 @@ function Avatar({ person }) {
   );
 }
 
-function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
+function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion, embeddedLayout = false }) {
   const [activeConversation, setActiveConversation] = useState(null);
   const [messages, setMessages] = useState(initialMessages);
   const [draft, setDraft] = useState("");
@@ -89,7 +89,7 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
   };
 
   return (
-    <div className="chat-shell flex min-h-screen flex-col bg-white text-[#424a4c]">
+    <div className={`${embeddedLayout ? '[&>nav]:hidden' : ''} chat-shell flex min-h-screen flex-col bg-white text-[#424a4c]`}>
       <nav className="flex h-18 shrink-0 items-center justify-between border-b border-[#424a4c]/15 px-5 sm:px-8">
         <button
           type="button"

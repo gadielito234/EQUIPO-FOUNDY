@@ -11,6 +11,8 @@ function makeStub() {
 	const chainable = () => ({
 		select: () => chainable(),
 		eq: () => chainable(),
+		order: () => chainable(),
+		update: () => chainable(),
 		single: async () => noop(),
 		maybeSingle: async () => ({ data: null }),
 		insert: async () => ({ error: { message: 'Supabase no configurado' } }),

@@ -12,7 +12,7 @@ const menuItems = [
 	{ label: 'Home', icon: Home }, { label: 'My investments', icon: Wallet }, { label: 'Messages', icon: Mail }, { label: 'Settings', icon: Settings }, { label: 'Notifications', icon: Bell },
 ];
 
-function Investments({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, onOpenChat, onOpenFoundyCard }) {
+function Investments({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, onOpenChat, onOpenFoundyCard, embeddedLayout = false }) {
 	const [sidebarOpen, setSidebarOpen] = useState(true);
 	const [searchTerm, setSearchTerm] = useState('');
 	const [filter, setFilter] = useState('All');
@@ -37,8 +37,8 @@ function Investments({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, 
 	};
 
 	return (
-		<div className="min-h-screen bg-[#efeee7] text-[#1e4043]"><div className="flex min-h-screen">
-			<aside className={`${sidebarOpen ? 'w-64' : 'w-18'} fixed inset-y-0 left-0 z-30 flex flex-col border-r border-[#d9d3c7] bg-[#f5f2eb] p-4 transition-all duration-200 lg:static`}>
+		<div className={`${embeddedLayout ? '[&>div>main>header]:hidden' : ''} min-h-screen bg-[#efeee7] text-[#1e4043]`}><div className="flex min-h-screen">
+			<aside className={`${embeddedLayout ? 'hidden' : ''} ${sidebarOpen ? 'w-64' : 'w-18'} fixed inset-y-0 left-0 z-30 flex flex-col border-r border-[#d9d3c7] bg-[#f5f2eb] p-4 transition-all duration-200 lg:static`}>
 				<button type="button" onClick={() => setSidebarOpen((open) => !open)} className="mb-6 flex h-12 items-center justify-center border-b border-[#d9d3c7] text-[#0b5d61]" aria-label="Alternar menú">{sidebarOpen ? <img src="/images/foundy-negro.png" alt="Foundy" className="h-8 w-auto" /> : <Menu size={21} />}</button>
 				<button type="button" onClick={onBackHome} className="grid h-9 w-9 place-items-center rounded-lg transition hover:bg-[#006b73]/9 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#006b73]/30" aria-label="Volver al panel" title="Volver al panel"><img src="https://tse2.mm.bing.net/th/id/OIP.w171eC9ZBI8OTweGWM7G0gHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" alt="" className="h-7 w-7 object-contain" /></button>
 				<div className="mb-7 flex flex-col items-center"><div className={`${sidebarOpen ? 'h-20 w-20' : 'h-10 w-10'} overflow-hidden rounded-full border-[3px] border-[#1b4a4d] bg-[#d6e7e6]`}><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=240&q=80" alt="Perfil" className="h-full w-full object-cover" /></div>{sidebarOpen && <><p className="mt-2 text-xs font-semibold text-[#27383a]">{name}</p><span className="mt-1 rounded bg-[#dfe6e6] px-2 py-0.5 text-[10px] text-[#637173]">Inversionista</span></>}</div>
