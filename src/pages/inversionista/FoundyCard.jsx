@@ -1,5 +1,81 @@
+<<<<<<< HEAD
 function FoundyCardPage({ usuarioData }) {
   const userName = usuarioData?.usuario || 'Usuario';
+=======
+import { useState } from 'react';
+import { Home, FolderKanban, Mail, Settings, Bell, HelpCircle, LogOut } from 'lucide-react';
+
+const defaultUser = {
+  name: 'Sara Hernández',
+  avatar:
+    'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=240&q=80',
+};
+
+const getStoredUser = () => {
+  if (typeof window === 'undefined') {
+    return defaultUser;
+  }
+
+  try {
+    const savedUser = JSON.parse(localStorage.getItem('user'));
+    if (savedUser?.name) {
+      return {
+        ...defaultUser,
+        ...savedUser,
+      };
+    }
+  } catch (error) {
+    console.warn('Unable to parse user from localStorage:', error);
+  }
+
+  return defaultUser;
+};
+
+const sidebarMenu = [
+  { label: 'Home', icon: Home },
+  { label: 'My projects', icon: FolderKanban },
+  { label: 'Messages', icon: Mail },
+  { label: 'Settings', icon: Settings },
+  { label: 'Notifications', icon: Bell },
+];
+
+const chartBars = [
+  { label: 'Jan', value: 28 },
+  { label: 'Feb', value: 38 },
+  { label: 'Mar', value: 42 },
+  { label: 'Apr', value: 58 },
+  { label: 'May', value: 74 },
+  { label: 'Jun', value: 64 },
+];
+
+const updates = [
+  {
+    name: 'EcoStream Solutions',
+    badge: 'Seed Stage',
+    value: '$48k',
+    meta: 'Q3 revenue goals exceeded by 15% following our…',
+    tone: 'green',
+    investors: 42,
+  },
+  {
+    name: 'Quantum Ledger',
+    badge: 'Series A',
+    value: '$27k',
+    meta: 'Beta testing for our cross-border payment protocol is…',
+    tone: 'purple',
+    investors: 128,
+  },
+];
+
+function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenSettings, onOpenChat, embeddedLayout = false }) {
+  const [storedUser] = useState(getStoredUser);
+  const user = {
+    ...storedUser,
+    name: usuarioData?.usuario || storedUser.name,
+    avatar: usuarioData?.avatar || storedUser.avatar,
+  };
+  const userName = user?.name || defaultUser.name;
+>>>>>>> d784d26ed20b685861482f6d6795287299b200c4
   const initials = userName
     .split(' ')
     .slice(0, 2)
@@ -8,8 +84,87 @@ function FoundyCardPage({ usuarioData }) {
     .toUpperCase();
 
   return (
+<<<<<<< HEAD
     <div className="min-h-full bg-[#f4f6f8] text-[#0f2d39]">
       <main className="min-w-0 px-1 py-1 sm:px-2 lg:px-4">
+=======
+    <div className={`${embeddedLayout ? '[&>div>aside]:hidden [&>div>main>header]:hidden' : ''} min-h-screen bg-[#f4f6f8] text-[#0f2d39]`}>
+      <div className="flex min-h-screen">
+      <aside className="flex w-64 min-w-60 flex-col border-r border-[#0b252b]/10 bg-[#f1f4f6] px-4 py-6">
+        <div className="mb-7 flex flex-col items-center gap-3">
+          <div className="h-22.5 w-22.5 overflow-hidden rounded-full border-[3px] border-[#084343]/15 bg-linear-to-br from-[#dfeef1] to-[#cde8d9]">
+            <img src={user.avatar || defaultUser.avatar} alt={userName} className="h-full w-full object-cover" />
+          </div>
+          <button type="button" className="cursor-pointer rounded-full border border-[#dfe7eb] bg-white/70 px-4.5 py-1.75 text-[0.86rem] font-semibold">
+            {userName}
+          </button>
+        </div>
+
+        <nav className="flex w-full flex-col gap-2.5" aria-label="Sidebar navigation">
+          {sidebarMenu.map((item, index) => {
+            const IconComponent = item.icon;
+
+            return (
+              <button
+                key={item.label}
+                type="button"
+                onClick={item.label === 'Home' ? onBackHome : item.label === 'Messages' ? onOpenChat : item.label === 'Settings' ? onOpenSettings : undefined}
+                className={`flex w-full cursor-pointer items-center gap-3 rounded-[10px] border border-dashed border-transparent bg-transparent px-3 py-2.75 text-left text-[0.96rem] font-medium transition hover:border-[#084343]/20 hover:bg-[#084343]/4 ${index === 0 ? 'border-[#084343]/20 bg-[#084343]/4' : ''}`}
+              >
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-[#09303c]/8 bg-white/60 text-[#0f2d39]"><IconComponent size={20} /></span>
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
+        </nav>
+
+        <div className="mt-auto flex w-full flex-col gap-2.5">
+          <button type="button" className="mt-2 flex w-full cursor-pointer items-center gap-3 border-t border-[#0b252b]/8 bg-transparent px-3 pt-3 text-left text-[#4a5865]">
+            <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-[#09303c]/8 bg-white/60"><HelpCircle size={20} /></span>
+            <span>Support</span>
+          </button>
+          <button type="button" onClick={onLogout} className="mt-0 flex w-full cursor-pointer items-center gap-3 border-t border-[#0b252b]/8 bg-transparent px-3 pt-3 text-left text-[#4a5865]">
+            <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-[#09303c]/8 bg-white/60"><LogOut size={20} /></span>
+            <span>Logout</span>
+          </button>
+        </div>
+      </aside>
+
+      <main className="min-w-0 flex-1 px-5 py-7 sm:px-8 lg:px-12">
+        <header className="relative z-40 flex h-18 items-center justify-between border-b border-[#0b252b]/8 bg-transparent px-0 sm:px-0">
+          <div className="flex h-full items-center gap-5 sm:gap-12">
+            <button
+              type="button"
+              onClick={onBackHome}
+              className="flex h-10 items-center gap-2 rounded-lg px-2 text-sm font-bold text-[#006b73] transition hover:bg-[#006b73]/9 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#006b73]/30"
+              aria-label="Volver al panel"
+              title="Volver al panel"
+            >
+              <img
+                src="https://tse2.mm.bing.net/th/id/OIP.w171eC9ZBI8OTweGWM7G0gHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
+                alt=""
+                className="h-7 w-7 object-contain"
+              />
+              <span className="hidden sm:inline">Volver</span>
+            </button>
+            <div aria-label="Foundy brand logo">
+              <img src="/images/foundy-logo.png" alt="Foundy logo" className="h-9.5 w-auto object-contain" />
+            </div>
+          </div>
+
+          <nav className="hidden items-center gap-7 text-[11px] sm:flex" aria-label="Main navigation">
+            <button type="button" onClick={onBackHome} className="text-[#758082] hover:text-[#006b73]">Dashboard</button>
+            <button type="button" onClick={onBackHome} className="text-[#758082] hover:text-[#006b73]">Statistics</button>
+            <button type="button" className="border-b-2 border-[#006b73] py-[1.62rem] font-semibold text-[#006b73]">Foundy card</button>
+          </nav>
+
+          <label className="flex h-8 w-36 items-center gap-2 rounded-full border border-[#dce2e2] bg-[#eef2f2] px-3 text-[#899496] sm:w-44" aria-label="Search">
+            <span aria-hidden="true">⌕</span>
+            <input type="text" placeholder="Buscar" className="w-full bg-transparent text-xs outline-none placeholder:text-[#899496]" />
+          </label>
+        </header>
+
+>>>>>>> d784d26ed20b685861482f6d6795287299b200c4
         <div className="mx-auto max-w-6xl">
           <section className="mt-7 flex items-center justify-between gap-4 rounded-xl bg-[#dfeeed] px-6 py-5">
             <div>

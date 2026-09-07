@@ -15,7 +15,11 @@ function Avatar({ person }) {
   );
 }
 
+<<<<<<< HEAD
 function Chat() {
+=======
+function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion, embeddedLayout = false }) {
+>>>>>>> d784d26ed20b685861482f6d6795287299b200c4
   const [activeConversation, setActiveConversation] = useState(null);
   const [messages, setMessages] = useState(initialMessages);
   const [draft, setDraft] = useState("");
@@ -39,7 +43,43 @@ function Chat() {
   };
 
   return (
+<<<<<<< HEAD
     <div className="chat-shell flex min-h-screen flex-col bg-white text-[#424a4c]">
+=======
+    <div className={`${embeddedLayout ? '[&>nav]:hidden' : ''} chat-shell flex min-h-screen flex-col bg-white text-[#424a4c]`}>
+      <nav className="flex h-18 shrink-0 items-center justify-between border-b border-[#424a4c]/15 px-5 sm:px-8">
+        <button
+          type="button"
+          onClick={onBackHome}
+          className="flex h-10 items-center gap-2 rounded-lg px cde-2 text-sm font-bold text-[#006b73] transition hover:bg-[#006b73]/9 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#006b73]/30"
+          aria-label="Volver al panel"
+          title="Volver al panel"
+        >
+          <img
+            src="https://tse2.mm.bing.net/th/id/OIP.w171eC9ZBI8OTweGWM7G0gHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
+            alt=""
+            className="h-7 w-7 object-contain"
+          />
+          <span className="hidden sm:inline">Volver</span>
+        </button>
+        <div className="flex items-center gap-3 sm:gap-5">
+          <span className="hidden text-xs font-semibold text-[#424a4c]/55 sm:block">
+            {investorMode ? "Investor inbox" : "Entrepreneur inbox"}
+          </span>
+          <button
+            type="button"
+            onClick={() => setNotice("Notifications are up to date.")}
+            className="grid h-9 w-9 place-items-center rounded-full text-[#424a4c]/70 transition hover:bg-[#006b73]/9 hover:text-[#006b73] focus-visible:outline-none"
+            aria-label="Notifications"
+          >
+            ♢
+          </button>
+          <button type="button" onClick={onCerrarSesion} className="text-xs font-semibold text-[#006b73] hover:underline">
+            Logout
+          </button>
+        </div>
+      </nav>
+>>>>>>> d784d26ed20b685861482f6d6795287299b200c4
       <main className="mx-auto flex min-h-0 w-full max-w-345 flex-1 flex-col px-3 py-3 sm:px-5 sm:py-5 lg:px-8">
         {notice && (
           <div

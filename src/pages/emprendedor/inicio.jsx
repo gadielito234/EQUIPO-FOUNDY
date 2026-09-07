@@ -1,14 +1,26 @@
 import { FolderKanban, Plus, Target, Users } from 'lucide-react';
+<<<<<<< HEAD
 
 function Inicio({ onOpenCreateProject }) {
+=======
+>>>>>>> d784d26ed20b685861482f6d6795287299b200c4
 
+function Inicio({ onOpenCreateProject }) {
     return (
+<<<<<<< HEAD
                 <div className="min-h-full bg-[#f3f8f6] text-[#173d43]">
                             <div className="mx-auto max-w-7xl px-1 py-1 sm:px-2 lg:px-4">
                                 <section className="flex flex-col justify-between gap-5 rounded-2xl bg-[#0d7169] px-6 py-7 text-white shadow-[0_14px_30px_rgba(13,113,105,0.16)] sm:flex-row sm:items-center sm:px-8">
                                     <div>
                                         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b9eee0]">Tu avance</p>
                                         <h2 className="mt-2 max-w-xl text-2xl font-bold tracking-tight sm:text-3xl">Sigue el camino de tu emprendimiento</h2>
+=======
+                <div className="mx-auto max-w-7xl px-1 py-2 text-[#173d43]">
+                    <section className="flex flex-col justify-between gap-5 rounded-2xl bg-[#0d7169] px-6 py-7 text-white shadow-[0_14px_30px_rgba(13,113,105,0.16)] sm:flex-row sm:items-center sm:px-8">
+                        <div>
+                            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b9eee0]">Tu avance</p>
+                            <h2 className="mt-2 max-w-xl text-2xl font-bold tracking-tight sm:text-3xl">Sigue el camino de tu emprendimiento</h2>
+>>>>>>> d784d26ed20b685861482f6d6795287299b200c4
                                         <p className="mt-3 max-w-lg text-sm leading-6 text-white/75">Cuando conectemos la información de tu proyecto podrás ver cuánto has avanzado hacia tu meta de inversión.</p>
                                     </div>
                                     <button type="button" onClick={onOpenCreateProject} className="flex w-fit shrink-0 items-center gap-2 rounded-lg bg-white px-4 py-3 text-xs font-bold text-[#0d7169] transition hover:bg-[#e7f7f1]"><Plus size={16} />Crear proyecto</button>
@@ -50,7 +62,10 @@ function Inicio({ onOpenCreateProject }) {
                                         <button type="button" onClick={onOpenCreateProject} className="mt-6 flex items-center gap-2 rounded-lg border border-[#0d7169] px-4 py-3 text-xs font-bold text-[#0d7169] hover:bg-[#e5f5ef]"><Plus size={16} />Registrar emprendimiento</button>
                                     </article>
                                 </section>
+<<<<<<< HEAD
                             </div>
+=======
+>>>>>>> d784d26ed20b685861482f6d6795287299b200c4
                 </div>
     );
 }

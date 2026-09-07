@@ -9,7 +9,11 @@ const initialProject = {
   id_categoria: "",
 };
 
+<<<<<<< HEAD
 function CrearProyecto({ usuarioData }) {
+=======
+function CrearProyecto({ usuarioData, onCerrarSesion, onBackHome, embeddedLayout = false }) {
+>>>>>>> d784d26ed20b685861482f6d6795287299b200c4
   const [proyecto, setProyecto] = useState(initialProject);
   const [imagenes, setImagenes] = useState([]);
   const [alerta, setAlerta] = useState(null);
@@ -94,8 +98,95 @@ function CrearProyecto({ usuarioData }) {
   const ayudaIA = (texto) => setAlerta({ tipo: "info", texto });
 
   return (
+<<<<<<< HEAD
     <div className="min-h-screen bg-[#f5f7f6] text-slate-800">
       <main
+=======
+    <div className={`${embeddedLayout ? '[&>nav]:hidden [&>div>aside]:hidden' : ''} min-h-screen bg-[#f5f7f6] text-slate-800`}>
+      <nav className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 px-4 py-3 backdrop-blur sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between gap-4">
+          <button
+            type="button"
+            onClick={onBackHome}
+            className="flex h-10 items-center gap-2 rounded-lg px-2 text-sm font-bold text-[#006b73] transition hover:bg-[#006b73]/9 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#006b73]/30"
+            aria-label="Volver al panel"
+            title="Volver al panel"
+          >
+            <img
+              src="https://tse2.mm.bing.net/th/id/OIP.w171eC9ZBI8OTweGWM7G0gHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
+              alt=""
+              className="h-7 w-7 object-contain"
+            />
+            <span>Volver</span>
+          </button>
+          <div className="hidden items-center gap-8 text-sm font-medium text-slate-500 md:flex">
+            <a href="#crear-proyecto" className="text-[#006b73]">
+              Espacio de trabajo
+            </a>
+            <a href="#ayuda" className="text-[#424a4c] hover:text-[#006b73]">
+              Centro de ayuda
+            </a>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="hidden text-sm text-slate-500 sm:block">
+              Hello, {nombreUsuario}
+            </span>
+            <button
+              type="button"
+              onClick={onCerrarSesion}
+              className="rounded-lg border border-[#424a4c]/30 px-3 py-2 text-xs font-semibold text-[#424a4c] transition hover:border-[#006b73] hover:text-[#006b73]"
+            >
+              Log out
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <div className="mx-auto flex max-w-375">
+        <aside className="hidden w-60 shrink-0 border-r border-slate-200 bg-white px-4 py-7 lg:block">
+          <div className="mb-8 px-3">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
+              Entrepreneur dashboard
+            </p>
+            <p className="mt-2 text-sm font-semibold text-slate-700">
+              Build your next opportunity
+            </p>
+          </div>
+          <nav className="space-y-1" aria-label="Entrepreneur menu">
+            {menu.map((item, index) => (
+              <a
+                key={item}
+                href={index === 0 ? "#crear-proyecto" : "#"}
+                className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition ${index === 0 ? "bg-[#006b73] text-white" : "text-[#424a4c] hover:bg-[#00634b]/10 hover:text-[#00634b]"}`}
+              >
+                <span className="grid h-7 w-7 place-items-center rounded-lg bg-white text-base font-bold shadow-sm">
+                  {index === 0 ? "+" : index + 1}
+                </span>
+                {item}
+              </a>
+            ))}
+          </nav>
+          <div id="ayuda" className="mt-10 rounded-2xl bg-[#f8f1e7] p-4">
+            <p className="text-xs font-bold text-[#8a5a24]">Need guidance?</p>
+            <p className="mt-2 text-xs leading-5 text-slate-500">
+              AI can help you shape your idea.
+            </p>
+            <button
+              type="button"
+              onClick={() =>
+                ayudaIA(
+                  "Tell me about your idea in the description and I will help you improve it.",
+                )
+              }
+              className="mt-3 text-xs font-bold text-[#00634b] hover:underline"
+            >
+              Get help →
+            </button>
+          </div>
+        </aside>
+
+        <main
+>>>>>>> d784d26ed20b685861482f6d6795287299b200c4
           id="crear-proyecto"
           className="mx-auto min-w-0 max-w-6xl px-4 py-8 sm:px-6 lg:px-10 lg:py-12"
         >
