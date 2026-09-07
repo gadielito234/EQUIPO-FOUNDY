@@ -1,56 +1,7 @@
 import { useState } from "react";
 
-const conversations = [
-  {
-    name: "Jorge Apicario",
-    role: "Startup founder",
-    preview: "The latest investment reports...",
-    time: "1:45 PM",
-    color: "#006b73",
-  },
-  {
-    name: "Maria Elena",
-    role: "Co-founder",
-    preview: "We should schedule a call...",
-    time: "Yesterday",
-    color: "#00634b",
-  },
-  {
-    name: "Tech Founders Hub",
-    role: "Community",
-    preview: "New updates are available.",
-    time: "Mon",
-    color: "#424a4c",
-  },
-  {
-    name: "Foundy Support",
-    role: "Support team",
-    preview: "How can we help you?",
-    time: "Sun",
-    color: "#2d8a8a",
-  },
-];
-
-const initialMessages = [
-  {
-    author: "Jorge Apicario",
-    text: "Hi! I have just uploaded the latest investment reports for the Foundy project.",
-    type: "received",
-    time: "1:48 PM",
-  },
-  {
-    author: "You",
-    text: "The quarterly statistics are ready for review. I was just checking it, looking solid!",
-    type: "sent",
-    time: "1:50 PM",
-  },
-  {
-    author: "Jorge Apicario",
-    text: "Great. Let's schedule a call tomorrow to discuss the scaling plan?",
-    type: "received",
-    time: "1:52 PM",
-  },
-];
+const conversations = [];
+const initialMessages = [];
 
 function Avatar({ person }) {
   return (
@@ -64,7 +15,7 @@ function Avatar({ person }) {
   );
 }
 
-function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
+function Chat() {
   const [activeConversation, setActiveConversation] = useState(null);
   const [messages, setMessages] = useState(initialMessages);
   const [draft, setDraft] = useState("");
@@ -73,7 +24,6 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
   const [mobileView, setMobileView] = useState("inbox");
   const [newMessageOpen, setNewMessageOpen] = useState(false);
   const [recipientSearch, setRecipientSearch] = useState("");
-  const investorMode = mode === "investor";
   const filtered = conversations.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase()),
   );
@@ -90,38 +40,6 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
 
   return (
     <div className="chat-shell flex min-h-screen flex-col bg-white text-[#424a4c]">
-      <nav className="flex h-18 shrink-0 items-center justify-between border-b border-[#424a4c]/15 px-5 sm:px-8">
-        <button
-          type="button"
-          onClick={onBackHome}
-          className="flex h-10 items-center gap-2 rounded-lg px cde-2 text-sm font-bold text-[#006b73] transition hover:bg-[#006b73]/9 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#006b73]/30"
-          aria-label="Volver al panel"
-          title="Volver al panel"
-        >
-          <img
-            src="https://tse2.mm.bing.net/th/id/OIP.w171eC9ZBI8OTweGWM7G0gHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
-            alt=""
-            className="h-7 w-7 object-contain"
-          />
-          <span className="hidden sm:inline">Volver</span>
-        </button>
-        <div className="flex items-center gap-3 sm:gap-5">
-          <span className="hidden text-xs font-semibold text-[#424a4c]/55 sm:block">
-            {investorMode ? "Investor inbox" : "Entrepreneur inbox"}
-          </span>
-          <button
-            type="button"
-            onClick={() => setNotice("Notifications are up to date.")}
-            className="grid h-9 w-9 place-items-center rounded-full text-[#424a4c]/70 transition hover:bg-[#006b73]/9 hover:text-[#006b73] focus-visible:outline-none"
-            aria-label="Notifications"
-          >
-            ♢
-          </button>
-          <button type="button" onClick={onCerrarSesion} className="text-xs font-semibold text-[#006b73] hover:underline">
-            Logout
-          </button>
-        </div>
-      </nav>
       <main className="mx-auto flex min-h-0 w-full max-w-345 flex-1 flex-col px-3 py-3 sm:px-5 sm:py-5 lg:px-8">
         {notice && (
           <div
@@ -168,10 +86,7 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
                 placeholder="Search conversations"
                 className="mt-4 w-full rounded-lg border-0 bg-[#424a4c]/6 px-3 py-2.5 text-xs outline-none focus:bg-white focus:ring-2 focus:ring-[#006b73]/20"
               />
-              <div
-                className="mt-5 flex items-center gap-4 overflow-hidden"
-                aria-label="Active contacts"
-              >
+              <div className="mt-5 flex items-center gap-4 overflow-hidden" aria-label="Active contacts">
                 {conversations.slice(0, 3).map((conversation) => (
                   <button
                     type="button"
@@ -193,6 +108,11 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
               </div>
             </header>
             <div className="flex-1 overflow-y-auto">
+              {filtered.length === 0 && (
+                <p className="p-6 text-center text-xs text-[#424a4c]/50">
+                  No conversations available.
+                </p>
+              )}
               {filtered.map((conversation) => (
                 <button
                   type="button"
@@ -400,7 +320,7 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
               />
             </div>
             <div className="min-h-48 px-5 py-5">
-              {recipientSearch ? (
+              {recipientSearch && conversations.length > 0 ? (
                 <button
                   type="button"
                   onClick={() => {

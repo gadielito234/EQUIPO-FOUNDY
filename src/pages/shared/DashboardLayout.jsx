@@ -31,6 +31,7 @@ export default function DashboardLayout({
   onBackHome,
   onOpenSettings,
   onOpenChat,
+  onOpenProjects,
   onOpenFoundyCard,
   activeNav = 'dashboard',
   sidebarItems = defaultSidebarItems,
@@ -48,6 +49,7 @@ export default function DashboardLayout({
     if (label === 'Home') onBackHome?.();
     if (label === 'Messages') onOpenChat?.();
     if (label === 'Settings') onOpenSettings?.();
+    if (label === 'My projects') onOpenProjects?.();
   };
 
   const handleTopNavAction = (label) => {

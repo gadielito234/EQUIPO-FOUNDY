@@ -80,6 +80,7 @@ function App() {
       onBackHome={irAHome}
       onOpenSettings={irAConfiguracion}
       onOpenChat={() => setPantallaLogueado('chat')}
+      onOpenProjects={() => setPantallaLogueado('create-project')}
       onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
       activeNav={options.activeNav || 'dashboard'}
       showSearch={options.showSearch ?? true}

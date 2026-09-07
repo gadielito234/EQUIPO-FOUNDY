@@ -25,12 +25,6 @@ const steps = [
     { number: '03', title: 'Empieza a colaborar', description: 'Da el siguiente paso y convierte tus ideas en resultados.' },
 ];
 
-const stats = [
-    { value: '01', label: 'Plataforma para conectar' },
-    { value: '03', label: 'Formas de participar' },
-    { value: '100%', label: 'Enfocada en oportunidades' },
-];
-
 export default function Landing({ onLogin, onRegister }) {
     return (
         <div className="min-h-screen bg-white text-slate-800">
@@ -112,13 +106,8 @@ export default function Landing({ onLogin, onRegister }) {
                                 Forma parte de Foundy
                             </button>
                         </div>
-                        <div className="grid grid-cols-3 gap-3">
-                            {stats.map((stat) => (
-                                <div key={stat.label} className="rounded-xl bg-white p-4 text-center shadow-sm ring-1 ring-slate-200">
-                                    <p className="text-2xl font-bold text-[#21a99b]">{stat.value}</p>
-                                    <p className="mt-2 text-xs leading-5 text-slate-500">{stat.label}</p>
-                                </div>
-                            ))}
+                        <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+                            <p className="text-sm leading-6 text-slate-500">Conoce oportunidades y conexiones cuando haya información disponible.</p>
                         </div>
                     </div>
                 </section>
