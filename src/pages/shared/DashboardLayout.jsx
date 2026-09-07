@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Bell,
   CircleHelp,
@@ -8,6 +8,8 @@ import {
   MessageSquareText,
   Search,
   Settings,
+  Wallet,
+  X,
 } from 'lucide-react';
 
 const defaultSidebarItems = [
@@ -24,6 +26,14 @@ const defaultTopNav = [
   { label: 'Foundy card', key: 'foundy-card' },
 ];
 
+const investorSidebarItems = [
+  { label: 'Home', icon: Home, key: 'home' },
+  { label: 'My investments', icon: Wallet, key: 'investments' },
+  { label: 'Messages', icon: MessageSquareText, key: 'messages' },
+  { label: 'Settings', icon: Settings, key: 'settings' },
+  { label: 'Notifications', icon: Bell, key: 'notifications' },
+];
+
 export default function DashboardLayout({
   children,
   usuarioData,
@@ -32,6 +42,12 @@ export default function DashboardLayout({
   onOpenSettings,
   onOpenChat,
   onOpenFoundyCard,
+  onOpenStatistics,
+  onOpenProjects,
+  onOpenInvestments,
+  onOpenNotifications,
+  onOpenSupport,
+  investorMode = false,
   activeNav = 'dashboard',
   sidebarItems = defaultSidebarItems,
   topNav = defaultTopNav,
@@ -41,18 +57,42 @@ export default function DashboardLayout({
   footerContent,
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
   const nombreUsuario = usuarioData?.usuario || 'Usuario';
   const visibleTopNav = topNav.filter(({ key }) => showStatistics || key !== 'statistics');
+  const visibleSidebarItems = investorMode ? investorSidebarItems : sidebarItems;
 
   const handleSidebarAction = (label) => {
     if (label === 'Home') onBackHome?.();
+    if (label === 'My projects') onOpenProjects?.();
+    if (label === 'My investments') onOpenInvestments?.();
     if (label === 'Messages') onOpenChat?.();
     if (label === 'Settings') onOpenSettings?.();
+    if (label === 'Notifications') onOpenNotifications?.();
   };
 
   const handleTopNavAction = (label) => {
-    if (label === 'Dashboard' || label === 'Statistics') onBackHome?.();
+    if (label === 'Dashboard') onBackHome?.();
+    if (label === 'Statistics') onOpenStatistics?.();
     if (label === 'Foundy card') onOpenFoundyCard?.();
+  };
+
+  useEffect(() => {
+    if (!logoutConfirmOpen) return undefined;
+
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape') setLogoutConfirmOpen(false);
+    };
+
+    window.addEventListener('keydown', closeOnEscape);
+    return () => window.removeEventListener('keydown', closeOnEscape);
+  }, [logoutConfirmOpen]);
+
+  const handleLogout = () => setLogoutConfirmOpen(true);
+
+  const confirmLogout = () => {
+    setLogoutConfirmOpen(false);
+    onCerrarSesion?.();
   };
 
   return (
@@ -101,7 +141,7 @@ export default function DashboardLayout({
           </div>
 
           <nav className="space-y-2">
-            {sidebarItems.map(({ label, icon: Icon, key }) => {
+            {visibleSidebarItems.map(({ label, icon: Icon, key }) => {
               const isActive = activeNav === key || (key === 'home' && activeNav === 'dashboard');
 
               return (
@@ -137,6 +177,7 @@ export default function DashboardLayout({
           <div className="mt-5 space-y-2 border-t border-[#e3ddd2] pt-4">
             <button
               type="button"
+              onClick={onOpenSupport}
               className={[
                 'flex w-full items-center rounded-xl px-2 py-2.5 text-left text-sm text-[#4f5d5f] transition hover:bg-[#efeae2] hover:text-[#183f43]',
                 sidebarOpen ? 'justify-start gap-3' : 'justify-center gap-0',
@@ -159,7 +200,7 @@ export default function DashboardLayout({
             </button>
             <button
               type="button"
-              onClick={onCerrarSesion}
+              onClick={handleLogout}
               className={[
                 'flex w-full items-center rounded-xl px-2 py-2.5 text-left text-sm text-[#4f5d5f] transition hover:bg-[#efeae2] hover:text-[#183f43]',
                 sidebarOpen ? 'justify-start gap-3' : 'justify-center gap-0',
@@ -256,6 +297,33 @@ export default function DashboardLayout({
           </footer>
         </main>
       </div>
+
+      {logoutConfirmOpen && (
+        <div className="fixed inset-0 z-50 grid place-items-center bg-[#173f43]/45 px-4 py-6 backdrop-blur-[2px]" role="presentation" onMouseDown={(event) => {
+          if (event.target === event.currentTarget) setLogoutConfirmOpen(false);
+        }}>
+          <div className="w-full max-w-md rounded-[24px] border border-white/70 bg-[#fbfaf6] p-6 shadow-[0_24px_70px_rgba(17,52,60,0.24)]" role="dialog" aria-modal="true" aria-labelledby="logout-title" aria-describedby="logout-description">
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex items-start gap-3">
+                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#fce9df] text-[#b85c3d]">
+                  <LogOut size={19} />
+                </div>
+                <div>
+                  <h2 id="logout-title" className="text-lg font-bold text-[#1d3f42]">Log out of Foundy?</h2>
+                  <p id="logout-description" className="mt-1 text-sm leading-5 text-[#687577]">You will need to sign in again to access your account.</p>
+                </div>
+              </div>
+              <button type="button" onClick={() => setLogoutConfirmOpen(false)} className="rounded-full p-1.5 text-[#718083] transition hover:bg-[#eef1ef] hover:text-[#29494c]" aria-label="Close logout confirmation">
+                <X size={18} />
+              </button>
+            </div>
+            <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+              <button type="button" autoFocus onClick={() => setLogoutConfirmOpen(false)} className="rounded-xl border border-[#ccd8d5] px-4 py-2.5 text-xs font-semibold text-[#526164] transition hover:bg-[#f0f3f0]">Cancel</button>
+              <button type="button" onClick={confirmLogout} className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#b85c3d] px-4 py-2.5 text-xs font-bold text-white transition hover:bg-[#98472f]"><LogOut size={14} /> Log out</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

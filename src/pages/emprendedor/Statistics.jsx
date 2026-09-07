@@ -90,7 +90,7 @@ const monthlyData = [
   },
 ];
 
-function Statistics({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, onOpenCreateProject, onOpenChat, onOpenFoundyCard }) {
+function Statistics({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, onOpenCreateProject, onOpenChat, onOpenFoundyCard, embeddedLayout = false }) {
   const nombreUsuario = usuarioData?.usuario || 'usuario';
   const [menuAbierto, setMenuAbierto] = useState(true);
   const [mesSeleccionado, setMesSeleccionado] = useState(5); // JUN por defecto
@@ -219,7 +219,7 @@ function Statistics({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, o
   const conicGradient = `conic-gradient(${d1.color} 0 ${d1.pct}%, ${d2.color} ${d1.pct}% ${d1.pct + d2.pct}%, ${d3.color} ${d1.pct + d2.pct}% 100%)`;
 
   return (
-    <div className="min-h-screen bg-[#f4f6f7] text-[#31474a]">
+    <div className={`${embeddedLayout ? '[&>div>aside]:hidden [&>div>div>header]:hidden' : ''} min-h-screen bg-[#f4f6f7] text-[#31474a]`}>
       <div className="flex min-h-screen">
         {menuAbierto && <aside className="fixed inset-y-0 left-0 z-30 flex w-56 flex-col border-r border-[#dfe5e5] bg-[#f8faf9] px-4 py-5 shadow-sm lg:static lg:shadow-none" aria-label="Menú principal">
           <div className="flex items-center justify-between border-b border-[#e1e6e6] pb-5">

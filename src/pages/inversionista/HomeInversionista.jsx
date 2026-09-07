@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 const featuredOpportunity = {
   title: 'Jorge Aparicio | Traditional Coffee',
   location: 'Santa Ana, El Salvador',
@@ -70,9 +68,9 @@ const investmentGrowth = [
   { month: 'Jul', value: 90 },
 ];
 
-function HomeInversionista({ usuarioData, onCerrarSesion, onBackHome, onOpenSettings, onOpenChat, onOpenFoundyCard }) {
+function HomeInversionista({ usuarioData }) {
   const nombreUsuario = usuarioData?.usuario || 'David Diaz';
-  const [searchTerm, setSearchTerm] = useState('');
+  const searchTerm = '';
 
   const filteredOpportunities = opportunities.filter((item) => {
     if (!searchTerm.trim()) return true;

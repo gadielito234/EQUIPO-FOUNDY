@@ -29,7 +29,7 @@ function Switch({ enabled, onChange }) {
   );
 }
 
-export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBackHome, onOpenFoundyCard, showSidebar = true }) {
+export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBackHome, onOpenFoundyCard, showSidebar = true, embeddedLayout = false }) {
   const [transactionAlerts, setTransactionAlerts] = useState(true);
   const [marketingInsights, setMarketingInsights] = useState(false);
   const [email, setEmail] = useState(usuarioData?.correo || '');
@@ -86,7 +86,7 @@ export default function PerfilConfiguracion({ usuarioData, onCerrarSesion, onBac
   };
 
   return (
-    <div className="min-h-screen bg-[#f4f6f4] text-slate-800">
+    <div className={`${embeddedLayout ? '[&>div>div>header]:hidden [&>div>div>footer]:hidden' : ''} min-h-screen bg-[#f4f6f4] text-slate-800`}>
       <div className="mx-auto flex min-h-screen max-w-[1600px] flex-col lg:flex-row">
         {showSidebar && <aside className="w-full border-b border-slate-200 bg-[#f8faf8] lg:w-70 lg:border-b-0 lg:border-r lg:border-slate-200">
           <div className="flex items-center gap-3 px-6 py-6">

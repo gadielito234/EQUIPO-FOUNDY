@@ -63,7 +63,7 @@ const updates = [
   },
 ];
 
-function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenSettings, onOpenChat }) {
+function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenSettings, onOpenChat, embeddedLayout = false }) {
   const [storedUser] = useState(getStoredUser);
   const user = {
     ...storedUser,
@@ -79,7 +79,7 @@ function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenSettings, onO
     .toUpperCase();
 
   return (
-    <div className="min-h-screen bg-[#f4f6f8] text-[#0f2d39]">
+    <div className={`${embeddedLayout ? '[&>div>aside]:hidden [&>div>main>header]:hidden' : ''} min-h-screen bg-[#f4f6f8] text-[#0f2d39]`}>
       <div className="flex min-h-screen">
       <aside className="flex w-64 min-w-60 flex-col border-r border-[#0b252b]/10 bg-[#f1f4f6] px-4 py-6">
         <div className="mb-7 flex flex-col items-center gap-3">
