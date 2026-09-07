@@ -12,7 +12,7 @@ const menuItems = [
 	{ label: 'Home', icon: Home }, { label: 'My investments', icon: Wallet }, { label: 'Messages', icon: Mail }, { label: 'Settings', icon: Settings }, { label: 'Notifications', icon: Bell },
 ];
 
-function Investments({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, onOpenChat, onOpenFoundyCard }) {
+function Investments({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, onOpenChat, onOpenFoundyCard, onOpenNotifications }) {
 	const [sidebarOpen, setSidebarOpen] = useState(true);
 	const [searchTerm, setSearchTerm] = useState('');
 	const [filter, setFilter] = useState('All');
@@ -33,7 +33,8 @@ function Investments({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, 
 		if (label === 'Home') onBackHome?.();
 		else if (label === 'Messages') onOpenChat?.();
 		else if (label === 'Settings') onOpenSettings?.();
-		else showNotice(label === 'Notifications' ? 'No tienes notificaciones nuevas.' : 'Esta sección está en preparación.');
+		else if (label === 'Notifications') onOpenNotifications?.();
+		else showNotice('Esta sección está en preparación.');
 	};
 
 	return (

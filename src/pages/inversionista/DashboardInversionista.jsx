@@ -22,7 +22,7 @@ const menuItems = [
     { label: 'Home', icon: Home }, { label: 'My investments', icon: Wallet }, { label: 'Messages', icon: Mail }, { label: 'Settings', icon: Settings }, { label: 'Notifications', icon: Bell },
 ];
 
-function DashboardInversionista({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, onOpenChat, onOpenInvestments, onOpenFoundyCard }) {
+function DashboardInversionista({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, onOpenChat, onOpenInvestments, onOpenFoundyCard, onOpenNotifications }) {
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedOpportunity, setSelectedOpportunity] = useState(null);
@@ -58,7 +58,8 @@ function DashboardInversionista({ usuarioData, onCerrarSesion, onOpenSettings, o
         else if (label === 'My investments') onOpenInvestments?.();
         else if (label === 'Messages') onOpenChat?.();
         else if (label === 'Settings') onOpenSettings?.();
-        else showNotice(label === 'Notifications' ? 'No tienes notificaciones nuevas.' : 'Tus inversiones aparecerán aquí.');
+        else if (label === 'Notifications') onOpenNotifications?.();
+        else showNotice('Tus inversiones aparecerán aquí.');
     };
 
     return (

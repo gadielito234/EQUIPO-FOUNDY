@@ -73,9 +73,8 @@ function App() {
   const esInversionista = usuarioLogueado?.tipo_usuario === 'Inversionista';
 
   if (usuarioLogueado) {
-    // Las notificaciones se habilitan primero para emprendedores.
-    if (pantallaLogueado === 'notifications' && !esInversionista) {
-      return <Notifications user={usuarioLogueado} onBack={irAHome} />;
+    if (pantallaLogueado === 'notifications') {
+      return <Notifications user={usuarioLogueado} role={usuarioLogueado.tipo_usuario} onBack={irAHome} />;
     }
 
     if (pantallaLogueado === 'settings') {
@@ -107,6 +106,7 @@ function App() {
           onOpenSettings={irAConfiguracion}
           onOpenChat={() => setPantallaLogueado('chat')}
           onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
+          onOpenNotifications={() => setPantallaLogueado('notifications')}
         />
       );
     }
@@ -121,13 +121,14 @@ function App() {
           onOpenChat={() => setPantallaLogueado('chat')}
           onOpenInvestments={() => setPantallaLogueado('investments')}
           onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
+          onOpenNotifications={() => setPantallaLogueado('notifications')}
           onVerDetalle={(negocio) => console.log('Detalle de oportunidad:', negocio)}
         />
       );
     }
 
     if (pantallaLogueado === 'foundy-card') {
-      return <FoundyCard usuarioData={usuarioLogueado} onLogout={handleCerrarSesion} onBackHome={irAHome} onOpenSettings={irAConfiguracion} onOpenChat={() => setPantallaLogueado('chat')} />;
+      return <FoundyCard usuarioData={usuarioLogueado} onLogout={handleCerrarSesion} onBackHome={irAHome} onOpenSettings={irAConfiguracion} onOpenChat={() => setPantallaLogueado('chat')} onOpenNotifications={() => setPantallaLogueado('notifications')} />;
     }
 
     if (esInversionista) {
@@ -140,6 +141,7 @@ function App() {
           onOpenChat={() => setPantallaLogueado('chat')}
           onOpenInvestments={() => setPantallaLogueado('investments')}
           onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
+          onOpenNotifications={() => setPantallaLogueado('notifications')}
           onVerDetalle={(negocio) => console.log('Detalle de oportunidad:', negocio)}
         />
       );

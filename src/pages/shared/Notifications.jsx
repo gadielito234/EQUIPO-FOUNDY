@@ -8,11 +8,13 @@ import {
 } from '../../services/notifications.js';
 
 // Presenta las notificaciones del emprendedor y mantiene la lista sincronizada.
-function Notifications({ user, onBack }) {
+function Notifications({ user, role, onBack }) {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [markingId, setMarkingId] = useState(null);
+  const userId = user?.id ?? user?.dui;
+  const isInvestor = role === 'Inversionista';
 
   useEffect(() => {
     let mounted = true;
@@ -20,7 +22,8 @@ function Notifications({ user, onBack }) {
 
     const loadNotifications = async () => {
       try {
-        const data = await fetchNotifications(user.id);
+        if (!userId) throw new Error('No se encontró el identificador del usuario.');
+        const data = await fetchNotifications(userId);
         if (mounted) setNotifications(data);
       } catch (loadError) {
         if (mounted) setError(loadError.message || 'No se pudieron cargar las notificaciones.');
@@ -38,13 +41,15 @@ function Notifications({ user, onBack }) {
     };
 
     loadNotifications();
-    channel = subscribeToNotifications(user.id, { onInsert: addNotification, onUpdate: updateNotification });
+    if (userId) {
+      channel = subscribeToNotifications(userId, { onInsert: addNotification, onUpdate: updateNotification });
+    }
 
     return () => {
       mounted = false;
       unsubscribeChannel(channel);
     };
-  }, [user.id]);
+  }, [userId]);
 
   const handleMarkAsRead = async (id) => {
     setMarkingId(id);
@@ -66,9 +71,9 @@ function Notifications({ user, onBack }) {
         </button>
         <header className="mt-8 flex items-start justify-between gap-4 border-b border-[#dfe5e5] pb-5">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-[.15em] text-[#1b7f61]">Centro de actividad</p>
+            <p className="text-[10px] font-bold uppercase tracking-[.15em] text-[#1b7f61]">Centro de actividad del {isInvestor ? 'inversionista' : 'emprendedor'}</p>
             <h1 className="mt-1 text-2xl font-bold tracking-tight text-[#004e56]">Notificaciones</h1>
-            <p className="mt-1 text-xs leading-5 text-[#687577]">Mantente al día con la actividad de tus proyectos.</p>
+            <p className="mt-1 text-xs leading-5 text-[#687577]">Mantente al día con la actividad de {isInvestor ? 'tus inversiones' : 'tus proyectos'}.</p>
           </div>
           <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#dfeeed] text-[#006b73]"><Bell size={18} /></span>
         </header>

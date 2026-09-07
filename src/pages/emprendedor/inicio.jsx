@@ -77,7 +77,7 @@ function Inicio({ usuarioData, onCerrarSesion, onOpenSettings, onOpenCreateProje
                                     <h1 className="mt-1 text-lg font-bold text-[#173d43]">Resumen de tu emprendimiento</h1>
                                 </div>
                                 <div className="flex items-center gap-3">
-                                    <button type="button" className="grid h-9 w-9 place-items-center rounded-full text-[#5d7376] hover:bg-[#edf6f3] hover:text-[#0d5c5d]" aria-label="Notificaciones"><Bell size={18} /></button>
+                                    <button type="button" onClick={onOpenNotifications} className="grid h-9 w-9 place-items-center rounded-full text-[#5d7376] hover:bg-[#edf6f3] hover:text-[#0d5c5d]" aria-label="Notificaciones"><Bell size={18} /></button>
                                     <span className="grid h-9 w-9 place-items-center rounded-full bg-[#d8eee8] text-xs font-bold text-[#0d7169]" aria-label={nombreUsuario}>{inicial}</span>
                                 </div>
                             </header>
