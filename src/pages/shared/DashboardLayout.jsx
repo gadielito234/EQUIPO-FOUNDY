@@ -55,8 +55,9 @@ export default function DashboardLayout({
 
   return (
     <div className="min-h-screen bg-[#efeee7] text-[#1e4043]">
-      <div className="flex min-h-screen w-full bg-[#f7f3ee]">
-        <aside
+      <div className="flex min-h-screen w-full flex-col bg-[#f7f3ee]">
+        <div className="flex min-h-0 flex-1">
+          <aside
           className={[
             'group relative border-r border-[#e9e2d8] bg-[#f8f4ef] px-3 py-5 transition-all duration-300 ease-in-out',
             sidebarOpen ? 'w-64' : 'w-[88px]',
@@ -179,9 +180,9 @@ export default function DashboardLayout({
               </span>
             </button>
           </div>
-        </aside>
+          </aside>
 
-        <main className="flex-1">
+          <main className="flex-1">
           <header className="border-b-[3px] border-[#0b5d61] bg-[#f5f2eb] px-6 py-4">
             <div className="flex items-center justify-between gap-4">
               <nav className="flex items-center gap-8 text-sm font-medium text-[#506466]">
@@ -218,41 +219,43 @@ export default function DashboardLayout({
 
           <div className="px-4 py-5 sm:px-5 lg:px-6 xl:px-8">{children}</div>
 
-          <footer className="w-full bg-[#006b70] text-white">
-            {footerContent || (
-              <>
-                <div className="mx-auto grid w-full max-w-none gap-8 px-6 py-10 sm:grid-cols-2 sm:px-10 lg:grid-cols-4 lg:px-12">
-                  <div className="sm:col-span-2">
-                    <img src="/images/foundy-negro.png" alt="Foundy" className="h-10 w-auto object-contain" />
-                    <p className="mt-4 max-w-sm text-sm leading-6 text-teal-100">
-                      Conectamos ideas, emprendedores e inversionistas para construir nuevas oportunidades en El Salvador.
-                    </p>
-                  </div>
+          </main>
+        </div>
 
-                  <div>
-                    <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-white">Explora</h2>
-                    <div className="mt-4 space-y-3 text-sm text-teal-100">
-                      <button type="button" className="block hover:text-white">Home</button>
-                      <button type="button" className="block hover:text-white">My investments</button>
-                      <button type="button" className="block hover:text-white">Messages</button>
-                    </div>
-                  </div>
+        <footer className="w-full bg-[#006b70] text-white">
+          {footerContent || (
+            <>
+              <div className="mx-auto grid w-full max-w-none gap-8 px-6 py-10 sm:grid-cols-2 sm:px-10 lg:grid-cols-4 lg:px-12">
+                <div className="sm:col-span-2">
+                  <img src="/images/foundy-negro.png" alt="Foundy" className="h-10 w-auto object-contain" />
+                  <p className="mt-4 max-w-sm text-sm leading-6 text-teal-100">
+                    Conectamos ideas, emprendedores e inversionistas para construir nuevas oportunidades en El Salvador.
+                  </p>
+                </div>
 
-                  <div>
-                    <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-white">Cuenta</h2>
-                    <div className="mt-4 space-y-3 text-sm text-teal-100">
-                      <button type="button" className="block hover:text-white">Sign in</button>
-                      <button type="button" className="block hover:text-white">Sign up</button>
-                    </div>
+                <div>
+                  <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-white">Explora</h2>
+                  <div className="mt-4 space-y-3 text-sm text-teal-100">
+                    <button type="button" className="block hover:text-white">Home</button>
+                    <button type="button" className="block hover:text-white">My investments</button>
+                    <button type="button" className="block hover:text-white">Messages</button>
                   </div>
                 </div>
-                <div className="border-t border-white/20 px-6 py-5 text-center text-xs text-teal-100 sm:px-10">
-                  © 2026 Foundy. Todos los derechos reservados.
+
+                <div>
+                  <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-white">Cuenta</h2>
+                  <div className="mt-4 space-y-3 text-sm text-teal-100">
+                    <button type="button" className="block hover:text-white">Sign in</button>
+                    <button type="button" className="block hover:text-white">Sign up</button>
+                  </div>
                 </div>
-              </>
-            )}
-          </footer>
-        </main>
+              </div>
+              <div className="border-t border-white/20 px-6 py-5 text-center text-xs text-teal-100 sm:px-10">
+                © 2026 Foundy. Todos los derechos reservados.
+              </div>
+            </>
+          )}
+        </footer>
       </div>
     </div>
   );

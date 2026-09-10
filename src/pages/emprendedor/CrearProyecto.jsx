@@ -338,7 +338,7 @@ function CrearProyecto({ nombreUsuario = "Entrepreneur", onCerrarSesion, onBackH
           </div>
         </main>
       </div>
-      <footer className="border-t border-slate-200 bg-white px-6 py-5 text-center text-xs text-slate-400">
+      <footer className="w-full shrink-0 border-t border-slate-200 bg-white px-6 py-5 text-center text-xs text-slate-400">
         <span className="font-bold text-[#006b73]">foundy.</span> Your idea
         deserves to grow. <span className="mx-2 hidden sm:inline">·</span>
         <span className="block sm:inline">© 2026</span>
