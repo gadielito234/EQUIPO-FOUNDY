@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 
 function Recuperacion({ onVolver, onContinuar }) {
     const [correo, setCorreo] = useState('');
@@ -6,9 +6,7 @@ function Recuperacion({ onVolver, onContinuar }) {
     const [cargando, setCargando] = useState(false);
     const [exito, setExito] = useState(false);
 
-    const validarEmail = (email) => {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-};
+    const validarEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -16,12 +14,12 @@ function Recuperacion({ onVolver, onContinuar }) {
         setExito(false);
 
         if (!correo.trim()) {
-            setError('Por favor ingresa tu correo electrónico');
+            setError('Please enter your email address.');
             return;
         }
 
         if (!validarEmail(correo)) {
-            setError('Por favor ingresa un correo electrónico válido');
+            setError('Please enter a valid email address.');
             return;
         }
 
@@ -37,7 +35,7 @@ function Recuperacion({ onVolver, onContinuar }) {
                 }, 3000);
             }
         } catch (err) {
-            setError(err.message || 'Error al enviar el código. Intenta de nuevo.');
+            setError(err.message || 'There was an error sending the code. Try again.');
         } finally {
             setCargando(false);
         }
@@ -46,23 +44,18 @@ function Recuperacion({ onVolver, onContinuar }) {
     return (
         <div className="flex min-h-screen items-center justify-center bg-slate-100 p-4">
             <div className="w-full max-w-105 overflow-hidden rounded-[30px_30px_0_0] bg-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.1)]">
-
-                <div className="h-25 rounded-b-[18px] bg-[#1b8d97] bg-[url('/images/foundy-logo.png')] bg-contain bg-center bg-no-repeat">
-                </div>
+                <div className="h-25 rounded-b-[18px] bg-[#1b8d97] bg-[url('/images/foundy-logo.png')] bg-contain bg-center bg-no-repeat" />
 
                 <div className="p-10">
-
                     <h2 className="mb-3 text-center font-bold text-[#243047]">
-                        Restablecer contraseña
+                        Reset your password
                     </h2>
 
                     <p className="mb-7.5 text-center text-gray-500">
-                        Introduce tu correo electrónico para recibir
-                        un código de verificación.
+                        Enter your email address to receive a verification code.
                     </p>
 
                     <form onSubmit={handleSubmit}>
-
                         {error && (
                             <div className="mb-4 rounded-lg border-l-4 border-red-600 bg-red-100 px-4 py-3 text-sm text-red-800">
                                 {error}
@@ -71,7 +64,7 @@ function Recuperacion({ onVolver, onContinuar }) {
 
                         {exito && (
                             <div className="mb-4 rounded-lg border-l-4 border-green-600 bg-green-200 px-4 py-3 text-sm text-green-800">
-                                Código enviado exitosamente a tu correo
+                                Code sent successfully to your email.
                             </div>
                         )}
 
@@ -97,17 +90,15 @@ function Recuperacion({ onVolver, onContinuar }) {
                             className="mt-7.5 w-full rounded-full border-0 bg-[#156f77] p-3.5 text-lg font-semibold text-white transition hover:bg-[#125c63] disabled:cursor-not-allowed disabled:bg-gray-400 disabled:opacity-70"
                             disabled={cargando}
                         >
-                            {cargando ? 'Enviando...' : 'Enviar código'}
+                            {cargando ? 'Sending...' : 'Send code'}
                         </button>
-
                     </form>
 
                     <div className="mt-6.25 text-center">
                         <button onClick={onVolver} className="cursor-pointer border-0 bg-transparent text-base text-gray-600">
-                            ← Volver al inicio de sesión
+                            ← Back to sign in
                         </button>
                     </div>
-
                 </div>
             </div>
         </div>

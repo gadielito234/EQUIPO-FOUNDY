@@ -1,11 +1,7 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Home, FolderKanban, Mail, Settings, Bell, HelpCircle, LogOut } from 'lucide-react';
 
-const defaultUser = {
-  name: 'Sara Hernández',
-  avatar:
-    'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=240&q=80',
-};
+const defaultUser = { name: 'Usuario', avatar: null };
 
 const getStoredUser = () => {
   if (typeof window === 'undefined') {
@@ -35,33 +31,7 @@ const sidebarMenu = [
   { label: 'Notifications', icon: Bell },
 ];
 
-const chartBars = [
-  { label: 'Jan', value: 28 },
-  { label: 'Feb', value: 38 },
-  { label: 'Mar', value: 42 },
-  { label: 'Apr', value: 58 },
-  { label: 'May', value: 74 },
-  { label: 'Jun', value: 64 },
-];
-
-const updates = [
-  {
-    name: 'EcoStream Solutions',
-    badge: 'Seed Stage',
-    value: '$48k',
-    meta: 'Q3 revenue goals exceeded by 15% following our…',
-    tone: 'green',
-    investors: 42,
-  },
-  {
-    name: 'Quantum Ledger',
-    badge: 'Series A',
-    value: '$27k',
-    meta: 'Beta testing for our cross-border payment protocol is…',
-    tone: 'purple',
-    investors: 128,
-  },
-];
+const updates = [];
 
 function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenSettings, onOpenChat }) {
   const [storedUser] = useState(getStoredUser);
@@ -128,15 +98,15 @@ function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenSettings, onO
               type="button"
               onClick={onBackHome}
               className="flex h-10 items-center gap-2 rounded-lg px-2 text-sm font-bold text-[#006b73] transition hover:bg-[#006b73]/9 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#006b73]/30"
-              aria-label="Volver al panel"
-              title="Volver al panel"
+              aria-label="Back to dashboard"
+              title="Back to dashboard"
             >
               <img
                 src="https://tse2.mm.bing.net/th/id/OIP.w171eC9ZBI8OTweGWM7G0gHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
                 alt=""
                 className="h-7 w-7 object-contain"
               />
-              <span className="hidden sm:inline">Volver</span>
+              <span className="hidden sm:inline">Back</span>
             </button>
             <div aria-label="Foundy brand logo">
               <img src="/images/foundy-logo.png" alt="Foundy logo" className="h-9.5 w-auto object-contain" />
@@ -172,12 +142,12 @@ function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenSettings, onO
               <div className="flex items-center justify-between">
                 <span className="font-bold tracking-[0.18em]">FOUNDY</span>
                 <span className="text-xl" aria-label="Card type">
-                  ●●●
+                  •••
                 </span>
               </div>
 
               <div className="mt-10 text-xs uppercase tracking-[0.18em] text-white/65">Investor ID</div>
-              <div className="mt-2 text-lg tracking-[0.2em]"># # # # # # # # # # 8291</div>
+              <div className="mt-2 text-lg tracking-[0.2em]">No disponible</div>
 
               <div className="mt-7 flex items-end justify-between">
                 <div>
@@ -191,12 +161,12 @@ function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenSettings, onO
             <article className="rounded-xl border border-[#0b252b]/10 bg-white p-5 shadow-[0_14px_24px_rgba(13,44,50,0.06)]">
               <div className="flex items-center justify-between font-semibold">
                 <span>Portfolio Summary</span>
-                <span className="rounded-full bg-[#1b7f61]/12 px-3 py-1 text-xs font-bold text-[#1b7f61]">+12.4%</span>
+                <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-[#6d7b88]">No data</span>
               </div>
 
               <div className="mt-5">
                 <div className="text-xs text-[#6d7b88]">Total Value</div>
-                <div className="mt-1 text-3xl font-bold text-[#0f2d39]">$128,490.00</div>
+                <div className="mt-1 text-3xl font-bold text-[#0f2d39]">No data</div>
               </div>
             </article>
 
@@ -207,12 +177,7 @@ function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenSettings, onO
               </div>
 
               <div className="mt-6 flex h-40 items-end justify-between gap-3" aria-label="ROI performance chart">
-                {chartBars.map((bar) => (
-                  <div key={bar.label} className="flex h-full flex-1 flex-col items-center justify-end gap-2 text-xs text-[#6d7b88]">
-                    <div className="w-full rounded-t-md bg-[#1b7f61]" style={{ height: `${bar.value}%` }} />
-                    <span>{bar.label}</span>
-                  </div>
-                ))}
+                <p className="m-auto text-xs text-[#6d7b88]">No hay datos de rendimiento.</p>
               </div>
             </article>
 
@@ -243,7 +208,7 @@ function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenSettings, onO
               </div>
 
               <div className="mt-4 divide-y divide-[#0b252b]/10">
-                {updates.map((item) => (
+                {updates.length > 0 ? updates.map((item) => (
                   <article key={item.name} className="flex gap-3 py-4 first:pt-0">
                     <div className={`grid h-10 w-10 shrink-0 place-items-center rounded-full text-sm font-bold text-white ${item.tone === 'green' ? 'bg-[#1b7f61]' : 'bg-[#7654a8]'}`}>
                       {item.name.split(' ')[0][0]}
@@ -255,13 +220,13 @@ function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenSettings, onO
                       </div>
                       <p className="mt-1 truncate text-xs text-[#6d7b88]">{item.meta}</p>
                       <div className="mt-2 flex items-center gap-1 text-[10px] text-[#6d7b88]">
-                        <span>◔</span>
+                        <span>â—”</span>
                         <span>{item.investors} investors</span>
                       </div>
                     </div>
                     <strong className="text-sm text-[#1b7f61]">{item.value}</strong>
                   </article>
-                ))}
+                )) : <p className="py-6 text-center text-xs text-[#6d7b88]">No hay actualizaciones disponibles.</p>}
               </div>
             </section>
           </aside>

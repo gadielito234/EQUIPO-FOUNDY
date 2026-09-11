@@ -1,137 +1,92 @@
-import {
-    Bell,
-    CreditCard,
-    FolderKanban,
-    HelpCircle,
-    Home,
-    LogOut,
-    Mail,
-    Plus,
-    Settings,
-    Target,
-    Users,
-} from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ArrowUpRight, FolderKanban, Plus, Target, Users } from 'lucide-react';
+import { supabase } from '../../services/supabase.js';
 
-const navigationItems = [
-    { label: 'Inicio', icon: Home },
-    { label: 'Mis proyectos', icon: FolderKanban },
-    { label: 'Foundy Card', icon: CreditCard },
-    { label: 'Mensajes', icon: Mail },
-    { label: 'Configuración', icon: Settings },
-    { label: 'Notificaciones', icon: Bell },
-];
+const formatMoney = (value) => `$${Number(value || 0).toLocaleString('en-US')}`;
 
-function Inicio({ usuarioData, onCerrarSesion, onOpenSettings, onOpenCreateProject, onOpenChat, onOpenFoundyCard }) {
-    const nombreUsuario = usuarioData?.usuario || 'Emprendedor';
-    const inicial = nombreUsuario.charAt(0).toUpperCase();
+function Inicio({ usuarioData, onOpenCreateProject }) {
+  const [proyectos, setProyectos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-    const handleNavigation = (label) => {
-        if (label === 'Mis proyectos') onOpenCreateProject?.();
-        if (label === 'Foundy Card') onOpenFoundyCard?.();
-        if (label === 'Mensajes') onOpenChat?.();
-        if (label === 'Configuración') onOpenSettings?.();
+  useEffect(() => {
+    let activo = true;
+    const cargarProyectos = async () => {
+      if (!usuarioData?.dui) {
+        setProyectos([]);
+        setLoading(false);
+        return;
+      }
+      setLoading(true);
+      const { data, error: queryError } = await supabase
+        .from('proyecto')
+        .select('id_proyecto, nombre, descripcion, monto_objetivo, monto_recaudado, estado, fecha_inicio')
+        .eq('dui', usuarioData.dui)
+        .order('fecha_inicio', { ascending: false });
+      if (!activo) return;
+      setError(queryError ? 'No pudimos cargar tus proyectos. Intenta nuevamente.' : '');
+      setProyectos(data || []);
+      setLoading(false);
     };
+    cargarProyectos();
+    window.addEventListener('foundy-project-published', cargarProyectos);
+    return () => {
+      activo = false;
+      window.removeEventListener('foundy-project-published', cargarProyectos);
+    };
+  }, [usuarioData?.dui]);
 
-    return (
-                <div className="min-h-screen bg-[#f3f8f6] text-[#173d43]">
-                    <div className="flex min-h-screen">
-                        <aside className="hidden w-64 shrink-0 flex-col border-r border-[#d9e7e3] bg-white px-4 py-6 lg:flex">
-                            <div className="flex items-center gap-3 px-3">
-                                <img src="/images/foundy-logo.png" alt="Foundy" className="h-8 w-auto object-contain" />
-                                <span className="text-xl font-bold text-[#0d5c5d]">Foundy</span>
-                            </div>
+  const metaTotal = proyectos.reduce((total, proyecto) => total + Number(proyecto.monto_objetivo || 0), 0);
+  const recaudadoTotal = proyectos.reduce((total, proyecto) => total + Number(proyecto.monto_recaudado || 0), 0);
+  const pendienteTotal = Math.max(metaTotal - recaudadoTotal, 0);
+  const progreso = metaTotal ? Math.min(Math.round((recaudadoTotal / metaTotal) * 100), 100) : 0;
+  const nombre = usuarioData?.usuario || 'emprendedor';
 
-                            <div className="mt-9 flex items-center gap-3 border-b border-[#e4eeeb] px-3 pb-6">
-                                <span className="grid h-11 w-11 place-items-center rounded-full bg-[#d8eee8] text-sm font-bold text-[#0d7169]">{inicial}</span>
-                                <div className="min-w-0">
-                                    <p className="truncate text-sm font-semibold">{usuarioData?.usuario || 'Emprendedor'}</p>
-                                    <p className="mt-0.5 text-xs text-[#789094]">Emprendedor</p>
-                                </div>
-                            </div>
+  return (
+    <div className="min-h-full bg-[#f7f3ee] text-[#1e4043]">
+      <div className="mx-auto max-w-7xl px-5 py-7 sm:px-8 lg:px-10 lg:py-9">
+        <section className="relative overflow-hidden rounded-2xl bg-[#0b5d61] px-6 py-8 text-white shadow-[0_16px_32px_rgba(11,93,97,0.16)] sm:px-9 sm:py-10">
+          <div className="absolute -right-12 -top-20 h-56 w-56 rounded-full border-[28px] border-white/10" aria-hidden="true" />
+          <div className="relative max-w-2xl">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#b9eee0]">Entrepreneur dashboard</p>
+            <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Hello, {nombre}</h1>
+            <p className="mt-3 text-sm leading-6 text-white/75">Manage your projects, track your progress, and find the next step to grow your idea.</p>
+          </div>
+        </section>
 
-                            <nav className="mt-6 space-y-1.5" aria-label="Navegación principal">
-                                {navigationItems.map(({ label, icon: Icon }) => (
-                                    <button
-                                        key={label}
-                                        type="button"
-                                        onClick={() => handleNavigation(label)}
-                                        className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-sm transition ${label === 'Inicio' ? 'bg-[#0d7169] font-semibold text-white shadow-sm' : 'text-[#5d7376] hover:bg-[#edf6f3] hover:text-[#0d5c5d]'}`}
-                                    >
-                                        <Icon size={17} />
-                                        {label}
-                                    </button>
-                                ))}
-                            </nav>
+        {error && <div className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">{error}</div>}
 
-                            <div className="mt-auto space-y-1.5 border-t border-[#e4eeeb] pt-5">
-                                <button type="button" className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-sm text-[#5d7376] hover:bg-[#edf6f3] hover:text-[#0d5c5d]"><HelpCircle size={17} />Ayuda</button>
-                                <button type="button" onClick={onCerrarSesion} className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-sm text-[#5d7376] hover:bg-red-50 hover:text-red-700"><LogOut size={17} />Cerrar sesión</button>
-                            </div>
-                        </aside>
+        <section className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Project summary">
+          {[
+            ['Projects', loading ? '...' : proyectos.length, 'Your registered initiatives', FolderKanban, ''],
+            ['Total goal', loading ? '...' : formatMoney(metaTotal), 'Requested capital', Target, ''],
+            ['Raised', loading ? '...' : formatMoney(recaudadoTotal), 'Confirmed funds', ArrowUpRight, 'text-[#168b68]'],
+            ['Remaining', loading ? '...' : formatMoney(pendienteTotal), 'To complete your goals', Users, ''],
+          ].map(([label, value, hint, Icon, valueClass]) => (
+            <article key={label} className="rounded-xl border border-[#e9e2d8] bg-white p-5">
+              <div className="flex items-center justify-between"><p className="text-xs font-semibold text-[#6b7a7c]">{label}</p><Icon size={18} className="text-[#0b5d61]" /></div>
+              <p className={`mt-4 text-2xl font-bold ${valueClass}`}>{value}</p><p className="mt-1 text-xs text-[#849294]">{hint}</p>
+            </article>
+          ))}
+        </section>
 
-                        <main className="min-w-0 flex-1">
-                            <header className="flex h-18 items-center justify-between border-b border-[#d9e7e3] bg-white px-5 sm:px-8">
-                                <div>
-                                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#15927f]">Panel del emprendedor</p>
-                                    <h1 className="mt-1 text-lg font-bold text-[#173d43]">Resumen de tu emprendimiento</h1>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <button type="button" className="grid h-9 w-9 place-items-center rounded-full text-[#5d7376] hover:bg-[#edf6f3] hover:text-[#0d5c5d]" aria-label="Notificaciones"><Bell size={18} /></button>
-                                    <span className="grid h-9 w-9 place-items-center rounded-full bg-[#d8eee8] text-xs font-bold text-[#0d7169]" aria-label={nombreUsuario}>{inicial}</span>
-                                </div>
-                            </header>
+        <section className="mt-7 grid gap-6 lg:grid-cols-[minmax(0,1.35fr)_minmax(280px,0.65fr)]">
+          <article className="rounded-xl border border-[#e9e2d8] bg-white p-6 sm:p-7">
+            <div className="flex items-start justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-[0.16em] text-[#168b68]">Overall progress</p><h2 className="mt-2 text-xl font-bold">Funding progress</h2></div><span className="text-2xl font-bold text-[#0b5d61]">{loading ? '...' : `${progreso}%`}</span></div>
+            <div className="mt-8 h-3 overflow-hidden rounded-full bg-[#e7ece8]"><div className="h-full rounded-full bg-[#168b68] transition-all duration-500" style={{ width: `${progreso}%` }} /></div>
+            <div className="mt-3 flex justify-between text-xs text-[#718083]"><span>{formatMoney(recaudadoTotal)} raised</span><span>{formatMoney(metaTotal)} goal</span></div>
+            {!loading && proyectos.length === 0 && <p className="mt-7 border-t border-[#edf0ed] pt-5 text-sm leading-6 text-[#718083]">Create your first project to start tracking your funding progress.</p>}
+          </article>
+          <article className="rounded-xl border border-dashed border-[#9bc8bd] bg-[#f3faf6] p-6 sm:p-7"><div className="grid h-11 w-11 place-items-center rounded-lg bg-[#dff2eb] text-[#0b5d61]"><FolderKanban size={20} /></div><h2 className="mt-5 text-xl font-bold">Your next step</h2><p className="mt-2 text-sm leading-6 text-[#718083]">{proyectos.length ? 'Keep your project information updated to attract the right investors.' : 'Register your idea and start connecting with investors.'}</p><button type="button" onClick={onOpenCreateProject} className="mt-6 inline-flex items-center gap-2 rounded-lg border border-[#0b5d61] px-4 py-3 text-sm font-bold text-[#0b5d61] transition hover:bg-[#e5f5ef]"><Plus size={16} /> {proyectos.length ? 'Add project' : 'Register project'}</button></article>
+        </section>
 
-                            <div className="mx-auto max-w-7xl px-5 py-7 sm:px-8 lg:px-10">
-                                <section className="flex flex-col justify-between gap-5 rounded-2xl bg-[#0d7169] px-6 py-7 text-white shadow-[0_14px_30px_rgba(13,113,105,0.16)] sm:flex-row sm:items-center sm:px-8">
-                                    <div>
-                                        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b9eee0]">Tu avance</p>
-                                        <h2 className="mt-2 max-w-xl text-2xl font-bold tracking-tight sm:text-3xl">Sigue el camino de tu emprendimiento</h2>
-                                        <p className="mt-3 max-w-lg text-sm leading-6 text-white/75">Cuando conectemos la información de tu proyecto podrás ver cuánto has avanzado hacia tu meta de inversión.</p>
-                                    </div>
-                                    <button type="button" onClick={onOpenCreateProject} className="flex w-fit shrink-0 items-center gap-2 rounded-lg bg-white px-4 py-3 text-xs font-bold text-[#0d7169] transition hover:bg-[#e7f7f1]"><Plus size={16} />Crear proyecto</button>
-                                </section>
-
-                                <section className="mt-7 grid gap-4 md:grid-cols-3" aria-label="Resumen de progreso">
-                                    <article className="rounded-xl border border-[#d9e7e3] bg-white p-5">
-                                        <div className="flex items-center justify-between"><p className="text-xs font-semibold text-[#688083]">Meta de inversión</p><Target size={18} className="text-[#0d7169]" /></div>
-                                        <p className="mt-5 text-2xl font-bold text-[#a2b4b3]">Sin datos</p>
-                                        <p className="mt-2 text-xs text-[#8a9b9c]">Se mostrará al conectar tu proyecto</p>
-                                    </article>
-                                    <article className="rounded-xl border border-[#d9e7e3] bg-white p-5">
-                                        <div className="flex items-center justify-between"><p className="text-xs font-semibold text-[#688083]">Inversionistas confirmados</p><Users size={18} className="text-[#0d7169]" /></div>
-                                        <p className="mt-5 text-2xl font-bold text-[#a2b4b3]">Sin datos</p>
-                                        <p className="mt-2 text-xs text-[#8a9b9c]">Aún no hay registros disponibles</p>
-                                    </article>
-                                    <article className="rounded-xl border border-[#d9e7e3] bg-white p-5">
-                                        <div className="flex items-center justify-between"><p className="text-xs font-semibold text-[#688083]">Falta para completar la meta</p><Target size={18} className="text-[#0d7169]" /></div>
-                                        <p className="mt-5 text-2xl font-bold text-[#a2b4b3]">Sin datos</p>
-                                        <p className="mt-2 text-xs text-[#8a9b9c]">Se calculará con tus inversiones</p>
-                                    </article>
-                                </section>
-
-                                <section className="mt-7 grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
-                                    <article className="rounded-xl border border-[#d9e7e3] bg-white p-6 sm:p-8">
-                                        <div className="flex items-start justify-between gap-4">
-                                            <div><p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#15927f]">Progreso de la meta</p><h2 className="mt-2 text-xl font-bold">Todavía no hay progreso para mostrar</h2></div>
-                                            <span className="grid h-10 w-10 place-items-center rounded-full bg-[#e9f6f2] text-[#0d7169]"><Target size={19} /></span>
-                                        </div>
-                                        <div className="mt-8 h-3 overflow-hidden rounded-full bg-[#e6efed]"><div className="h-full w-0 rounded-full bg-[#0d7169]" /></div>
-                                        <div className="mt-3 flex justify-between text-xs text-[#849798]"><span>0% completado</span><span>Meta pendiente</span></div>
-                                        <p className="mt-8 border-t border-[#edf2f0] pt-5 text-sm leading-6 text-[#718588]">Crea tu proyecto y conecta la base de datos para comenzar a visualizar el avance real.</p>
-                                    </article>
-
-                                    <article className="rounded-xl border border-dashed border-[#9bc8bd] bg-[#f8fcfa] p-6 sm:p-8">
-                                        <div className="grid h-11 w-11 place-items-center rounded-lg bg-[#dff2eb] text-[#0d7169]"><FolderKanban size={20} /></div>
-                                        <h2 className="mt-5 text-xl font-bold">Tu proyecto aparecerá aquí</h2>
-                                        <p className="mt-2 text-sm leading-6 text-[#718588]">Aún no hay información conectada. Cuando registres tu emprendimiento podrás consultar su avance desde este panel.</p>
-                                        <button type="button" onClick={onOpenCreateProject} className="mt-6 flex items-center gap-2 rounded-lg border border-[#0d7169] px-4 py-3 text-xs font-bold text-[#0d7169] hover:bg-[#e5f5ef]"><Plus size={16} />Registrar emprendimiento</button>
-                                    </article>
-                                </section>
-                            </div>
-                        </main>
-                    </div>
-                </div>
-    );
+        <section className="mt-7 rounded-xl border border-[#e9e2d8] bg-white p-6 sm:p-7">
+          <div className="flex items-center justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-[0.16em] text-[#168b68]">Your projects</p><h2 className="mt-2 text-xl font-bold">Overview</h2></div><span className="text-xs font-semibold text-[#718083]">{proyectos.length} {proyectos.length === 1 ? 'project' : 'projects'}</span></div>
+          {loading ? <p className="py-10 text-center text-sm text-[#718083]">Loading your projects...</p> : proyectos.length === 0 ? <p className="py-10 text-center text-sm text-[#718083]">You have no registered projects yet.</p> : <div className="mt-5 grid gap-3 md:grid-cols-2">{proyectos.map((proyecto) => <article key={proyecto.id_proyecto} className="rounded-lg border border-[#edf0ed] bg-[#fbfcfa] p-4"><div className="flex items-start justify-between gap-3"><h3 className="font-bold">{proyecto.nombre}</h3><span className="rounded-full bg-[#e5f3ed] px-2.5 py-1 text-[10px] font-bold uppercase text-[#168b68]">{proyecto.estado || 'draft'}</span></div><p className="mt-2 line-clamp-2 text-sm leading-5 text-[#718083]">{proyecto.descripcion || 'No description available.'}</p><div className="mt-4 flex justify-between border-t border-[#edf0ed] pt-3 text-xs text-[#718083]"><span>Raised: <strong className="text-[#1e4043]">{formatMoney(proyecto.monto_recaudado)}</strong></span><span>Goal: <strong className="text-[#1e4043]">{formatMoney(proyecto.monto_objetivo)}</strong></span></div></article>)}</div>}
+        </section>
+      </div>
+    </div>
+  );
 }
 
 export default Inicio;

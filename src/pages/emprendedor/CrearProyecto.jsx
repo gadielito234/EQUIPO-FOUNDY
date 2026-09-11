@@ -1,21 +1,36 @@
-import { useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import { supabase } from "../../services/supabase.js";
 import AIConsultingPanel from "../../components/ai/AIConsultingPanel.jsx";
-
-const menu = ["Create project", "My projects", "Opportunities", "Messages"];
 
 const initialProject = {
   nombre: "",
   descripcion: "",
   monto: "",  
   retorno: "",
+  id_categoria: "",
 };
 
-function CrearProyecto({ nombreUsuario = "Entrepreneur", onCerrarSesion, onBackHome }) {
+function CrearProyecto({ usuarioData }) {
   const [proyecto, setProyecto] = useState(initialProject);
   const [imagenes, setImagenes] = useState([]);
   const [alerta, setAlerta] = useState(null);
+  const [categorias, setCategorias] = useState([]);
   const inputImagenes = useRef(null);
+
+  useEffect(() => {
+    const cargarCategorias = async () => {
+      const { data, error } = await supabase
+        .from("categoria")
+        .select("id_categoria, nombre")
+        .order("nombre");
+      if (error) {
+        setAlerta({ tipo: "warning", texto: `Could not load categories: ${error.message}` });
+        return;
+      }
+      setCategorias(data || []);
+    };
+    cargarCategorias();
+  }, []);
 
   const actualizarCampo = (event) => {
     setProyecto({ ...proyecto, [event.target.name]: event.target.value });
@@ -48,26 +63,27 @@ function CrearProyecto({ nombreUsuario = "Entrepreneur", onCerrarSesion, onBackH
       });
       return;
     }
-    if (publicar) {
-      const fechaInicio = new Date();
-      const meses = Number.parseInt(proyecto.retorno, 10) || 1;
-      const fechaFin = new Date(fechaInicio);
-      fechaFin.setMonth(fechaFin.getMonth() + meses);
-      const { error } = await supabase.from("proyecto").insert([{
-        nombre: proyecto.nombre.trim(),
-        descripcion: proyecto.descripcion.trim(),
-        monto_objetivo: proyecto.monto ? Number(proyecto.monto) : 0,
-        inversion: 0,
-        estado: "publicado",
-        fecha_inicio: fechaInicio.toISOString().slice(0, 10),
-        fecha_fin: fechaFin.toISOString().slice(0, 10),
-      }]);
-      if (error) {
-        setAlerta({ tipo: "warning", texto: `Could not publish project: ${error.message}` });
-        return;
-      }
-      window.dispatchEvent(new Event("foundy-project-published"));
+    const fechaInicio = new Date();
+    const meses = Number.parseInt(proyecto.retorno, 10) || 1;
+    const fechaFin = new Date(fechaInicio);
+    fechaFin.setMonth(fechaFin.getMonth() + meses);
+    const { error } = await supabase.from("proyecto").insert([{
+      nombre: proyecto.nombre.trim(),
+      descripcion: proyecto.descripcion.trim(),
+      monto_objetivo: proyecto.monto ? Number(proyecto.monto) : 0,
+      monto_recaudado: 0,
+      inversion: 0,
+      estado: publicar ? "publicado" : "borrador",
+      fecha_inicio: fechaInicio.toISOString().slice(0, 10),
+      fecha_fin: fechaFin.toISOString().slice(0, 10),
+      dui: usuarioData?.dui,
+      id_categoria: proyecto.id_categoria || null,
+    }]);
+    if (error) {
+      setAlerta({ tipo: "warning", texto: `Could not save project: ${error.message}` });
+      return;
     }
+    if (publicar) window.dispatchEvent(new Event("foundy-project-published"));
     setAlerta({
       tipo: "success",
       texto: publicar
@@ -158,7 +174,7 @@ function CrearProyecto({ nombreUsuario = "Entrepreneur", onCerrarSesion, onBackH
 
         <main
           id="crear-proyecto"
-          className="min-w-0 flex-1 px-4 py-8 sm:px-6 lg:px-10 lg:py-12"
+          className="mx-auto min-w-0 max-w-6xl px-4 py-8 sm:px-6 lg:px-10 lg:py-12"
         >
           <div className="mx-auto max-w-6xl">
             <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
@@ -189,7 +205,7 @@ function CrearProyecto({ nombreUsuario = "Entrepreneur", onCerrarSesion, onBackH
                   type="button"
                   onClick={() => setAlerta(null)}
                   className="ml-4 font-bold opacity-60 hover:opacity-100"
-                  aria-label="Cerrar alerta"
+                  aria-label="Close alert"
                 >
                   ×
                 </button>
@@ -252,6 +268,22 @@ function CrearProyecto({ nombreUsuario = "Entrepreneur", onCerrarSesion, onBackH
                   required
                 />
                 <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                  <label className="text-xs font-bold uppercase tracking-wide text-slate-600">
+                    Category
+                    <select
+                      name="id_categoria"
+                      value={proyecto.id_categoria}
+                      onChange={actualizarCampo}
+                      className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-normal normal-case outline-none focus:border-[#168b88] focus:bg-white focus:ring-4 focus:ring-[#168b88]/10"
+                    >
+                      <option value="">Select a category</option>
+                      {categorias.map((categoria) => (
+                        <option key={categoria.id_categoria} value={categoria.id_categoria}>
+                          {categoria.nombre}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
                   <label className="text-xs font-bold uppercase tracking-wide text-slate-600">
                     Requested amount
                     <input
@@ -339,6 +371,77 @@ function CrearProyecto({ nombreUsuario = "Entrepreneur", onCerrarSesion, onBackH
         </main>
       </div>
       <footer className="w-full shrink-0 border-t border-slate-200 bg-white px-6 py-5 text-center text-xs text-slate-400">
+              <aside className="h-fit rounded-2xl border border-[#424a4c]/15 bg-white p-5 shadow-[0_12px_35px_rgba(20,65,65,0.06)] sm:p-6">
+                <div className="mb-5 flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#006b73]">
+                      Assistant
+                    </p>
+                    <h2 className="mt-1 text-lg font-black text-[#424a4c]">
+                      AI Consulting
+                    </h2>
+                    <p className="text-[11px] text-[#424a4c]/60">
+                      MADE FOR YOU
+                    </p>
+                  </div>
+                  <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#006b73] text-xs font-black text-white">
+                    AI
+                  </span>
+                </div>
+                <div className="space-y-2">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      ayudaIA(
+                        "Name generation ready: add a name related to the problem your project solves.",
+                      )
+                    }
+                    className="w-full rounded-xl bg-[#006b73] px-4 py-3 text-left text-xs font-bold text-white transition hover:bg-[#00545b]"
+                  >
+                    Generate name
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      ayudaIA(
+                        "To improve it, mention the problem, your solution, and the audience you serve.",
+                      )
+                    }
+                    className="w-full rounded-xl bg-[#00634b] px-4 py-3 text-left text-xs font-bold text-white transition hover:bg-[#004c3a]"
+                  >
+                    Improve description
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      ayudaIA(
+                        "Complete the requested amount and return timeline to calculate an estimate.",
+                      )
+                    }
+                    className="w-full rounded-xl bg-[#424a4c] px-4 py-3 text-left text-xs font-bold text-white transition hover:bg-[#343a3c]"
+                  >
+                    Calculate investment
+                  </button>
+                </div>
+                <div className="mt-7 rounded-xl border border-[#424a4c]/10 bg-[#424a4c]/4 p-4">
+                  <div className="flex gap-2">
+                    <span className="grid h-6 w-6 shrink-0 place-items-center rounded-md bg-[#006b73] text-[10px] font-bold text-white">
+                      AI
+                    </span>
+                    <p className="m-0 text-xs leading-5 text-[#424a4c]/75">
+                      Hello, how can I help you with your project?
+                    </p>
+                  </div>
+                  <div className="mt-5 flex items-center justify-between rounded-lg border border-[#424a4c]/15 bg-white px-3 py-2 text-[11px] text-[#424a4c]/60">
+                    <span>Write here...</span>
+                    <span className="text-[#00634b]">→</span>
+                  </div>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </main>
+      <footer className="border-t border-slate-200 bg-white px-6 py-5 text-center text-xs text-slate-400">
         <span className="font-bold text-[#006b73]">foundy.</span> Your idea
         deserves to grow. <span className="mx-2 hidden sm:inline">·</span>
         <span className="block sm:inline">© 2026</span>

@@ -1,54 +1,36 @@
-import { useState } from "react";
+﻿import { useState } from "react";
+import { ArrowLeft, MessageCircle, MoreHorizontal, Paperclip, Phone, Plus, Search, Send, X } from "lucide-react";
 
 const conversations = [
   {
-    name: "Jorge Apicario",
-    role: "Startup founder",
-    preview: "The latest investment reports...",
-    time: "1:45 PM",
-    color: "#006b73",
+    name: "Equipo Foundy",
+    role: "Support",
+    color: "#0b817d",
+    time: "Ahora",
+    preview: "Welcome to the Foundy community.",
   },
   {
-    name: "Maria Elena",
-    role: "Co-founder",
-    preview: "We should schedule a call...",
-    time: "Yesterday",
-    color: "#00634b",
+    name: "Maria Gonzalez",
+    role: "Entrepreneur",
+    color: "#d17b4a",
+    time: "Ayer",
+    preview: "I would like to share my project with you.",
   },
   {
-    name: "Tech Founders Hub",
-    role: "Community",
-    preview: "New updates are available.",
-    time: "Mon",
-    color: "#424a4c",
-  },
-  {
-    name: "Foundy Support",
-    role: "Support team",
-    preview: "How can we help you?",
-    time: "Sun",
-    color: "#2d8a8a",
+    name: "Carlos Rivera",
+    role: "Investor",
+    color: "#6f7db8",
+    time: "Lun",
+    preview: "Can we talk about the opportunity?",
   },
 ];
 
 const initialMessages = [
   {
-    author: "Jorge Apicario",
-    text: "Hi! I have just uploaded the latest investment reports for the Foundy project.",
+    author: "Foundy Team",
+    text: "Welcome to your messages. Here you can talk with entrepreneurs, investors, and the Foundy team.",
     type: "received",
-    time: "1:48 PM",
-  },
-  {
-    author: "You",
-    text: "The quarterly statistics are ready for review. I was just checking it, looking solid!",
-    type: "sent",
-    time: "1:50 PM",
-  },
-  {
-    author: "Jorge Apicario",
-    text: "Great. Let's schedule a call tomorrow to discuss the scaling plan?",
-    type: "received",
-    time: "1:52 PM",
+    time: "Ahora",
   },
 ];
 
@@ -64,7 +46,7 @@ function Avatar({ person }) {
   );
 }
 
-function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
+function Chat() {
   const [activeConversation, setActiveConversation] = useState(null);
   const [messages, setMessages] = useState(initialMessages);
   const [draft, setDraft] = useState("");
@@ -73,7 +55,6 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
   const [mobileView, setMobileView] = useState("inbox");
   const [newMessageOpen, setNewMessageOpen] = useState(false);
   const [recipientSearch, setRecipientSearch] = useState("");
-  const investorMode = mode === "investor";
   const filtered = conversations.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase()),
   );
@@ -89,40 +70,8 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
   };
 
   return (
-    <div className="chat-shell flex min-h-screen flex-col bg-white text-[#424a4c]">
-      <nav className="flex h-18 shrink-0 items-center justify-between border-b border-[#424a4c]/15 px-5 sm:px-8">
-        <button
-          type="button"
-          onClick={onBackHome}
-          className="flex h-10 items-center gap-2 rounded-lg px cde-2 text-sm font-bold text-[#006b73] transition hover:bg-[#006b73]/9 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#006b73]/30"
-          aria-label="Volver al panel"
-          title="Volver al panel"
-        >
-          <img
-            src="https://tse2.mm.bing.net/th/id/OIP.w171eC9ZBI8OTweGWM7G0gHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
-            alt=""
-            className="h-7 w-7 object-contain"
-          />
-          <span className="hidden sm:inline">Volver</span>
-        </button>
-        <div className="flex items-center gap-3 sm:gap-5">
-          <span className="hidden text-xs font-semibold text-[#424a4c]/55 sm:block">
-            {investorMode ? "Investor inbox" : "Entrepreneur inbox"}
-          </span>
-          <button
-            type="button"
-            onClick={() => setNotice("Notifications are up to date.")}
-            className="grid h-9 w-9 place-items-center rounded-full text-[#424a4c]/70 transition hover:bg-[#006b73]/9 hover:text-[#006b73] focus-visible:outline-none"
-            aria-label="Notifications"
-          >
-            ♢
-          </button>
-          <button type="button" onClick={onCerrarSesion} className="text-xs font-semibold text-[#006b73] hover:underline">
-            Logout
-          </button>
-        </div>
-      </nav>
-      <main className="mx-auto flex min-h-0 w-full max-w-345 flex-1 flex-col px-3 py-3 sm:px-5 sm:py-5 lg:px-8">
+    <div className="chat-shell flex min-h-screen flex-col bg-[#f7f3ee] text-[#424a4c]">
+      <main className="flex min-h-0 w-full flex-1 flex-col px-0 py-0">
         {notice && (
           <div
             className="mb-3 flex items-center justify-between rounded-lg bg-[#006b73]/6 px-4 py-2.5 text-xs text-[#006b73]"
@@ -134,11 +83,11 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
               onClick={() => setNotice("")}
               aria-label="Dismiss notification"
             >
-              ×
+              <X size={15} />
             </button>
           </div>
         )}
-        <div className="chat-window flex min-h-0 flex-1 overflow-hidden rounded-xl border border-[#424a4c]/15 bg-white shadow-[0_12px_35px_rgba(20,65,65,0.07)]">
+        <div className="chat-window flex min-h-0 flex-1 overflow-hidden border-y border-[#dfe5df] bg-white">
           <section
             className={`${mobileView === "chat" ? "hidden" : "flex"} inbox-panel w-full shrink-0 flex-col border-r border-[#424a4c]/15 sm:flex sm:w-80 lg:w-96`}
             aria-label="Conversation list"
@@ -159,19 +108,19 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
                   className="grid h-9 w-9 place-items-center rounded-full text-xl text-[#00634b] hover:bg-[#006b73]/9"
                   aria-label="New message"
                 >
-                  +
+                  <Plus size={18} />
                 </button>
               </div>
-              <input
+              <div className="relative mt-4">
+                <Search size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#424a4c]/45" />
+                <input
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder="Search conversations"
-                className="mt-4 w-full rounded-lg border-0 bg-[#424a4c]/6 px-3 py-2.5 text-xs outline-none focus:bg-white focus:ring-2 focus:ring-[#006b73]/20"
-              />
-              <div
-                className="mt-5 flex items-center gap-4 overflow-hidden"
-                aria-label="Active contacts"
-              >
+                className="w-full rounded-lg border-0 bg-[#424a4c]/6 py-2.5 pl-9 pr-3 text-xs outline-none focus:bg-white focus:ring-2 focus:ring-[#006b73]/20"
+                />
+              </div>
+              <div className="mt-5 flex items-center gap-4 overflow-hidden" aria-label="Active contacts">
                 {conversations.slice(0, 3).map((conversation) => (
                   <button
                     type="button"
@@ -193,6 +142,11 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
               </div>
             </header>
             <div className="flex-1 overflow-y-auto">
+              {filtered.length === 0 && (
+                <p className="p-6 text-center text-xs text-[#424a4c]/50">
+                  No conversations available.
+                </p>
+              )}
               {filtered.map((conversation) => (
                 <button
                   type="button"
@@ -223,13 +177,6 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
                 </button>
               ))}
             </div>
-            <button
-              type="button"
-              onClick={() => setNewMessageOpen(true)}
-              className="m-4 rounded-lg bg-[#00634b] px-4 py-3 text-xs font-bold text-white hover:bg-[#004c3a]"
-            >
-              + New message
-            </button>
           </section>
           <section
             className={`${mobileView === "inbox" ? "hidden" : "flex"} chat-panel min-w-0 flex-1 flex-col sm:flex`}
@@ -245,7 +192,7 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
                       className="grid h-8 w-8 place-items-center rounded-full text-2xl text-[#424a4c] sm:hidden"
                       aria-label="Back to inbox"
                     >
-                      ‹
+                      <ArrowLeft size={16} />
                     </button>
                     <Avatar person={activeConversation} />
                     <div>
@@ -264,7 +211,7 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
                       className="grid h-9 w-9 place-items-center rounded-full text-[#424a4c]/70 hover:bg-[#006b73]/9 hover:text-[#006b73]"
                       aria-label="Start voice call"
                     >
-                      ⌕
+                        <Phone size={16} />
                     </button>
                     <button
                       type="button"
@@ -274,7 +221,7 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
                       className="grid h-9 w-9 place-items-center rounded-full text-[#424a4c]/70 hover:bg-[#006b73]/9 hover:text-[#006b73]"
                       aria-label="More options"
                     >
-                      •••
+                      <MoreHorizontal size={17} />
                     </button>
                   </div>
                 </header>
@@ -315,7 +262,7 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
                     className="grid h-9 w-9 place-items-center rounded-full text-lg text-[#424a4c]/70 hover:bg-[#006b73]/9 hover:text-[#006b73]"
                     aria-label="Attach file"
                   >
-                    ⊕
+                    <Paperclip size={16} />
                   </button>
                   <input
                     value={draft}
@@ -328,14 +275,14 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
                     className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#00634b] text-sm text-white hover:bg-[#004c3a]"
                     aria-label="Send message"
                   >
-                    ➤
+                    <Send size={16} />
                   </button>
                 </form>
               </>
             ) : (
               <div className="chat-empty-state flex flex-1 flex-col items-center justify-center px-6 text-center">
                 <div className="mb-6 grid h-24 w-24 place-items-center rounded-full border-2 border-[#424a4c]/70 bg-[#006b73]/3 text-4xl text-[#424a4c]">
-                  ✈
+                  <MessageCircle size={34} />
                 </div>
                 <h2 className="text-xl font-semibold text-[#424a4c]">
                   Your messages
@@ -380,7 +327,7 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
                 className="grid h-9 w-9 place-items-center rounded-full text-lg text-[#424a4c]/70 hover:bg-[#006b73]/9 hover:text-[#006b73]"
                 aria-label="Close new message"
               >
-                ×
+                <X size={17} />
               </button>
             </header>
             <div className="flex items-center gap-3 border-b border-[#424a4c]/10 px-5 py-3">
@@ -400,7 +347,7 @@ function Chat({ mode = "entrepreneur", onBackHome, onCerrarSesion }) {
               />
             </div>
             <div className="min-h-48 px-5 py-5">
-              {recipientSearch ? (
+              {recipientSearch && conversations.length > 0 ? (
                 <button
                   type="button"
                   onClick={() => {
