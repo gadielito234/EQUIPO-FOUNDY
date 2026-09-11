@@ -29,6 +29,8 @@ export default function PerfilConfiguracion({
   embeddedLayout = false,
   mode = 'platform',
   onSavePublicProfile,
+  onOpenFoundyCard = () => {},
+  onOpenChat = () => {},
 }) {
   const [transactionAlerts, setTransactionAlerts] = useState(true);
   const [marketingInsights, setMarketingInsights] = useState(false);
