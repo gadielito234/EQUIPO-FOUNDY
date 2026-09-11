@@ -218,7 +218,7 @@ function App() {
           onOpenChat={() => setPantallaLogueado('chat')}
           onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
         />,
-        { activeNav: 'investments', showSearch: true }
+        { activeNav: 'dashboard', showSearch: true }
       );
     }
 
@@ -241,10 +241,7 @@ function App() {
     }
 
     if (pantallaLogueado === 'foundy-card') {
-      return renderWithDashboardLayout(
-        <FoundyCard usuarioData={usuarioLogueado} onLogout={handleCerrarSesion} onBackHome={irAHome} onOpenSettings={irAConfiguracion} onOpenChat={() => setPantallaLogueado('chat')} embeddedLayout />,
-        { activeNav: 'foundy-card', showSearch: true }
-      );
+      return <FoundyCard usuarioData={usuarioLogueado} onLogout={handleCerrarSesion} onBackHome={irAHome} onOpenSettings={irAConfiguracion} onOpenChat={() => setPantallaLogueado('chat')} />;
     }
 
     return renderWithDashboardLayout(

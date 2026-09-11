@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 ﻿import { useEffect, useState } from 'react';
 import { ArrowUpRight, BriefcaseBusiness, CreditCard, Gem, PieChart, ShieldCheck, TrendingUp } from 'lucide-react';
 import { supabase } from '../../services/supabase.js';
+=======
+import { ArrowUpRight, BriefcaseBusiness, CreditCard, Gem, PieChart, ShieldCheck, TrendingUp } from 'lucide-react';
+>>>>>>> 2faddb61ebe7e22657c07e43958bce71dde472fa
 
 function FoundyCardPage({ usuarioData, onBackHome, onOpenInvestments }) {
   const [investments, setInvestments] = useState([]);
