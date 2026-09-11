@@ -114,7 +114,15 @@ export default function PerfilConfiguracion({
     setSaving(true);
     const { error } = await supabase
       .from('Usuario')
-      .update({ correo: email, usuario: displayName })
+      .update({
+        correo: email,
+        usuario: displayName,
+        intereses: interests.split(',').map((interest) => interest.trim()).filter(Boolean),
+        biografia: biography,
+        rango_inversion: investmentRange,
+        nivel_riesgo: riskLevel,
+        disponibilidad_contacto: contactAvailability,
+      })
       .eq('dui', usuarioData?.dui);
     setSaving(false);
 

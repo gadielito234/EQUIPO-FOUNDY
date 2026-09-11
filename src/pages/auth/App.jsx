@@ -37,7 +37,7 @@ function App() {
         .from('Usuario')
         .select('*')
         .eq('usuario', usuario)
-        .single();
+        .maybeSingle();
 
       if (error) {
         if (error.code === 'PGRST116') {
@@ -195,7 +195,7 @@ function App() {
     if (pantallaLogueado === 'chat') {
       const ChatPage = usuarioLogueado.tipo_usuario === 'Inversionista' ? ChatInversionista : ChatEmprendedor;
       return renderWithDashboardLayout(
-        <ChatPage onBackHome={irAHome} onCerrarSesion={handleCerrarSesion} embeddedLayout />,
+        <ChatPage usuarioData={usuarioLogueado} onBackHome={irAHome} onCerrarSesion={handleCerrarSesion} embeddedLayout />,
         { activeNav: 'messages', showSearch: true }
       );
     }
@@ -282,9 +282,24 @@ function App() {
     return (
       <Recuperacion
         onVolver={() => setEsRecuperacion(false)}
-        onContinuar={(correo) => {
-          console.log('Recovery email:', correo);
-          setEsRecuperacion(false);
+        onContinuar={async (correo, nuevaContrasena) => {
+          const { data: usuarioEncontrado, error: consultaError } = await supabase
+            .from('Usuario')
+            .select('dui')
+            .eq('correo', correo)
+            .maybeSingle();
+
+          if (consultaError) throw consultaError;
+          if (!usuarioEncontrado) {
+            throw new Error('No account was found with that email address.');
+          }
+
+          const { error: actualizacionError } = await supabase
+            .from('Usuario')
+            .update({ contrasena: nuevaContrasena })
+            .eq('dui', usuarioEncontrado.dui);
+
+          if (actualizacionError) throw actualizacionError;
         }}
       />
     );

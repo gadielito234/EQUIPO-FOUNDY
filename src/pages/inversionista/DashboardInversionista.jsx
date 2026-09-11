@@ -11,6 +11,7 @@ async function readPublishedProjects() {
     location: project.ubicacion || 'Location unavailable',
     category: project.id_categoria || 'Uncategorized',
     objective: project.descripcion || 'No description available.',
+    image: project.imagen_url || '',
     goal: project.monto_objetivo ? `$${Number(project.monto_objetivo).toLocaleString('en-US')}` : 'Not available',
     term: project.fecha_fin && project.fecha_inicio ? `${project.fecha_inicio} - ${project.fecha_fin}` : 'Not available',
   }));
@@ -78,14 +79,48 @@ function DashboardInversionista({ usuarioData }) {
       id_inversionista: usuarioData?.dui,
       id_inversion: investment.id_inversion,
     });
-    setInvirtiendo(false);
     if (paymentError) {
+      setInvirtiendo(false);
       showNotice(`Investment recorded, but the payment could not be saved: ${paymentError.message}`);
       return;
     }
+
+    const { data: project, error: projectReadError } = await supabase
+      .from('proyecto')
+      .select('monto_recaudado')
+      .eq('id_proyecto', selectedOpportunity.id)
+      .single();
+
+    if (projectReadError) {
+      showNotice(`Payment saved, but the project total could not be updated: ${projectReadError.message}`);
+      setInvirtiendo(false);
+      return;
+    }
+
+    const { error: projectUpdateError } = await supabase
+      .from('proyecto')
+      .update({ monto_recaudado: Number(project?.monto_recaudado || 0) + amount })
+      .eq('id_proyecto', selectedOpportunity.id);
+
+    if (projectUpdateError) {
+      showNotice(`Payment saved, but the project total could not be updated: ${projectUpdateError.message}`);
+      setInvirtiendo(false);
+      return;
+    }
+
+    const { error: notificationError } = await supabase.from('notifications').insert({
+      user_id: usuarioData?.dui,
+      title: 'Investment registered',
+      body: `Your investment of $${amount.toLocaleString('en-US')} is pending payment confirmation.`,
+      is_read: false,
+    });
+
+    setInvirtiendo(false);
     setSelectedOpportunity(null);
     setMontoInversion('');
-    showNotice('Investment recorded and pending payment created.');
+    showNotice(notificationError
+      ? `Investment recorded, but notification failed: ${notificationError.message}`
+      : 'Investment recorded and pending payment created.');
   };
 
   return (
@@ -94,7 +129,7 @@ function DashboardInversionista({ usuarioData }) {
         {opportunities.length > 0 && (
           <section className="overflow-hidden rounded-2xl bg-[#006b73] p-6 text-white shadow-[0_12px_24px_rgba(0,80,85,0.16)] sm:p-8">
             <div className="grid items-center gap-8 lg:grid-cols-[.7fr_1.3fr]">
-              <div className="mx-auto grid h-48 w-48 place-items-center rounded-full border-4 border-[#dff1ed] bg-white/10 text-xs text-[#d5efee] sm:h-56 sm:w-56">No image</div>
+              {opportunities[0].image ? <img src={opportunities[0].image} alt="" className="mx-auto h-48 w-48 rounded-full border-4 border-[#dff1ed] object-cover sm:h-56 sm:w-56" /> : <div className="mx-auto grid h-48 w-48 place-items-center rounded-full border-4 border-[#dff1ed] bg-white/10 text-xs text-[#d5efee] sm:h-56 sm:w-56">No image</div>}
               <div>
                 <p className="text-[10px] font-medium uppercase tracking-[.14em] text-[#d4efee]">Featured opportunity</p>
                 <h1 className="mt-2 text-xl font-semibold sm:text-2xl">{opportunities[0].title}</h1>
@@ -112,7 +147,7 @@ function DashboardInversionista({ usuarioData }) {
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3"><div><p className="text-xs font-bold uppercase tracking-[.15em] text-[#1b7f61]">Discover</p><h2 className="mt-1 text-2xl font-semibold text-[#1d3f42]">Browse opportunities</h2></div><button type="button" onClick={() => setSearchTerm('')} className="text-xs font-semibold text-[#1d4b4c] hover:text-[#0d5d61]">View all</button></div>
           <div className="mb-5"><input value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} placeholder="Search opportunities" className="w-full rounded-full border border-[#d7d0c4] bg-white px-4 py-3 text-sm outline-none focus:border-[#006b73] sm:max-w-sm" /></div>
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {filtered.map((item) => <article key={item.id} className="flex flex-col overflow-hidden rounded-lg border border-[#d7d0c4] bg-[#f8f4ef] shadow-sm"><div className="grid h-32 place-items-center bg-[#e8efed] text-xs text-[#5d6d6d]">No image</div><div className="flex flex-1 flex-col p-4"><span className="w-fit rounded-full bg-[#edf5f2] px-2 py-1 text-[9px] font-semibold text-[#1d4b4c]">{item.category}</span><h3 className="mt-2 text-sm font-semibold text-[#1d3f42]">{item.title}</h3><p className="mt-1 text-[10px] text-[#5f7274]">{item.location}</p><p className="mt-3 flex-1 text-[11px] leading-4 text-[#5d6d6d]">{item.objective}</p><div className="mt-3 grid grid-cols-2 gap-2 text-[10px]"><span className="rounded bg-[#f0f3f0] p-2">Goal <b className="block text-[#1f4043]">{item.goal}</b></span><span className="rounded bg-[#f0f3f0] p-2">Term <b className="block text-[#1f4043]">{item.term}</b></span></div><button type="button" onClick={() => setSelectedOpportunity(item)} className="mt-3 w-full rounded-md bg-[#006b73] px-3 py-2 text-[10px] font-bold uppercase text-white hover:bg-[#005159]">Invest</button></div></article>)}
+            {filtered.map((item) => <article key={item.id} className="flex flex-col overflow-hidden rounded-lg border border-[#d7d0c4] bg-[#f8f4ef] shadow-sm">{item.image ? <img src={item.image} alt="" className="h-32 w-full object-cover" /> : <div className="grid h-32 place-items-center bg-[#e8efed] text-xs text-[#5d6d6d]">No image</div>}<div className="flex flex-1 flex-col p-4"><span className="w-fit rounded-full bg-[#edf5f2] px-2 py-1 text-[9px] font-semibold text-[#1d4b4c]">{item.category}</span><h3 className="mt-2 text-sm font-semibold text-[#1d3f42]">{item.title}</h3><p className="mt-1 text-[10px] text-[#5f7274]">{item.location}</p><p className="mt-3 flex-1 text-[11px] leading-4 text-[#5d6d6d]">{item.objective}</p><div className="mt-3 grid grid-cols-2 gap-2 text-[10px]"><span className="rounded bg-[#f0f3f0] p-2">Goal <b className="block text-[#1f4043]">{item.goal}</b></span><span className="rounded bg-[#f0f3f0] p-2">Term <b className="block text-[#1f4043]">{item.term}</b></span></div><button type="button" onClick={() => setSelectedOpportunity(item)} className="mt-3 w-full rounded-md bg-[#006b73] px-3 py-2 text-[10px] font-bold uppercase text-white hover:bg-[#005159]">Invest</button></div></article>)}
           </div>
           {filtered.length === 0 && <p className="rounded-lg border border-dashed border-[#cbd4d3] p-10 text-center text-sm text-[#446062]">No opportunities found.</p>}
         </section>

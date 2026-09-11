@@ -1,11 +1,73 @@
-﻿import { useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { jsPDF } from 'jspdf';
+import { supabase } from '../../services/supabase.js';
 
-const monthlyData = [];
-
-function Statistics() {
+function Statistics({ usuarioData }) {
+  const [monthlyData, setMonthlyData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [mesSeleccionado, setMesSeleccionado] = useState(5); // JUN por defecto
   const [periodoSeleccionado, setPeriodoSeleccionado] = useState('6 MONTHS');
+
+  useEffect(() => {
+    let mounted = true;
+
+    const loadStatistics = async () => {
+      if (!usuarioData?.dui) {
+        setMonthlyData([]);
+        setLoading(false);
+        return;
+      }
+
+      const { data: projects, error } = await supabase
+        .from('proyecto')
+        .select('id_proyecto, monto_objetivo, monto_recaudado, estado, fecha_inicio, id_categoria')
+        .eq('dui', usuarioData.dui);
+
+      if (!mounted) return;
+      if (error) {
+        setMonthlyData([]);
+        setLoading(false);
+        return;
+      }
+
+      const now = new Date();
+      const rows = Array.from({ length: 12 }, (_, index) => {
+        const date = new Date(now.getFullYear(), now.getMonth() - (11 - index), 1);
+        const month = date.toLocaleString('en-US', { month: 'short' }).toUpperCase();
+        const activeProjects = (projects || []).filter((project) => project.estado === 'publicado' && new Date(project.fecha_inicio || now) <= date).length;
+        const totalInvestment = (projects || []).reduce((total, project) => total + Number(project.monto_recaudado || 0), 0);
+        const totalGoal = (projects || []).reduce((total, project) => total + Number(project.monto_objetivo || 0), 0);
+        const progress = totalGoal ? Math.min(totalInvestment / totalGoal, 1) : 0;
+        const distribution = [
+          { label: 'Projects', pct: 50, color: '#138b88' },
+          { label: 'Raised', pct: Math.round(progress * 35), color: '#65bcb2' },
+          { label: 'Pending', pct: 50 - Math.round(progress * 35), color: '#d9e9e5' },
+        ];
+        return {
+          month,
+          cx: 12 + index * 34,
+          cy: 112 - progress * 70,
+          totalInvestment: `$${totalInvestment.toLocaleString('en-US')}`,
+          roi: `${Math.round(progress * 100)}%`,
+          activeProjects: String(activeProjects),
+          investmentChange: `${Math.round(progress * 100)}% of goal reached`,
+          roiChange: 'Based on current funding',
+          projectsChange: `${activeProjects} published project${activeProjects === 1 ? '' : 's'}`,
+          distribution,
+        };
+      });
+
+      setMonthlyData(rows);
+      setLoading(false);
+    };
+
+    loadStatistics();
+    return () => { mounted = false; };
+  }, [usuarioData?.dui]);
+
+  if (loading) {
+    return <div className="rounded-lg border border-dashed border-[#cbd4d3] p-8 text-center text-sm text-[#446062]">Loading statistics...</div>;
+  }
 
   if (monthlyData.length === 0) {
     return <div className="rounded-lg border border-dashed border-[#cbd4d3] p-8 text-center text-sm text-[#446062]">No statistics available.</div>;

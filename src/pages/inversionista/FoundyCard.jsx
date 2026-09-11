@@ -1,6 +1,9 @@
-﻿import { ArrowUpRight, BriefcaseBusiness, CreditCard, Gem, PieChart, ShieldCheck, TrendingUp } from 'lucide-react';
+﻿import { useEffect, useState } from 'react';
+import { ArrowUpRight, BriefcaseBusiness, CreditCard, Gem, PieChart, ShieldCheck, TrendingUp } from 'lucide-react';
+import { supabase } from '../../services/supabase.js';
 
 function FoundyCardPage({ usuarioData, onBackHome, onOpenInvestments }) {
+  const [investments, setInvestments] = useState([]);
   const userName = usuarioData?.usuario || 'Usuario';
   const initials = userName
     .split(' ')
@@ -9,6 +12,21 @@ function FoundyCardPage({ usuarioData, onBackHome, onOpenInvestments }) {
     .join('')
     .toUpperCase();
   const investorId = usuarioData?.dui ? `FDY-${String(usuarioData.dui).slice(-4)}` : 'FDY-0000';
+  useEffect(() => {
+    let mounted = true;
+    const loadInvestments = async () => {
+      if (!usuarioData?.dui) return;
+      const { data } = await supabase
+        .from('inversion')
+        .select('monto, participacion')
+        .eq('id_inversionista', usuarioData.dui);
+      if (mounted) setInvestments(data || []);
+    };
+    loadInvestments();
+    return () => { mounted = false; };
+  }, [usuarioData?.dui]);
+  const totalValue = investments.reduce((total, item) => total + Number(item.monto || 0), 0);
+  const totalParticipation = investments.reduce((total, item) => total + Number(item.participacion || 0), 0);
 
   return (
     <main className="min-h-full bg-[#f7f3ee] px-4 py-6 text-[#173f43] sm:px-6 lg:px-8">
@@ -58,9 +76,9 @@ function FoundyCardPage({ usuarioData, onBackHome, onOpenInvestments }) {
                 <PieChart className="text-[#0b817d]" size={25} />
               </div>
               <div className="mt-6 grid gap-4 sm:grid-cols-3">
-                <div className="rounded-2xl bg-[#f4f8f6] p-4"><p className="text-xs text-[#728184]">Total value</p><p className="mt-2 text-xl font-bold">No data</p></div>
-                <div className="rounded-2xl bg-[#f4f8f6] p-4"><p className="text-xs text-[#728184]">Active investments</p><p className="mt-2 text-xl font-bold">0</p></div>
-                <div className="rounded-2xl bg-[#f4f8f6] p-4"><p className="text-xs text-[#728184]">Performance</p><p className="mt-2 text-xl font-bold">No data</p></div>
+                <div className="rounded-2xl bg-[#f4f8f6] p-4"><p className="text-xs text-[#728184]">Total value</p><p className="mt-2 text-xl font-bold">${totalValue.toLocaleString('en-US')}</p></div>
+                <div className="rounded-2xl bg-[#f4f8f6] p-4"><p className="text-xs text-[#728184]">Active investments</p><p className="mt-2 text-xl font-bold">{investments.length}</p></div>
+                <div className="rounded-2xl bg-[#f4f8f6] p-4"><p className="text-xs text-[#728184]">Participation</p><p className="mt-2 text-xl font-bold">{totalParticipation.toFixed(2)}%</p></div>
               </div>
             </section>
           </div>

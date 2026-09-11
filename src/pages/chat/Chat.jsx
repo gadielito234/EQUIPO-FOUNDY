@@ -1,38 +1,6 @@
-﻿import { useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { ArrowLeft, MessageCircle, MoreHorizontal, Paperclip, Phone, Plus, Search, Send, X } from "lucide-react";
-
-const conversations = [
-  {
-    name: "Equipo Foundy",
-    role: "Support",
-    color: "#0b817d",
-    time: "Ahora",
-    preview: "Welcome to the Foundy community.",
-  },
-  {
-    name: "Maria Gonzalez",
-    role: "Entrepreneur",
-    color: "#d17b4a",
-    time: "Ayer",
-    preview: "I would like to share my project with you.",
-  },
-  {
-    name: "Carlos Rivera",
-    role: "Investor",
-    color: "#6f7db8",
-    time: "Lun",
-    preview: "Can we talk about the opportunity?",
-  },
-];
-
-const initialMessages = [
-  {
-    author: "Foundy Team",
-    text: "Welcome to your messages. Here you can talk with entrepreneurs, investors, and the Foundy team.",
-    type: "received",
-    time: "Ahora",
-  },
-];
+import { supabase } from '../../services/supabase.js';
 
 function Avatar({ person }) {
   return (
@@ -46,26 +14,109 @@ function Avatar({ person }) {
   );
 }
 
-function Chat() {
+function Chat({ usuarioData }) {
   const [activeConversation, setActiveConversation] = useState(null);
-  const [messages, setMessages] = useState(initialMessages);
+  const [conversations, setConversations] = useState([]);
+  const [messages, setMessages] = useState([]);
   const [draft, setDraft] = useState("");
   const [search, setSearch] = useState("");
   const [notice, setNotice] = useState("");
   const [mobileView, setMobileView] = useState("inbox");
   const [newMessageOpen, setNewMessageOpen] = useState(false);
   const [recipientSearch, setRecipientSearch] = useState("");
+  const currentDui = usuarioData?.dui;
   const filtered = conversations.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase()),
   );
 
-  const sendMessage = (event) => {
+  useEffect(() => {
+    let mounted = true;
+    const loadPeople = async () => {
+      if (!currentDui) return;
+      const { data, error } = await supabase
+        .from('Usuario')
+        .select('dui, nombre, apellidos, usuario, tipo_usuario')
+        .neq('dui', currentDui)
+        .order('nombre');
+      if (mounted && !error) {
+        setConversations((data || []).map((person, index) => ({
+          dui: person.dui,
+          name: person.nombre && person.apellidos ? `${person.nombre} ${person.apellidos}` : person.usuario,
+          role: person.tipo_usuario === 'Inversionista' ? 'Investor' : 'Entrepreneur',
+          color: ['#0b817d', '#d17b4a', '#6f7db8'][index % 3],
+          time: '',
+          preview: 'Start a conversation.',
+        })));
+      }
+    };
+    loadPeople();
+    return () => { mounted = false; };
+  }, [currentDui]);
+
+  useEffect(() => {
+    let mounted = true;
+    let channel;
+    const loadMessages = async () => {
+      if (!activeConversation?.id) {
+        setMessages([]);
+        return;
+      }
+      const { data, error } = await supabase
+        .from('chat_messages')
+        .select('id, sender_dui, body, created_at')
+        .eq('conversation_id', activeConversation.id)
+        .order('created_at');
+      if (mounted && !error) {
+        setMessages((data || []).map((message) => ({
+          id: message.id,
+          author: message.sender_dui === currentDui ? 'You' : activeConversation.name,
+          text: message.body,
+          type: message.sender_dui === currentDui ? 'sent' : 'received',
+          time: new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        })));
+      }
+      channel = supabase.channel(`chat:${activeConversation.id}`).on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages', filter: `conversation_id=eq.${activeConversation.id}` }, (payload) => {
+        const message = payload.new;
+        setMessages((current) => current.some((item) => item.id === message.id) ? current : [...current, {
+          id: message.id,
+          author: message.sender_dui === currentDui ? 'You' : activeConversation.name,
+          text: message.body,
+          type: message.sender_dui === currentDui ? 'sent' : 'received',
+          time: new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        }]);
+      }).subscribe();
+    };
+    loadMessages();
+    return () => { mounted = false; if (channel) supabase.removeChannel(channel); };
+  }, [activeConversation?.id, activeConversation?.name, currentDui]);
+
+  const openConversation = async (conversation) => {
+    if (!currentDui || !conversation?.dui) return;
+    const { data: participantRow } = await supabase.from('chat_participants').select('conversation_id').eq('dui', currentDui);
+    const conversationIds = (participantRow || []).map((row) => row.conversation_id);
+    let conversationId = null;
+    if (conversationIds.length) {
+      const { data: shared } = await supabase.from('chat_participants').select('conversation_id').eq('dui', conversation.dui).in('conversation_id', conversationIds).limit(1).maybeSingle();
+      conversationId = shared?.conversation_id || null;
+    }
+    if (!conversationId) {
+      const { data: created } = await supabase.from('chat_conversations').insert({}).select('id').single();
+      if (!created) return;
+      conversationId = created.id;
+      await supabase.from('chat_participants').insert([{ conversation_id: conversationId, dui: currentDui }, { conversation_id: conversationId, dui: conversation.dui }]);
+    }
+    setActiveConversation({ ...conversation, id: conversationId });
+    setMobileView('chat');
+  };
+
+  const sendMessage = async (event) => {
     event.preventDefault();
-    if (!draft.trim()) return;
-    setMessages([
-      ...messages,
-      { author: "You", text: draft.trim(), type: "sent", time: "Now" },
-    ]);
+    if (!draft.trim() || !activeConversation?.id || !currentDui) return;
+    const { error } = await supabase.from('chat_messages').insert({ conversation_id: activeConversation.id, sender_dui: currentDui, body: draft.trim() });
+    if (error) {
+      setNotice(`Message could not be sent: ${error.message}`);
+      return;
+    }
     setDraft("");
   };
 
@@ -125,10 +176,7 @@ function Chat() {
                   <button
                     type="button"
                     key={conversation.name}
-                    onClick={() => {
-                      setActiveConversation(conversation);
-                      setMobileView("chat");
-                    }}
+                    onClick={() => openConversation(conversation)}
                     className="flex shrink-0 flex-col items-center gap-1.5"
                   >
                     <span className="rounded-full border-2 border-[#00634b] p-0.5">
@@ -151,10 +199,7 @@ function Chat() {
                 <button
                   type="button"
                   key={conversation.name}
-                  onClick={() => {
-                    setActiveConversation(conversation);
-                    setMobileView("chat");
-                  }}
+                  onClick={() => openConversation(conversation)}
                   className={`flex w-full gap-3 border-b border-[#424a4c]/[0.07] px-4 py-4 text-left transition hover:bg-[#006b73]/[0.035] sm:px-5 ${activeConversation?.name === conversation.name ? "bg-[#006b73]/[0.07]" : ""}`}
                 >
                   <Avatar person={conversation} />
@@ -351,9 +396,8 @@ function Chat() {
                 <button
                   type="button"
                   onClick={() => {
-                    setActiveConversation(conversations[0]);
+                    openConversation(conversations.find((conversation) => conversation.name.toLowerCase().includes(recipientSearch.toLowerCase())) || conversations[0]);
                     setNewMessageOpen(false);
-                    setMobileView("chat");
                     setRecipientSearch("");
                   }}
                   className="flex w-full items-center gap-3 rounded-lg p-3 text-left hover:bg-[#006b73]/6"
