@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { ArrowLeft, Bell, CheckCheck, Clock3, ExternalLink, LoaderCircle, Sparkles } from 'lucide-react';
+﻿import { useEffect, useMemo, useState } from 'react';
+import { Bell, CheckCheck, Clock3, ExternalLink, LoaderCircle, Sparkles } from 'lucide-react';
 import {
   fetchNotifications,
   markAsRead,
@@ -13,7 +13,7 @@ const filterOptions = [
   { value: 'read', label: 'Read' },
 ];
 
-export default function Notifications({ user, usuarioData, role, onBack }) {
+export default function Notifications({ user, usuarioData, role }) {
   const currentUser = user ?? usuarioData ?? null;
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -96,12 +96,6 @@ export default function Notifications({ user, usuarioData, role, onBack }) {
   return (
     <main className="min-h-screen bg-[#f4f6f7] text-[#31474a]">
       <div className="mx-auto max-w-5xl px-5 py-7 sm:px-8 lg:px-12">
-        {onBack && (
-          <button type="button" onClick={onBack} className="inline-flex items-center gap-2 text-xs font-semibold text-[#006b73] transition hover:text-[#004e56]">
-            <ArrowLeft size={16} /> Back to home
-          </button>
-        )}
-
         <header className="mt-8 rounded-[28px] border border-[#dfe5e5] bg-white px-5 py-5 shadow-[0_10px_30px_rgba(17,52,60,0.04)] sm:px-6">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -157,7 +151,7 @@ export default function Notifications({ user, usuarioData, role, onBack }) {
             {visibleNotifications.length === 0 ? (
               <div className="rounded-[24px] border border-dashed border-[#cbd8d6] bg-white p-10 text-center text-sm text-[#687577]">There are no notifications in this filter.</div>
             ) : (
-              <div className="divide-y divide-[#e1e6e6] overflow-hidden rounded-[24px] border border-[#e0e7e7] bg-white shadow-[0_12px_30px_rgba(17,52,60,0.03)]" aria-label="Lista de notificaciones">
+              <div className="divide-y divide-[#e1e6e6] overflow-hidden rounded-[24px] border border-[#e0e7e7] bg-white shadow-[0_12px_30px_rgba(17,52,60,0.03)]" aria-label="Notification list">
                 {visibleNotifications.map((notification) => (
                   <article key={notification.id} className={`flex gap-4 p-4 sm:p-5 ${notification.is_read ? 'bg-white' : 'bg-[#f1f8f6]'}`}>
                     <div className={`mt-1 grid h-10 w-10 shrink-0 place-items-center rounded-full ${notification.is_read ? 'bg-[#edf2f2] text-[#5a6c6d]' : 'bg-[#dfeeed] text-[#006b73]'}`}>

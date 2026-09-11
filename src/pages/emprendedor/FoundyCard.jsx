@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Home, FolderKanban, Mail, Settings, Bell, HelpCircle, LogOut } from 'lucide-react';
 
 const defaultUser = { name: 'Usuario', avatar: null };
@@ -98,15 +98,15 @@ function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenSettings, onO
               type="button"
               onClick={onBackHome}
               className="flex h-10 items-center gap-2 rounded-lg px-2 text-sm font-bold text-[#006b73] transition hover:bg-[#006b73]/9 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#006b73]/30"
-              aria-label="Volver al panel"
-              title="Volver al panel"
+              aria-label="Back to dashboard"
+              title="Back to dashboard"
             >
               <img
                 src="https://tse2.mm.bing.net/th/id/OIP.w171eC9ZBI8OTweGWM7G0gHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
                 alt=""
                 className="h-7 w-7 object-contain"
               />
-              <span className="hidden sm:inline">Volver</span>
+              <span className="hidden sm:inline">Back</span>
             </button>
             <div aria-label="Foundy brand logo">
               <img src="/images/foundy-logo.png" alt="Foundy logo" className="h-9.5 w-auto object-contain" />
@@ -142,7 +142,7 @@ function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenSettings, onO
               <div className="flex items-center justify-between">
                 <span className="font-bold tracking-[0.18em]">FOUNDY</span>
                 <span className="text-xl" aria-label="Card type">
-                  ●●●
+                  •••
                 </span>
               </div>
 
@@ -161,12 +161,12 @@ function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenSettings, onO
             <article className="rounded-xl border border-[#0b252b]/10 bg-white p-5 shadow-[0_14px_24px_rgba(13,44,50,0.06)]">
               <div className="flex items-center justify-between font-semibold">
                 <span>Portfolio Summary</span>
-                <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-[#6d7b88]">Sin datos</span>
+                <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-[#6d7b88]">No data</span>
               </div>
 
               <div className="mt-5">
                 <div className="text-xs text-[#6d7b88]">Total Value</div>
-                <div className="mt-1 text-3xl font-bold text-[#0f2d39]">Sin datos</div>
+                <div className="mt-1 text-3xl font-bold text-[#0f2d39]">No data</div>
               </div>
             </article>
 
@@ -220,7 +220,7 @@ function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenSettings, onO
                       </div>
                       <p className="mt-1 truncate text-xs text-[#6d7b88]">{item.meta}</p>
                       <div className="mt-2 flex items-center gap-1 text-[10px] text-[#6d7b88]">
-                        <span>◔</span>
+                        <span>â—”</span>
                         <span>{item.investors} investors</span>
                       </div>
                     </div>

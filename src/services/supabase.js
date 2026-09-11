@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+﻿import { createClient } from '@supabase/supabase-js';
 // Leemos las variables del archivo .env
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
@@ -27,10 +27,10 @@ try {
 	if (!supabaseUrl || !supabaseAnonKey) throw new Error('Supabase env missing');
 	supabase = createClient(supabaseUrl, supabaseAnonKey);
 } catch (err) {
-	// Evitar que un error en la creación de cliente rompa la app en desarrollo
+	// Evitar que un error en la creaciÃ³n de cliente rompa la app en desarrollo
 	// y exportar un stub que devuelva respuestas seguras.
-	// En producción debes configurar correctamente las variables de entorno.
-	console.warn('Supabase no configurado — usando stub:', err.message || err);
+	// En producciÃ³n debes configurar correctamente las variables de entorno.
+	console.warn('Supabase no configurado â€” usando stub:', err.message || err);
 	supabase = makeStub();
 }
 

@@ -1,101 +1,14 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { jsPDF } from 'jspdf';
 
 const monthlyData = [];
 
-<<<<<<< HEAD
 function Statistics() {
-=======
-// Datos por mes: posición en el SVG (ajustada a la curva) + estadísticas asociadas
-const monthlyData = [
-  {
-    month: 'JAN', cx: 0, cy: 126,
-    totalInvestment: '$8,200.00', investmentChange: '↗ 5.1% vs last month',
-    roi: '12.4%', roiChange: '↗ 1.2% vs last month',
-    activeProjects: '03', projectsChange: '↗ 1 new this month',
-    distribution: [
-      { label: 'Equity & Tech', pct: 45, color: '#146f78' },
-      { label: 'Real Estate', pct: 35, color: '#69c5b0' },
-      { label: 'Crypto & Alt', pct: 20, color: '#d3e8e1' },
-    ],
-  },
-  {
-    month: 'FEB', cx: 66, cy: 116,
-    totalInvestment: '$8,950.00', investmentChange: '↗ 9.1% vs last month',
-    roi: '13.1%', roiChange: '↗ 0.7% vs last month',
-    activeProjects: '04', projectsChange: '↗ 1 new this month',
-    distribution: [
-      { label: 'Equity & Tech', pct: 48, color: '#146f78' },
-      { label: 'Real Estate', pct: 33, color: '#69c5b0' },
-      { label: 'Crypto & Alt', pct: 19, color: '#d3e8e1' },
-    ],
-  },
-  {
-    month: 'MAR', cx: 132, cy: 106,
-    totalInvestment: '$9,600.00', investmentChange: '↗ 7.3% vs last month',
-    roi: '14.5%', roiChange: '↗ 1.4% vs last month',
-    activeProjects: '04', projectsChange: '— no change',
-    distribution: [
-      { label: 'Equity & Tech', pct: 50, color: '#146f78' },
-      { label: 'Real Estate', pct: 32, color: '#69c5b0' },
-      { label: 'Crypto & Alt', pct: 18, color: '#d3e8e1' },
-    ],
-  },
-  {
-    month: 'APR', cx: 198, cy: 111,
-    totalInvestment: '$10,400.00', investmentChange: '↗ 8.3% vs last month',
-    roi: '15.6%', roiChange: '↗ 1.1% vs last month',
-    activeProjects: '05', projectsChange: '↗ 1 new this month',
-    distribution: [
-      { label: 'Equity & Tech', pct: 52, color: '#146f78' },
-      { label: 'Real Estate', pct: 31, color: '#69c5b0' },
-      { label: 'Crypto & Alt', pct: 17, color: '#d3e8e1' },
-    ],
-  },
-  {
-    month: 'MAY', cx: 264, cy: 80,
-    totalInvestment: '$11,300.00', investmentChange: '↗ 8.7% vs last month',
-    roi: '16.8%', roiChange: '↗ 1.2% vs last month',
-    activeProjects: '06', projectsChange: '↗ 1 new this month',
-    distribution: [
-      { label: 'Equity & Tech', pct: 53, color: '#146f78' },
-      { label: 'Real Estate', pct: 31, color: '#69c5b0' },
-      { label: 'Crypto & Alt', pct: 16, color: '#d3e8e1' },
-    ],
-  },
-  {
-    month: 'JUN', cx: 330, cy: 40,
-    totalInvestment: '$12,450.00', investmentChange: '↗ 12.5% vs last month',
-    roi: '18.2%', roiChange: '↗ 4.8% vs last month',
-    activeProjects: '07', projectsChange: '↗ 2 new this month',
-    distribution: [
-      { label: 'Equity & Tech', pct: 55, color: '#146f78' },
-      { label: 'Real Estate', pct: 30, color: '#69c5b0' },
-      { label: 'Crypto & Alt', pct: 15, color: '#d3e8e1' },
-    ],
-  },
-  {
-    month: 'JUL', cx: 396, cy: 55,
-    totalInvestment: '$13,100.00', investmentChange: '↗ 5.2% vs last month',
-    roi: '19.0%', roiChange: '↗ 0.8% vs last month',
-    activeProjects: '07', projectsChange: '— no change',
-    distribution: [
-      { label: 'Equity & Tech', pct: 56, color: '#146f78' },
-      { label: 'Real Estate', pct: 29, color: '#69c5b0' },
-      { label: 'Crypto & Alt', pct: 15, color: '#d3e8e1' },
-    ],
-  },
-];
-
-function Statistics({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, onOpenCreateProject, onOpenChat, onOpenFoundyCard, embeddedLayout = false }) {
-  const nombreUsuario = usuarioData?.usuario || 'usuario';
-  const [menuAbierto, setMenuAbierto] = useState(true);
->>>>>>> d784d26ed20b685861482f6d6795287299b200c4
   const [mesSeleccionado, setMesSeleccionado] = useState(5); // JUN por defecto
   const [periodoSeleccionado, setPeriodoSeleccionado] = useState('6 MONTHS');
 
   if (monthlyData.length === 0) {
-    return <div className="rounded-lg border border-dashed border-[#cbd4d3] p-8 text-center text-sm text-[#446062]">No hay estadísticas disponibles.</div>;
+    return <div className="rounded-lg border border-dashed border-[#cbd4d3] p-8 text-center text-sm text-[#446062]">No statistics available.</div>;
   }
 
   const getDatosPorPeriodo = (periodo) => {
@@ -205,7 +118,7 @@ function Statistics({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, o
     doc.setTextColor(0, 76, 82);
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(10);
-    doc.text('Foundy • Generated report', centerX, 280, { align: 'center' });
+    doc.text('Foundy · Generated report', centerX, 280, { align: 'center' });
 
     doc.save('foundy-statistics-report.pdf');
   };
@@ -216,53 +129,13 @@ function Statistics({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, o
     return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
   };
 
-  // Construye el conic-gradient del donut dinámicamente según el mes activo
+  // Build the donut conic gradient dynamically for the active month.
   const [d1, d2, d3] = datosActivos.distribution;
   const conicGradient = `conic-gradient(${d1.color} 0 ${d1.pct}%, ${d2.color} ${d1.pct}% ${d1.pct + d2.pct}%, ${d3.color} ${d1.pct + d2.pct}% 100%)`;
 
   return (
-<<<<<<< HEAD
     <div className="min-h-screen bg-[#f4f6f7] text-[#31474a]">
       <main id="dashboard" className="mx-auto max-w-6xl px-1 py-1 sm:px-2 lg:px-4">
-=======
-    <div className={`${embeddedLayout ? '[&>div>aside]:hidden [&>div>div>header]:hidden' : ''} min-h-screen bg-[#f4f6f7] text-[#31474a]`}>
-      <div className="flex min-h-screen">
-        {menuAbierto && <aside className="fixed inset-y-0 left-0 z-30 flex w-56 flex-col border-r border-[#dfe5e5] bg-[#f8faf9] px-4 py-5 shadow-sm lg:static lg:shadow-none" aria-label="Menú principal">
-          <div className="flex items-center justify-between border-b border-[#e1e6e6] pb-5">
-            <img src="/images/foundy-logo.png" alt="Foundy" className="mx-auto h-8 w-auto object-contain brightness-0 opacity-75" />
-          </div>
-          <div className="border-b border-[#e1e6e6] py-5 text-center">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center overflow-hidden rounded-full border-2 border-[#006b73] bg-[#d6e7e6] text-xl text-[#006b73]">{nombreUsuario.charAt(0).toUpperCase()}</div>
-            <p className="mt-2 text-xs font-semibold text-[#27383a]">{nombreUsuario}</p>
-            <span className="mt-1 inline-block rounded bg-[#dfe6e6] px-2 py-0.5 text-[10px] text-[#637173]">Emprendedor</span>
-          </div>
-          <nav className="mt-5 flex flex-col gap-1.5">
-            {menuItems.map((item) => (
-              <button key={item.label} type="button" onClick={item.label === 'Home' ? onBackHome : item.label === 'My investments' ? onOpenCreateProject : item.label === 'Messages' ? onOpenChat : item.label === 'Settings' ? onOpenSettings : undefined} className={`flex items-center gap-3 rounded-md px-3 py-2.5 text-left text-xs transition ${item.active ? 'bg-[#006b73] font-semibold text-white shadow-sm' : 'text-[#526164] hover:bg-[#e8f0f0] hover:text-[#006b73]'}`}>
-                <span className="w-4 text-center text-base leading-none" aria-hidden="true">{item.icon}</span>
-                {item.label}
-              </button>
-            ))}
-          </nav>
-          <div className="mt-auto flex flex-col gap-1.5 border-t border-[#e1e6e6] pt-4">
-            <button type="button" className="flex items-center gap-3 rounded-md px-3 py-2.5 text-left text-xs text-[#526164] hover:bg-[#e8f0f0] hover:text-[#006b73]"><span className="w-4 text-center text-base">?</span>Support</button>
-            <button type="button" onClick={onCerrarSesion} className="flex items-center gap-3 rounded-md px-3 py-2.5 text-left text-xs text-[#526164] hover:bg-[#e8f0f0] hover:text-[#006b73]"><span className="w-4 text-center text-base">↪</span>Logout</button>
-          </div>
-        </aside>}
-        <div className="min-w-0 flex-1">
-          <header className="relative z-40 flex h-18 items-center justify-between border-b border-[#dfe5e5] bg-[#f8faf9] px-6 sm:px-10">
-            <div className="flex h-full items-center gap-5 sm:gap-12">
-              <button type="button" onClick={onBackHome} className="grid h-9 w-9 place-items-center rounded-lg transition hover:bg-[#006b73]/9 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#006b73]/30" aria-label="Volver al panel" title="Volver al panel"><img src="https://tse2.mm.bing.net/th/id/OIP.w171eC9ZBI8OTweGWM7G0gHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" alt="" className="h-7 w-7 object-contain" /></button>
-              <button type="button" onClick={() => setMenuAbierto((abierto) => !abierto)} className="text-lg text-[#006b73]" aria-label={menuAbierto ? 'Ocultar menú' : 'Mostrar menú'} aria-expanded={menuAbierto}>☰</button>
-              <nav className="hidden h-full items-center gap-7 text-[11px] sm:flex" aria-label="Secciones">
-                <a href="#estadisticas" className="border-b-2 border-[#006b73] py-[1.62rem] font-semibold text-[#006b73]">Statistics</a>
-                <button type="button" onClick={onOpenFoundyCard} className="text-[#758082] hover:text-[#006b73]">Foundy card</button>
-              </nav>
-            </div>
-            <label className="flex h-8 w-36 items-center gap-2 rounded-full border border-[#dce2e2] bg-[#eef2f2] px-3 text-[#899496] sm:w-44"><span aria-hidden="true">⌕</span><input type="search" placeholder="Buscar" className="w-full bg-transparent text-xs outline-none placeholder:text-[#899496]" /></label>
-          </header>
-          <main id="dashboard" className="mx-auto max-w-6xl px-5 py-7 sm:px-8 lg:px-12">
->>>>>>> d784d26ed20b685861482f6d6795287299b200c4
             <section className="flex flex-col justify-between gap-5 sm:flex-row sm:items-start">
               <div><h1 className="text-2xl font-bold tracking-tight text-[#004e56]">My Statistics</h1><p className="mt-1 max-w-lg text-xs leading-5 text-[#687577]">Track your progress and get insights into your performance.</p></div>
               <div className="flex items-center gap-2 self-start"><button type="button" onClick={handleExportReport} className="rounded-md bg-[#006b73] px-3 py-2 text-[11px] font-semibold text-white shadow-sm transition hover:bg-[#005c61]">Export report</button></div>
@@ -304,7 +177,7 @@ function Statistics({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, o
                   </div>
                 </div>
                 <div className="relative mt-8 h-40 border-b border-[#e4e9e9] bg-[linear-gradient(to_bottom,transparent_24%,#edf2f2_25%,transparent_26%,transparent_49%,#edf2f2_50%,transparent_51%,transparent_74%,#edf2f2_75%,transparent_76%)]">
-                  <svg viewBox="0 0 396 140" preserveAspectRatio="none" className="absolute inset-0 h-full w-full overflow-visible" role="img" aria-label="Crecimiento del portafolio durante el año">
+                  <svg viewBox="0 0 396 140" preserveAspectRatio="none" className="absolute inset-0 h-full w-full overflow-visible" role="img" aria-label="Portfolio growth during the year">
                     <path d={(() => {
                       const puntos = datosPorPeriodo.map((punto) => ({
                         x: punto.cx,
@@ -343,7 +216,7 @@ function Statistics({ usuarioData, onCerrarSesion, onOpenSettings, onBackHome, o
                           onClick={() => setMesSeleccionado(indiceEnMonthlyData)}
                           className="cursor-pointer transition-all"
                           role="button"
-                          aria-label={`Ver estadísticas de ${punto.month}`}
+                          aria-label={`View statistics for ${punto.month}`}
                         />
                       );
                     })}

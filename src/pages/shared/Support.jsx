@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { ArrowLeft, BookOpen, CheckCircle2, ChevronDown, Mail, MessageCircleQuestion, Send } from 'lucide-react';
+﻿import { useState } from 'react';
+import { BookOpen, CheckCircle2, ChevronDown, Mail, MessageCircleQuestion, Send } from 'lucide-react';
 
 const faqs = [
   {
@@ -20,7 +20,7 @@ const faqs = [
   },
 ];
 
-export default function Support({ onBack, onOpenChat }) {
+export default function Support({ onOpenChat }) {
   const [openFaq, setOpenFaq] = useState(0);
   const [form, setForm] = useState({ subject: '', message: '' });
   const [sent, setSent] = useState(false);
@@ -39,11 +39,7 @@ export default function Support({ onBack, onOpenChat }) {
   return (
     <main className="min-h-screen bg-[#f4f6f7] text-[#31474a]">
       <div className="mx-auto max-w-6xl px-5 py-7 sm:px-8 lg:px-12">
-        <button type="button" onClick={onBack} className="inline-flex items-center gap-2 text-xs font-semibold text-[#006b73] transition hover:text-[#004e56]">
-          <ArrowLeft size={16} /> Back to home
-        </button>
-
-        <header className="mt-8 rounded-[28px] bg-[#006b73] px-6 py-8 text-white shadow-[0_16px_35px_rgba(17,52,60,0.12)] sm:px-8 sm:py-10">
+        <header className="mt-2 rounded-[28px] bg-[#006b73] px-6 py-8 text-white shadow-[0_16px_35px_rgba(17,52,60,0.12)] sm:px-8 sm:py-10">
           <div className="max-w-2xl">
             <p className="text-[10px] font-bold uppercase tracking-[.2em] text-[#bde3dc]">Foundy help center</p>
             <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">How can we help?</h1>

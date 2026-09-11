@@ -1,36 +1,36 @@
-const navigation = [
-    { name: 'Function', href: '#function' },
+﻿const navigation = [
+    { name: 'How it works', href: '#function' },
     { name: 'About us', href: '#about' },
     { name: 'Details', href: '#details' },
 ];
 
 const features = [
     {
-        title: 'Descubre oportunidades',
-        description: 'Encuentra proyectos y propuestas que conectan con tus objetivos.',
+        title: 'Discover opportunities',
+        description: 'Find projects and proposals that match your goals.',
     },
     {
-        title: 'Conecta con personas',
-        description: 'Construye relaciones con emprendedores, aliados e inversionistas.',
+        title: 'Connect with people',
+        description: 'Build relationships with entrepreneurs, partners, and investors.',
     },
     {
-        title: 'Haz crecer tus ideas',
-        description: 'Lleva tus proyectos al siguiente nivel con las herramientas de Foundy.',
+        title: 'Grow your ideas',
+        description: 'Take your projects to the next level with Foundy tools.',
     },
 ];
 
 const steps = [
-    { number: '01', title: 'Crea tu perfil', description: 'Cuéntanos quién eres y qué quieres construir.' },
-    { number: '02', title: 'Explora la comunidad', description: 'Conoce proyectos, ideas y oportunidades relevantes.' },
-    { number: '03', title: 'Empieza a colaborar', description: 'Da el siguiente paso y convierte tus ideas en resultados.' },
+    { number: '01', title: 'Create your profile', description: 'Tell us who you are and what you want to build.' },
+    { number: '02', title: 'Explore the community', description: 'Discover relevant projects, ideas, and opportunities.' },
+    { number: '03', title: 'Start collaborating', description: 'Take the next step and turn your ideas into results.' },
 ];
 
 export default function Landing({ onLogin, onRegister }) {
     return (
         <div className="min-h-screen bg-white text-slate-800">
             <header className="bg-[#006b70] shadow-sm">
-                <nav className="mx-auto flex h-[4.25rem] max-w-7xl items-center justify-between px-6 sm:px-10 lg:px-12" aria-label="Navegación principal">
-                    <a href="#top" className="flex shrink-0 items-center" aria-label="Foundy inicio">
+                <nav className="mx-auto flex h-[4.25rem] max-w-7xl items-center justify-between px-6 sm:px-10 lg:px-12" aria-label="Main navigation">
+                    <a href="#top" className="flex shrink-0 items-center" aria-label="Foundy home">
                         <img src="/images/foundy-logo.png" alt="Foundy" className="h-10 w-auto object-contain brightness-0 invert" />
                     </a>
                     <div className="hidden items-center gap-7 text-sm font-medium lg:flex">
@@ -65,7 +65,7 @@ export default function Landing({ onLogin, onRegister }) {
                                 Investments that foster entrepreneurship in <span className="text-[#21a99b]">El Salvador</span>
                             </h1>
                             <p className="mt-4 text-sm leading-6 text-slate-600">
-                                Una plataforma para convertir conexiones en oportunidades.
+                                A platform that turns connections into opportunities.
                             </p>
                         </div>
                     </div>
@@ -73,12 +73,12 @@ export default function Landing({ onLogin, onRegister }) {
 
                 <section className="mx-auto max-w-7xl px-6 py-20 sm:px-10 lg:px-12" aria-labelledby="features-title">
                     <div className="max-w-2xl">
-                        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#21a99b]">Qué puedes hacer</p>
+                        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#21a99b]">What can you do?</p>
                         <h2 id="features-title" className="mt-3 text-3xl font-bold tracking-tight text-[#006b70] sm:text-4xl">
-                            Todo lo que necesitas para empezar
+                            Everything you need to get started
                         </h2>
                         <p className="mt-4 text-base leading-7 text-slate-600">
-                            Reemplaza este texto por la propuesta de valor principal de tu proyecto.
+                            Find the people, projects, and tools you need to turn ideas into momentum.
                         </p>
                     </div>
                     <div className="mt-10 grid gap-5 md:grid-cols-3">
@@ -97,17 +97,17 @@ export default function Landing({ onLogin, onRegister }) {
                         <div>
                             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#21a99b]">About us</p>
                             <h2 id="about-title" className="mt-3 text-3xl font-bold tracking-tight text-[#006b70] sm:text-4xl">
-                                Una comunidad que impulsa nuevas posibilidades
+                                A community that drives new possibilities
                             </h2>
                             <p className="mt-5 leading-7 text-slate-600">
-                                Este es un bloque de contenido para presentar la misión, historia o equipo de Foundy. Puedes reemplazarlo con la información definitiva de tu organización.
+                                Foundy brings entrepreneurs, investors, and partners together to build meaningful opportunities and a stronger future.
                             </p>
                             <button type="button" onClick={onRegister} className="mt-7 rounded-md bg-[#006b70] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#00545a]">
-                                Forma parte de Foundy
+                                Join Foundy
                             </button>
                         </div>
                         <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-                            <p className="text-sm leading-6 text-slate-500">Conoce oportunidades y conexiones cuando haya información disponible.</p>
+                            <p className="text-sm leading-6 text-slate-500">Discover opportunities and meaningful connections in one growing community.</p>
                         </div>
                     </div>
                 </section>
@@ -115,7 +115,7 @@ export default function Landing({ onLogin, onRegister }) {
                 <section id="details" className="mx-auto max-w-7xl px-6 py-20 sm:px-10 lg:px-12" aria-labelledby="steps-title">
                     <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#21a99b]">Details</p>
                     <h2 id="steps-title" className="mt-3 text-3xl font-bold tracking-tight text-[#006b70] sm:text-4xl">
-                        Empieza en tres pasos
+                        Get started in three steps
                     </h2>
                     <div className="mt-10 grid gap-8 md:grid-cols-3">
                         {steps.map((step) => (
@@ -133,7 +133,7 @@ export default function Landing({ onLogin, onRegister }) {
                 <div className="mx-auto grid max-w-7xl gap-8 px-6 py-10 sm:grid-cols-2 sm:px-10 lg:grid-cols-4 lg:px-12">
                     <div className="sm:col-span-2">
                         <img src="/images/foundy-logo.png" alt="Foundy" className="h-10 w-auto object-contain brightness-0 invert" />
-                        <p className="mt-4 max-w-sm text-sm leading-6 text-teal-100">Conectamos ideas, emprendedores e inversionistas para construir nuevas oportunidades en El Salvador.</p>
+                        <p className="mt-4 max-w-sm text-sm leading-6 text-teal-100">We connect ideas, entrepreneurs, and investors to build new opportunities in El Salvador.</p>
                     </div>
                     <div>
                         <h2 className="text-sm font-semibold">Explora</h2>
@@ -142,14 +142,14 @@ export default function Landing({ onLogin, onRegister }) {
                         </div>
                     </div>
                     <div>
-                        <h2 className="text-sm font-semibold">Cuenta</h2>
+                        <h2 className="text-sm font-semibold">Account</h2>
                         <div className="mt-4 space-y-3 text-sm text-teal-100">
                             <button type="button" onClick={onLogin} className="block hover:text-white">Sign in</button>
                             <button type="button" onClick={onRegister} className="block hover:text-white">Sign up</button>
                         </div>
                     </div>
                 </div>
-                <div className="border-t border-white/20 px-6 py-5 text-center text-xs text-teal-100 sm:px-10">© 2026 Foundy. Todos los derechos reservados.</div>
+                <div className="border-t border-white/20 px-6 py-5 text-center text-xs text-teal-100 sm:px-10">© 2026 Foundy. All rights reserved.</div>
             </footer>
         </div>
     );

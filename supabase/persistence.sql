@@ -1,6 +1,9 @@
 -- Ejecutar una vez en Supabase SQL Editor.
 -- Ajusta el tipo de dui si en tu instalación no es numeric.
 
+alter table public."Usuario"
+  add column if not exists avatar text;
+
 alter table public.inversion
   add column if not exists id_inversionista numeric;
 

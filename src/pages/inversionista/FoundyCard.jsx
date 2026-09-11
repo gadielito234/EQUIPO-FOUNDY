@@ -1,261 +1,95 @@
-<<<<<<< HEAD
-function FoundyCardPage({ usuarioData }) {
+﻿import { ArrowUpRight, BriefcaseBusiness, CreditCard, Gem, PieChart, ShieldCheck, TrendingUp } from 'lucide-react';
+
+function FoundyCardPage({ usuarioData, onBackHome, onOpenInvestments }) {
   const userName = usuarioData?.usuario || 'Usuario';
-=======
-import { useState } from 'react';
-import { Home, FolderKanban, Mail, Settings, Bell, HelpCircle, LogOut } from 'lucide-react';
-
-const defaultUser = {
-  name: 'Sara Hernández',
-  avatar:
-    'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=240&q=80',
-};
-
-const getStoredUser = () => {
-  if (typeof window === 'undefined') {
-    return defaultUser;
-  }
-
-  try {
-    const savedUser = JSON.parse(localStorage.getItem('user'));
-    if (savedUser?.name) {
-      return {
-        ...defaultUser,
-        ...savedUser,
-      };
-    }
-  } catch (error) {
-    console.warn('Unable to parse user from localStorage:', error);
-  }
-
-  return defaultUser;
-};
-
-const sidebarMenu = [
-  { label: 'Home', icon: Home },
-  { label: 'My projects', icon: FolderKanban },
-  { label: 'Messages', icon: Mail },
-  { label: 'Settings', icon: Settings },
-  { label: 'Notifications', icon: Bell },
-];
-
-const chartBars = [
-  { label: 'Jan', value: 28 },
-  { label: 'Feb', value: 38 },
-  { label: 'Mar', value: 42 },
-  { label: 'Apr', value: 58 },
-  { label: 'May', value: 74 },
-  { label: 'Jun', value: 64 },
-];
-
-const updates = [
-  {
-    name: 'EcoStream Solutions',
-    badge: 'Seed Stage',
-    value: '$48k',
-    meta: 'Q3 revenue goals exceeded by 15% following our…',
-    tone: 'green',
-    investors: 42,
-  },
-  {
-    name: 'Quantum Ledger',
-    badge: 'Series A',
-    value: '$27k',
-    meta: 'Beta testing for our cross-border payment protocol is…',
-    tone: 'purple',
-    investors: 128,
-  },
-];
-
-function FoundyCardPage({ usuarioData, onLogout, onBackHome, onOpenSettings, onOpenChat, embeddedLayout = false }) {
-  const [storedUser] = useState(getStoredUser);
-  const user = {
-    ...storedUser,
-    name: usuarioData?.usuario || storedUser.name,
-    avatar: usuarioData?.avatar || storedUser.avatar,
-  };
-  const userName = user?.name || defaultUser.name;
->>>>>>> d784d26ed20b685861482f6d6795287299b200c4
   const initials = userName
     .split(' ')
     .slice(0, 2)
     .map((part) => part[0])
     .join('')
     .toUpperCase();
+  const investorId = usuarioData?.dui ? `FDY-${String(usuarioData.dui).slice(-4)}` : 'FDY-0000';
 
   return (
-<<<<<<< HEAD
-    <div className="min-h-full bg-[#f4f6f8] text-[#0f2d39]">
-      <main className="min-w-0 px-1 py-1 sm:px-2 lg:px-4">
-=======
-    <div className={`${embeddedLayout ? '[&>div>aside]:hidden [&>div>main>header]:hidden' : ''} min-h-screen bg-[#f4f6f8] text-[#0f2d39]`}>
-      <div className="flex min-h-screen">
-      <aside className="flex w-64 min-w-60 flex-col border-r border-[#0b252b]/10 bg-[#f1f4f6] px-4 py-6">
-        <div className="mb-7 flex flex-col items-center gap-3">
-          <div className="h-22.5 w-22.5 overflow-hidden rounded-full border-[3px] border-[#084343]/15 bg-linear-to-br from-[#dfeef1] to-[#cde8d9]">
-            <img src={user.avatar || defaultUser.avatar} alt={userName} className="h-full w-full object-cover" />
-          </div>
-          <button type="button" className="cursor-pointer rounded-full border border-[#dfe7eb] bg-white/70 px-4.5 py-1.75 text-[0.86rem] font-semibold">
-            {userName}
-          </button>
-        </div>
-
-        <nav className="flex w-full flex-col gap-2.5" aria-label="Sidebar navigation">
-          {sidebarMenu.map((item, index) => {
-            const IconComponent = item.icon;
-
-            return (
-              <button
-                key={item.label}
-                type="button"
-                onClick={item.label === 'Home' ? onBackHome : item.label === 'Messages' ? onOpenChat : item.label === 'Settings' ? onOpenSettings : undefined}
-                className={`flex w-full cursor-pointer items-center gap-3 rounded-[10px] border border-dashed border-transparent bg-transparent px-3 py-2.75 text-left text-[0.96rem] font-medium transition hover:border-[#084343]/20 hover:bg-[#084343]/4 ${index === 0 ? 'border-[#084343]/20 bg-[#084343]/4' : ''}`}
-              >
-                <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-[#09303c]/8 bg-white/60 text-[#0f2d39]"><IconComponent size={20} /></span>
-                <span>{item.label}</span>
-              </button>
-            );
-          })}
-        </nav>
-
-        <div className="mt-auto flex w-full flex-col gap-2.5">
-          <button type="button" className="mt-2 flex w-full cursor-pointer items-center gap-3 border-t border-[#0b252b]/8 bg-transparent px-3 pt-3 text-left text-[#4a5865]">
-            <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-[#09303c]/8 bg-white/60"><HelpCircle size={20} /></span>
-            <span>Support</span>
-          </button>
-          <button type="button" onClick={onLogout} className="mt-0 flex w-full cursor-pointer items-center gap-3 border-t border-[#0b252b]/8 bg-transparent px-3 pt-3 text-left text-[#4a5865]">
-            <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-[#09303c]/8 bg-white/60"><LogOut size={20} /></span>
-            <span>Logout</span>
-          </button>
-        </div>
-      </aside>
-
-      <main className="min-w-0 flex-1 px-5 py-7 sm:px-8 lg:px-12">
-        <header className="relative z-40 flex h-18 items-center justify-between border-b border-[#0b252b]/8 bg-transparent px-0 sm:px-0">
-          <div className="flex h-full items-center gap-5 sm:gap-12">
-            <button
-              type="button"
-              onClick={onBackHome}
-              className="flex h-10 items-center gap-2 rounded-lg px-2 text-sm font-bold text-[#006b73] transition hover:bg-[#006b73]/9 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#006b73]/30"
-              aria-label="Volver al panel"
-              title="Volver al panel"
-            >
-              <img
-                src="https://tse2.mm.bing.net/th/id/OIP.w171eC9ZBI8OTweGWM7G0gHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
-                alt=""
-                className="h-7 w-7 object-contain"
-              />
-              <span className="hidden sm:inline">Volver</span>
-            </button>
-            <div aria-label="Foundy brand logo">
-              <img src="/images/foundy-logo.png" alt="Foundy logo" className="h-9.5 w-auto object-contain" />
-            </div>
-          </div>
-
-          <nav className="hidden items-center gap-7 text-[11px] sm:flex" aria-label="Main navigation">
-            <button type="button" onClick={onBackHome} className="text-[#758082] hover:text-[#006b73]">Dashboard</button>
-            <button type="button" onClick={onBackHome} className="text-[#758082] hover:text-[#006b73]">Statistics</button>
-            <button type="button" className="border-b-2 border-[#006b73] py-[1.62rem] font-semibold text-[#006b73]">Foundy card</button>
-          </nav>
-
-          <label className="flex h-8 w-36 items-center gap-2 rounded-full border border-[#dce2e2] bg-[#eef2f2] px-3 text-[#899496] sm:w-44" aria-label="Search">
-            <span aria-hidden="true">⌕</span>
-            <input type="text" placeholder="Buscar" className="w-full bg-transparent text-xs outline-none placeholder:text-[#899496]" />
-          </label>
-        </header>
-
->>>>>>> d784d26ed20b685861482f6d6795287299b200c4
-        <div className="mx-auto max-w-6xl">
-          <section className="mt-7 flex items-center justify-between gap-4 rounded-xl bg-[#dfeeed] px-6 py-5">
+    <main className="min-h-full bg-[#f7f3ee] px-4 py-6 text-[#173f43] sm:px-6 lg:px-8">
+      <div className="w-full space-y-8">
+        <section className="overflow-hidden rounded-[24px] border border-[#0b817d]/25 bg-[#0b5d61] py-9 text-white shadow-[0_14px_30px_rgba(11,93,97,0.12)]">
+          <div className="flex flex-col gap-6 px-5 sm:flex-row sm:items-end sm:justify-between sm:px-8 lg:px-10">
             <div>
-              <span className="text-[0.7rem] font-bold tracking-[0.16em] text-[#1b7f61]">MEMBER DASHBOARD</span>
-              <h1 className="mt-1 text-2xl font-bold tracking-tight">Manage your Foundy Card and exclusive investment portfolio.</h1>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#a9e5d5]">Foundy Card</p>
+              <h1 className="mt-2 max-w-2xl text-2xl font-bold leading-tight tracking-tight sm:text-4xl">Your investment center, all in one place.</h1>
+              <p className="mt-3 max-w-xl text-sm leading-6 text-white/75">Check your card status and investment summary from your dashboard.</p>
             </div>
-            <button type="button" className="shrink-0 rounded-lg bg-[#1d5c4d] px-4 py-3 text-sm font-bold text-white hover:bg-[#15483d]">
-              + Invest Now
+            <button type="button" onClick={onBackHome} className="inline-flex items-center gap-2 self-start rounded-full border border-white/25 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10 sm:self-auto">
+              Back to dashboard <ArrowUpRight size={15} />
             </button>
-          </section>
+          </div>
+        </section>
 
-        <div className="mt-5 grid gap-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(280px,1fr)]">
-          <section className="flex min-w-0 flex-col gap-5">
-            <article className="min-h-53.75 rounded-2xl bg-linear-to-br from-[#06494d] via-[#0d4c52] to-[#1a6d71] p-6 text-white shadow-[0_14px_24px_rgba(13,44,50,0.12)]">
-              <div className="flex items-center justify-between">
-                <span className="font-bold tracking-[0.18em]">FOUNDY</span>
-                <span className="text-xl" aria-label="Card type">
-                  ●●●
-                </span>
-              </div>
-
-              <div className="mt-10 text-xs uppercase tracking-[0.18em] text-white/65">Investor ID</div>
-              <div className="mt-2 text-lg tracking-[0.2em]">No disponible</div>
-
-              <div className="mt-7 flex items-end justify-between">
-                <div>
-                  <span className="block text-[0.65rem] uppercase tracking-widest text-white/60">Card Holder</span>
-                  <strong className="text-sm">{userName}</strong>
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.35fr)_minmax(280px,0.65fr)]">
+          <div className="space-y-6">
+            <section className="relative min-h-[260px] overflow-hidden rounded-[24px] bg-gradient-to-br from-[#123f43] via-[#0a6b6d] to-[#1ca38b] p-6 text-white shadow-[0_18px_35px_rgba(10,75,77,0.2)] sm:p-8">
+              <div className="absolute -right-10 -top-16 h-48 w-48 rounded-full border-[24px] border-white/10" />
+              <div className="relative flex h-full min-h-[210px] flex-col justify-between">
+                <div className="flex items-center justify-between">
+                  <span className="text-lg font-bold tracking-[0.22em]">FOUNDY</span>
+                  <CreditCard size={27} className="text-white/80" />
                 </div>
-                <div className="grid h-10 w-10 place-items-center rounded-full border border-white/30 text-xs font-bold">{initials}</div>
-              </div>
-            </article>
-
-            <article className="rounded-xl border border-[#0b252b]/10 bg-white p-5 shadow-[0_14px_24px_rgba(13,44,50,0.06)]">
-              <div className="flex items-center justify-between font-semibold">
-                <span>Portfolio Summary</span>
-                <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-[#6d7b88]">Sin datos</span>
-              </div>
-
-              <div className="mt-5">
-                <div className="text-xs text-[#6d7b88]">Total Value</div>
-                <div className="mt-1 text-3xl font-bold text-[#0f2d39]">Sin datos</div>
-              </div>
-            </article>
-
-            <article className="rounded-xl border border-[#0b252b]/10 bg-white p-5 shadow-[0_14px_24px_rgba(13,44,50,0.06)]">
-              <div className="flex items-center justify-between font-semibold">
-                <span>ROI Performance</span>
-                <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-[#6d7b88]">YTD</span>
-              </div>
-
-              <div className="mt-6 flex h-40 items-end justify-between gap-3" aria-label="ROI performance chart">
-                <p className="m-auto text-xs text-[#6d7b88]">No hay datos de rendimiento.</p>
-              </div>
-            </article>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <article className="flex items-center gap-3 rounded-xl border border-[#0b252b]/10 bg-white p-4">
-                <div className="grid h-10 w-10 place-items-center rounded-lg bg-[#1b7f61]/12 text-[#1b7f61]">✦</div>
                 <div>
-                  <h3 className="font-semibold">Early Access</h3>
-                  <p className="text-xs text-[#6d7b88]">Priority opportunities</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60">Investor ID</p>
+                  <p className="mt-2 text-lg tracking-[0.22em]">{investorId}</p>
                 </div>
-              </article>
+                <div className="flex items-end justify-between gap-4">
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60">Card holder</p>
+                    <p className="mt-1 text-sm font-semibold">{userName}</p>
+                  </div>
+                  <div className="grid h-11 w-11 place-items-center rounded-full border border-white/35 bg-white/10 text-xs font-bold">{initials || 'IN'}</div>
+                </div>
+              </div>
+            </section>
 
-              <article className="flex items-center gap-3 rounded-xl border border-[#0b252b]/10 bg-white p-4">
-                <div className="grid h-10 w-10 place-items-center rounded-lg bg-[#1b7f61]/12 text-[#1b7f61]">✓</div>
+            <section className="rounded-[24px] border border-[#e5e0d8] bg-white p-6 shadow-[0_12px_28px_rgba(35,60,62,0.06)]">
+              <div className="flex items-center justify-between gap-4">
                 <div>
-                  <h3 className="font-semibold">Tax Benefits</h3>
-                  <p className="text-xs text-[#6d7b88]">Smart portfolio planning</p>
+                  <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#728184]">Portfolio summary</p>
+                  <h2 className="mt-1 text-2xl font-bold text-[#173f43]">Your investment activity</h2>
                 </div>
-              </article>
-            </div>
-          </section>
-
-          <aside>
-            <section className="rounded-xl border border-[#0b252b]/10 bg-white p-5 shadow-[0_14px_24px_rgba(13,44,50,0.06)]">
-              <div className="flex items-center justify-between">
-                <h2 className="font-bold">Entrepreneur Updates</h2>
-                <button type="button" className="text-xs font-bold text-[#1b7f61]">View All</button>
+                <PieChart className="text-[#0b817d]" size={25} />
               </div>
-
-              <div className="mt-4 divide-y divide-[#0b252b]/10">
-                <p className="py-6 text-center text-xs text-[#6d7b88]">No hay actualizaciones disponibles.</p>
+              <div className="mt-6 grid gap-4 sm:grid-cols-3">
+                <div className="rounded-2xl bg-[#f4f8f6] p-4"><p className="text-xs text-[#728184]">Total value</p><p className="mt-2 text-xl font-bold">No data</p></div>
+                <div className="rounded-2xl bg-[#f4f8f6] p-4"><p className="text-xs text-[#728184]">Active investments</p><p className="mt-2 text-xl font-bold">0</p></div>
+                <div className="rounded-2xl bg-[#f4f8f6] p-4"><p className="text-xs text-[#728184]">Performance</p><p className="mt-2 text-xl font-bold">No data</p></div>
               </div>
+            </section>
+          </div>
+
+          <aside className="space-y-6">
+            <section className="rounded-[24px] border border-[#e5e0d8] bg-white p-6 shadow-[0_12px_28px_rgba(35,60,62,0.06)]">
+              <div className="flex items-center gap-3">
+                <span className="grid h-10 w-10 place-items-center rounded-full bg-[#e2f4ee] text-[#0b817d]"><TrendingUp size={18} /></span>
+                <div><h2 className="font-bold">Rendimiento</h2><p className="text-xs text-[#728184]">Resumen anual</p></div>
+              </div>
+              <div className="mt-7 flex h-28 items-end gap-2">
+                {[35, 48, 42, 63, 57, 78, 88].map((height, index) => <div key={index} className="flex-1 rounded-t-md bg-[#9fd8c7]" style={{ height: `${height}%` }} />)}
+              </div>
+              <p className="mt-3 text-xs text-[#728184]">Performance will appear after you make your first investment.</p>
+            </section>
+
+            <section className="rounded-[24px] border border-[#e5e0d8] bg-white p-6 shadow-[0_12px_28px_rgba(35,60,62,0.06)]">
+              <h2 className="font-bold">Your card benefits</h2>
+              <div className="mt-5 space-y-4">
+                <div className="flex items-center gap-3"><ShieldCheck size={18} className="text-[#0b817d]" /><span className="text-sm text-[#536568]">Secure investment tracking</span></div>
+                <div className="flex items-center gap-3"><Gem size={18} className="text-[#0b817d]" /><span className="text-sm text-[#536568]">Access to selected opportunities</span></div>
+                <div className="flex items-center gap-3"><BriefcaseBusiness size={18} className="text-[#0b817d]" /><span className="text-sm text-[#536568]">Centralized portfolio management</span></div>
+              </div>
+              <button type="button" onClick={onOpenInvestments} className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-[#0b817d] transition hover:text-[#075e5c]">View my investments <ArrowUpRight size={15} /></button>
             </section>
           </aside>
         </div>
-        </div>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }
 
