@@ -2,6 +2,8 @@
 import { supabase } from "../../services/supabase.js";
 import AIConsultingPanel from "../../components/ai/AIConsultingPanel.jsx";
 
+const menu = ["Create project", "My projects", "Opportunities", "Messages"];
+
 const initialProject = {
   nombre: "",
   descripcion: "",
@@ -10,14 +12,12 @@ const initialProject = {
   id_categoria: "",
 };
 
-function CrearProyecto({ usuarioData, onBackHome = () => {}, onCerrarSesion = () => {} }) {
+function CrearProyecto({ usuarioData, nombreUsuario = "Entrepreneur", onCerrarSesion, onBackHome }) {
   const [proyecto, setProyecto] = useState(initialProject);
   const [imagenes, setImagenes] = useState([]);
   const [alerta, setAlerta] = useState(null);
   const [categorias, setCategorias] = useState([]);
   const inputImagenes = useRef(null);
-  const nombreUsuario = usuarioData?.usuario || "Usuario";
-  const menu = ["Create project", "My projects", "Analytics"];
 
   useEffect(() => {
     const cargarCategorias = async () => {
@@ -69,22 +69,6 @@ function CrearProyecto({ usuarioData, onBackHome = () => {}, onCerrarSesion = ()
     const meses = Number.parseInt(proyecto.retorno, 10) || 1;
     const fechaFin = new Date(fechaInicio);
     fechaFin.setMonth(fechaFin.getMonth() + meses);
-    let imagenUrl = null;
-
-    if (imagenes[0]) {
-      const extension = imagenes[0].name.split('.').pop()?.toLowerCase() || 'jpg';
-      const imagePath = `${usuarioData?.dui || 'anonymous'}/${Date.now()}.${extension}`;
-      const { error: uploadError } = await supabase.storage
-        .from('project-images')
-        .upload(imagePath, imagenes[0], { upsert: true, contentType: imagenes[0].type });
-      if (uploadError) {
-        setAlerta({ tipo: 'warning', texto: `Could not upload project image: ${uploadError.message}` });
-        return;
-      }
-      const { data: publicImage } = supabase.storage.from('project-images').getPublicUrl(imagePath);
-      imagenUrl = publicImage.publicUrl;
-    }
-
     const { error } = await supabase.from("proyecto").insert([{
       nombre: proyecto.nombre.trim(),
       descripcion: proyecto.descripcion.trim(),
@@ -96,7 +80,6 @@ function CrearProyecto({ usuarioData, onBackHome = () => {}, onCerrarSesion = ()
       fecha_fin: fechaFin.toISOString().slice(0, 10),
       dui: usuarioData?.dui,
       id_categoria: proyecto.id_categoria || null,
-      imagen_url: imagenUrl,
     }]);
     if (error) {
       setAlerta({ tipo: "warning", texto: `Could not save project: ${error.message}` });

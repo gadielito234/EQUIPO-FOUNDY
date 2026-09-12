@@ -1,5 +1,4 @@
-﻿import { useEffect, useState } from 'react';
-import { supabase } from '../../services/supabase.js';
+﻿import { useState } from 'react';
 
 function Switch({ enabled, onChange }) {
   return (
@@ -25,149 +24,18 @@ export default function PerfilConfiguracion({
   usuarioData,
   onCerrarSesion,
   onBackHome,
-  showSidebar = true,
-  embeddedLayout = false,
-  mode = 'platform',
-  onSavePublicProfile,
-  onOpenFoundyCard = () => {},
-  onOpenChat = () => {},
+  onOpenFoundyCard,
+  onOpenChat,
 }) {
   const [transactionAlerts, setTransactionAlerts] = useState(true);
   const [marketingInsights, setMarketingInsights] = useState(false);
-  const [email, setEmail] = useState(usuarioData?.correo || '');
-  const [displayName, setDisplayName] = useState(usuarioData?.usuario || '');
-  const [profilePicture, setProfilePicture] = useState(usuarioData?.avatar || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=500&q=80');
-  const [interests, setInterests] = useState((usuarioData?.intereses || ['Technology', 'Retail', 'Agriculture', 'Sustainability']).join(', '));
-  const [biography, setBiography] = useState(usuarioData?.biografia || '');
-  const [investmentRange, setInvestmentRange] = useState(usuarioData?.rango_inversion || '$25,000 - $50,000');
-  const [riskLevel, setRiskLevel] = useState(usuarioData?.nivel_riesgo || 'Medium');
-  const [contactAvailability, setContactAvailability] = useState(usuarioData?.disponibilidad_contacto || 'Available for new conversations');
-  const [saving, setSaving] = useState(false);
-  const [notice, setNotice] = useState('');
-  const [profileModal, setProfileModal] = useState(null);
-  const [deactivateModalOpen, setDeactivateModalOpen] = useState(false);
-
-  const isEmbeddedLayout = Boolean(embeddedLayout);
-  const showLegacyProfileSections = false;
-
-  useEffect(() => {
-    const loadPreferences = async () => {
-      const { data, error } = await supabase
-        .from('preferencias_usuario')
-        .select('alertas_transacciones, sugerencias_marketing')
-        .eq('dui', usuarioData?.dui)
-        .maybeSingle();
-      if (error) {
-        setNotice(`Preferences could not be loaded: ${error.message}`);
-        return;
-      }
-      if (data) {
-        setTransactionAlerts(data.alertas_transacciones);
-        setMarketingInsights(data.sugerencias_marketing);
-      }
-    };
-    if (usuarioData?.dui) loadPreferences();
-  }, [usuarioData?.dui]);
-
-  const saveProfile = async () => {
-    setSaving(true);
-    const { error } = await supabase
-      .from('Usuario')
-      .update({ correo: email, usuario: displayName, avatar: profilePicture })
-      .eq('dui', usuarioData?.dui);
-    setSaving(false);
-    if (error) {
-      setProfileModal(null);
-      setNotice(`Profile could not be saved: ${error.message}`);
-      return;
-    }
-
-    setProfileModal(null);
-    onSavePublicProfile?.({ correo: email, usuario: displayName, avatar: profilePicture });
-    setNotice('Personal data updated.');
-  };
-
-  const handleProfilePictureChange = (event) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-    if (!file.type.startsWith('image/')) {
-      setNotice('Please select an image file.');
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      setNotice('The image must be smaller than 5 MB.');
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = () => setProfilePicture(reader.result);
-    reader.readAsDataURL(file);
-  };
-
-  const savePublicProfile = async () => {
-    setSaving(true);
-    const { error } = await supabase
-      .from('Usuario')
-      .update({
-        correo: email,
-        usuario: displayName,
-        intereses: interests.split(',').map((interest) => interest.trim()).filter(Boolean),
-        biografia: biography,
-        rango_inversion: investmentRange,
-        nivel_riesgo: riskLevel,
-        disponibilidad_contacto: contactAvailability,
-      })
-      .eq('dui', usuarioData?.dui);
-    setSaving(false);
-
-    if (error) {
-      setProfileModal(null);
-      setNotice(`Profile could not be saved: ${error.message}`);
-      return;
-    }
-
-    setProfileModal(null);
-    onSavePublicProfile?.({
-      correo: email,
-      usuario: displayName,
-      intereses: interests.split(',').map((interest) => interest.trim()).filter(Boolean),
-      biografia: biography,
-      rango_inversion: investmentRange,
-      nivel_riesgo: riskLevel,
-      disponibilidad_contacto: contactAvailability,
-    });
-    setNotice('Public profile updated.');
-  };
-
-  const handleSaveChanges = async () => {
-    if (profileModal === 'personal') {
-      await saveProfile();
-      return;
-    }
-
-    await savePublicProfile();
-  };
-
-  const savePreference = async (field, value, setter) => {
-    setter(value);
-    const { error } = await supabase.from('preferencias_usuario').upsert({
-      dui: usuarioData?.dui,
-      [field]: value,
-    });
-    if (error) setNotice(`Preference could not be saved: ${error.message}`);
-  };
+  const displayName = usuarioData?.usuario || 'Maya Johnson';
+  const profilePicture = usuarioData?.avatar || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=500&q=80';
 
   const handleDeactivate = () => {
-    setDeactivateModalOpen(true);
-  };
-
-  const confirmDeactivate = () => {
-    setDeactivateModalOpen(false);
     onCerrarSesion();
     onBackHome();
   };
-
-  const isProfileMode = mode === 'profile';
 
   return (
     <div className="space-y-6">
