@@ -16,6 +16,31 @@ const quickPrompts = [
   },
 ];
 
+function formatAssistantReply(response) {
+  const rawReply = String(response || '').trim();
+  const withoutCodeFence = rawReply.replace(/^```(?:json)?\s*|\s*```$/gi, '').trim();
+  const objectStart = withoutCodeFence.indexOf('{');
+  const objectEnd = withoutCodeFence.lastIndexOf('}');
+
+  if (objectStart !== -1 && objectEnd > objectStart) {
+    try {
+      const parsedReply = JSON.parse(withoutCodeFence.slice(objectStart, objectEnd + 1));
+      if (parsedReply.nombre || parsedReply.descripcion || parsedReply.monto || parsedReply.retorno) {
+        const nombre = parsedReply.nombre ? `Una buena opción sería ${parsedReply.nombre}.` : '';
+        const descripcion = parsedReply.descripcion ? `Se trata de ${parsedReply.descripcion.replace(/[()]/g, '')}` : '';
+        const monto = parsedReply.monto ? `La inversión puede comenzar desde ${parsedReply.monto.replace(/[()]/g, '')}.` : '';
+        const retorno = parsedReply.retorno ? `El retorno es ${parsedReply.retorno.replace(/[()]/g, '')}.` : '';
+
+        return [nombre, descripcion, monto, retorno].filter(Boolean).join(' ');
+      }
+    } catch {
+      // Mantiene la respuesta original si no es un JSON válido.
+    }
+  }
+
+  return withoutCodeFence.replace(/[()]/g, '').trim();
+}
+
 function AIConsultingPanel({ project, onMessage }) {
   const [query, setQuery] = useState('');
   const [reply, setReply] = useState('Hello, how can I help you with your project?');
@@ -35,7 +60,7 @@ function AIConsultingPanel({ project, onMessage }) {
         monto: project.monto,
         retorno: project.retorno,
       });
-      setReply(response);
+      setReply(formatAssistantReply(response));
       setQuery('');
       onMessage?.({ tipo: 'info', texto: response });
     } catch (requestError) {
