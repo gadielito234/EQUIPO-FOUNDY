@@ -4,6 +4,7 @@ import Recuperacion from './recuperacion.jsx';
 import Registro from './registro.jsx';
 import Inicio from '../emprendedor/inicio.jsx';
 import Landing from './landing.jsx';
+import HomeInversionista from '../inversionista/HomeInversionista.jsx';
 import DashboardInversionista from '../inversionista/DashboardInversionista.jsx';
 import Investments from '../inversionista/investments.jsx';
 import FoundyCard from '../inversionista/FoundyCard.jsx';
@@ -16,6 +17,7 @@ import DashboardLayout from '../shared/DashboardLayout.jsx';
 import Statistics from '../emprendedor/Statistics.jsx';
 import Notifications from '../inversionista/Notifications.jsx';
 import Support from '../shared/Support.jsx';
+import Policies from '../shared/Policies.jsx';
 
 function App() {
   const [mostrarLanding, setMostrarLanding] = useState(true);
@@ -77,7 +79,7 @@ function App() {
     setMostrarLanding(false);
   };
 
-  const irAHome = () => setPantallaLogueado(esInversionista ? 'dashboard' : 'home');
+  const irAHome = () => setPantallaLogueado('home');
   const irAConfiguracion = () => setPantallaLogueado('settings');
   const irAPerfilPublico = () => setPantallaLogueado('investor-profile');
   const irAEditarPerfil = () => setPantallaLogueado('profile-settings');
@@ -124,6 +126,10 @@ function App() {
       );
     }
 
+    if (pantallaLogueado === 'policies') {
+      return <Policies onBack={irAConfiguracion} />;
+    }
+
     if (pantallaLogueado === 'statistics') {
       return renderWithDashboardLayout(
         <Statistics
@@ -150,6 +156,7 @@ function App() {
           embeddedLayout
           onOpenChat={() => setPantallaLogueado('chat')}
           onSavePublicProfile={actualizarPerfilPublico}
+          onOpenPolicies={() => setPantallaLogueado('policies')}
           mode="platform"
         />,
         { activeNav: 'settings', showSearch: true }
@@ -167,6 +174,7 @@ function App() {
           embeddedLayout
           onOpenChat={() => setPantallaLogueado('chat')}
           onSavePublicProfile={actualizarPerfilPublico}
+          onOpenPolicies={() => setPantallaLogueado('policies')}
           mode="profile"
         />,
         { activeNav: 'profile-settings', showSearch: true }
@@ -218,30 +226,26 @@ function App() {
           onOpenChat={() => setPantallaLogueado('chat')}
           onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
         />,
-        { activeNav: 'dashboard', showSearch: true }
+        { activeNav: 'investments', showSearch: true }
       );
     }
 
-    if (pantallaLogueado === 'dashboard' || (pantallaLogueado === 'home' && esInversionista)) {
+    if ((pantallaLogueado === 'home' || pantallaLogueado === 'dashboard') && esInversionista) {
       return renderWithDashboardLayout(
-        <DashboardInversionista
+        <HomeInversionista
           usuarioData={usuarioLogueado}
-          onCerrarSesion={handleCerrarSesion}
-          onBackHome={irAHome}
-          showSidebar={false}
-          embeddedLayout
-          onOpenSettings={irAConfiguracion}
-          onOpenChat={() => setPantallaLogueado('chat')}
           onOpenInvestments={() => setPantallaLogueado('investments')}
           onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
-          onVerDetalle={(negocio) => console.log('Detalle de oportunidad:', negocio)}
         />,
         { activeNav: 'dashboard', showSearch: true }
       );
     }
 
     if (pantallaLogueado === 'foundy-card') {
-      return <FoundyCard usuarioData={usuarioLogueado} onLogout={handleCerrarSesion} onBackHome={irAHome} onOpenSettings={irAConfiguracion} onOpenChat={() => setPantallaLogueado('chat')} />;
+      return renderWithDashboardLayout(
+        <FoundyCard usuarioData={usuarioLogueado} />,
+        { activeNav: 'foundy-card', showSearch: true }
+      );
     }
 
     return renderWithDashboardLayout(

@@ -305,7 +305,7 @@ export default function DashboardLayout({
             </div>
           </header>
 
-          <div className="min-w-0 px-0 py-0">{children}</div>
+          <div className="min-w-0 px-4 py-4 sm:px-6 lg:px-8">{children}</div>
 
           </main>
         </div>

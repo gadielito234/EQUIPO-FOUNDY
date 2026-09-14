@@ -10,8 +10,11 @@ export default function PerfilPublicoInversionista({
   const [editorOpen, setEditorOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState('');
+  const [photoUploading, setPhotoUploading] = useState(false);
   const [displayName, setDisplayName] = useState(usuarioData?.usuario || '');
   const [email, setEmail] = useState(usuarioData?.correo || '');
+  const [password, setPassword] = useState('');
+  const [avatar, setAvatar] = useState(usuarioData?.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=500&q=80');
   const [interests, setInterests] = useState((usuarioData?.intereses || ['Technology', 'Retail', 'Agriculture', 'Sustainability']).join(', '));
   const [biography, setBiography] = useState(usuarioData?.biografia || '');
   const [investmentRange, setInvestmentRange] = useState(usuarioData?.rango_inversion || '$25,000 - $50,000');
@@ -29,6 +32,8 @@ export default function PerfilPublicoInversionista({
   const abrirEditor = () => {
     setDisplayName(usuarioData?.usuario || '');
     setEmail(usuarioData?.correo || '');
+    setPassword('');
+    setAvatar(usuarioData?.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=500&q=80');
     setInterests((usuarioData?.intereses || ['Technology', 'Retail', 'Agriculture', 'Sustainability']).join(', '));
     setBiography(usuarioData?.biografia || '');
     setInvestmentRange(usuarioData?.rango_inversion || '$25,000 - $50,000');
@@ -37,11 +42,61 @@ export default function PerfilPublicoInversionista({
     setEditorOpen(true);
   };
 
+  const handleAvatarChange = async (event) => {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    setPhotoUploading(true);
+
+    try {
+      const storage = supabase?.storage;
+
+      if (storage?.from) {
+        const extension = file.name.split('.').pop() || 'png';
+        const fileName = `${usuarioData?.dui || 'avatar'}-${Date.now()}.${extension}`;
+        const { error: uploadError } = await storage.from('project-images').upload(fileName, file, {
+          upsert: true,
+        });
+
+        if (uploadError) {
+          throw uploadError;
+        }
+
+        const { data } = storage.from('project-images').getPublicUrl(fileName);
+        setAvatar(data?.publicUrl || '');
+      } else {
+        setAvatar(URL.createObjectURL(file));
+      }
+    } catch (error) {
+      setNotice(error.message || 'No se pudo subir la foto de perfil.');
+    } finally {
+      setPhotoUploading(false);
+    }
+  };
+
   const guardarPerfil = async () => {
     setSaving(true);
+    const payload = {
+      correo: email,
+      usuario: displayName,
+      avatar,
+      intereses: interests.split(',').map((interest) => interest.trim()).filter(Boolean),
+      biografia: biography,
+      rango_inversion: investmentRange,
+      nivel_riesgo: riskLevel,
+      disponibilidad_contacto: contactAvailability,
+    };
+
+    if (password.trim()) {
+      payload.contrasena = password.trim();
+    }
+
     const { error } = await supabase
       .from('Usuario')
-      .update({ correo: email, usuario: displayName })
+      .update(payload)
       .eq('dui', usuarioData?.dui);
     setSaving(false);
 
@@ -50,15 +105,7 @@ export default function PerfilPublicoInversionista({
       return;
     }
 
-    onSavePublicProfile?.({
-      correo: email,
-      usuario: displayName,
-      intereses: interests.split(',').map((interest) => interest.trim()).filter(Boolean),
-      biografia: biography,
-      rango_inversion: investmentRange,
-      nivel_riesgo: riskLevel,
-      disponibilidad_contacto: contactAvailability,
-    });
+    onSavePublicProfile?.(payload);
     setEditorOpen(false);
     setNotice('Public profile updated.');
   };
@@ -72,7 +119,7 @@ export default function PerfilPublicoInversionista({
               <div className="flex items-center gap-5">
                 <div className="grid h-24 w-24 place-items-center overflow-hidden rounded-full border-4 border-white/80 bg-white shadow-lg">
                   <img
-                    src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=500&q=80"
+                    src={usuarioData?.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=500&q=80'}
                     alt={nombre}
                     className="h-full w-full object-cover"
                   />
@@ -87,7 +134,7 @@ export default function PerfilPublicoInversionista({
               <div className="flex flex-wrap gap-3">
                 <button
                   type="button"
-                  onClick={onOpenProfileSettings || abrirEditor}
+                  onClick={abrirEditor}
                   className="rounded-full bg-white px-4 py-2 text-xs font-bold text-[#0b5d61] transition hover:bg-[#eaf8f6]"
                 >
                   Edit
@@ -202,6 +249,13 @@ export default function PerfilPublicoInversionista({
             </div>
 
             <div className="mt-7 grid gap-5 sm:grid-cols-2">
+              <div className="sm:col-span-2 flex flex-col items-center justify-center gap-3 rounded-2xl border border-[#dce7e4] bg-[#f8fbfa] p-4">
+                <img src={avatar} alt="Profile preview" className="h-24 w-24 rounded-full object-cover border border-[#dce7e4] bg-white" />
+                <label className="inline-flex cursor-pointer items-center justify-center rounded-full bg-[#0b817d] px-3 py-2 text-xs font-semibold text-white transition hover:bg-[#076b68]">
+                  <span>{photoUploading ? 'Uploading...' : 'Choose photo'}</span>
+                  <input type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" />
+                </label>
+              </div>
               <label className="text-sm font-semibold text-[#314f52]">
                 <span className="mb-2 block">Nombre visible</span>
                 <input value={displayName} onChange={(event) => setDisplayName(event.target.value)} className="w-full rounded-xl border border-[#dce7e4] bg-[#f8fbfa] px-4 py-3 font-normal outline-none focus:border-[#1ca38b] focus:ring-2 focus:ring-[#dff5f0]" />
@@ -209,6 +263,10 @@ export default function PerfilPublicoInversionista({
               <label className="text-sm font-semibold text-[#314f52]">
                 <span className="mb-2 block">Contact email</span>
                 <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} className="w-full rounded-xl border border-[#dce7e4] bg-[#f8fbfa] px-4 py-3 font-normal outline-none focus:border-[#1ca38b] focus:ring-2 focus:ring-[#dff5f0]" />
+              </label>
+              <label className="text-sm font-semibold text-[#314f52] sm:col-span-2">
+                <span className="mb-2 block">Password</span>
+                <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Leave blank to keep the current password" className="w-full rounded-xl border border-[#dce7e4] bg-[#f8fbfa] px-4 py-3 font-normal outline-none focus:border-[#1ca38b] focus:ring-2 focus:ring-[#dff5f0]" />
               </label>
               <label className="text-sm font-semibold text-[#314f52] sm:col-span-2">
                 <span className="mb-2 block">Interests</span>
