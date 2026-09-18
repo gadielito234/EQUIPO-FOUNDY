@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { supabase } from '../../services/supabase.js';
 import Recuperacion from './recuperacion.jsx';
 import Registro from './registro.jsx';
@@ -21,21 +21,94 @@ import { useI18n } from '../../services/i18n.js';
 
 function LanguageSelector() {
   const { language, setLanguage, t } = useI18n();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const options = [
+    { value: 'es', label: t('spanish'), flag: '🇪🇸' },
+    { value: 'en', label: t('english'), flag: '🇺🇸' },
+  ];
+
+  const activeOption = options.find((option) => option.value === language) || options[0];
+
+  useEffect(() => {
+    if (!isOpen) return undefined;
+
+    const handlePointerDown = (event) => {
+      const selector = document.getElementById('language-selector');
+      if (selector && !selector.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen]);
 
   return (
-    <label className="fixed right-5 top-5 z-[60] flex items-center gap-2 rounded-full border border-[#c9d1ce] bg-white/95 px-3 py-2 text-xs font-semibold text-[#506466] shadow-sm">
-      <span aria-hidden="true">{language === 'es' ? '🇪🇸' : '🇺🇸'}</span>
-      <span className="sr-only">{t('language')}</span>
-      <select
-        value={language}
-        onChange={(event) => setLanguage(event.target.value)}
-        className="bg-transparent text-xs font-semibold outline-none"
-        aria-label={t('language')}
-      >
-        <option value="es">{t('spanish')}</option>
-        <option value="en">{t('english')}</option>
-      </select>
-    </label>
+    <div id="language-selector" className="fixed bottom-5 right-5 z-[60]">
+      <div className="relative">
+        <button
+          type="button"
+          onClick={() => setIsOpen((open) => !open)}
+          aria-label={t('language')}
+          className="flex items-center gap-2 rounded-full border border-[#dfe7e4] bg-[#f8f6f3]/95 px-2.5 py-2 shadow-[0_12px_28px_rgba(16,34,38,0.12)] backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_32px_rgba(16,34,38,0.16)]"
+        >
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#edf3f1] text-base shadow-inner shadow-[#dfe5e3]" aria-hidden="true">
+            {activeOption.flag}
+          </span>
+          <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#5b6b6d]">{activeOption.value}</span>
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 20 20"
+            fill="none"
+            className={['h-4 w-4 text-[#405659] transition-transform duration-200', isOpen ? 'rotate-180' : ''].join(' ')}
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
+
+        {isOpen && (
+          <div className="absolute bottom-[calc(100%+10px)] right-0 w-44 overflow-hidden rounded-2xl border border-[#dfe7e4] bg-white/95 p-1.5 shadow-[0_18px_40px_rgba(15,31,34,0.18)] backdrop-blur-md">
+            {options.map((option) => {
+              const isSelected = option.value === language;
+
+              return (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => {
+                    setLanguage(option.value);
+                    setIsOpen(false);
+                  }}
+                  className={[
+                    'flex w-full items-center justify-between rounded-xl px-2.5 py-2 text-left text-sm transition-colors duration-150',
+                    isSelected ? 'bg-[#edf7f5] text-[#0f3d42]' : 'text-[#355255] hover:bg-[#f3f7f5]',
+                  ].join(' ')}
+                >
+                  <span className="flex items-center gap-2">
+                    <span aria-hidden="true">{option.flag}</span>
+                    <span className="font-medium">{option.label}</span>
+                  </span>
+                  {isSelected && <span className="text-base text-[#0d6c70]">✓</span>}
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 
