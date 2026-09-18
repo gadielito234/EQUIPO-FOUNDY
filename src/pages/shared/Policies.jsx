@@ -1,4 +1,7 @@
-const policySections = [
+import { useI18n } from '../../services/i18n.js';
+
+const policySections = {
+  en: [
   {
     id: 'privacy',
     title: 'Privacy Policy',
@@ -39,9 +42,54 @@ const policySections = [
       'Foundy may review reports, apply corrective measures, and remove content that violates these guidelines.',
     ],
   },
-];
+  ],
+  es: [
+    {
+      id: 'privacy',
+      title: 'Política de privacidad',
+      summary: 'Cómo recopilamos, usamos y protegemos la información personal.',
+      paragraphs: [
+        'Foundy recopila la información necesaria para ofrecer una plataforma segura y útil para emprendedores e inversionistas. Esto incluye datos de cuenta, información de perfil, comunicaciones e información relacionada con transacciones.',
+        'Usamos esta información para operar la plataforma, personalizar la experiencia, ayudar a los usuarios, prevenir usos indebidos y cumplir obligaciones legales.',
+        'No vendemos datos personales a terceros. La información solo puede compartirse con proveedores de confianza que nos ayudan a operar la aplicación bajo obligaciones de confidencialidad.',
+      ],
+    },
+    {
+      id: 'terms',
+      title: 'Términos de servicio',
+      summary: 'Las reglas y responsabilidades para usar Foundy.',
+      paragraphs: [
+        'Los usuarios deben proporcionar información precisa, usar la plataforma responsablemente y respetar los derechos de los demás participantes. El uso indebido, fraude, comportamiento abusivo o acceso no autorizado puede causar restricciones de cuenta.',
+        'Foundy ofrece un mercado y un canal de comunicación entre las partes, pero no garantiza resultados, rendimientos de inversión ni éxito empresarial.',
+        'Al usar la plataforma, aceptas cumplir nuestras políticas, las leyes aplicables y las expectativas establecidas en este acuerdo.',
+      ],
+    },
+    {
+      id: 'cookies',
+      title: 'Cookies y uso de datos',
+      summary: 'Cómo usamos cookies, analítica e información almacenada.',
+      paragraphs: [
+        'Usamos cookies y tecnologías similares para entender cómo se utiliza la plataforma, mejorar el rendimiento, recordar preferencias y ofrecer una experiencia más fluida.',
+        'Las herramientas de analítica nos ayudan a medir la participación, resolver problemas e identificar oportunidades para mejorar los servicios.',
+        'Los usuarios pueden administrar las preferencias de cookies desde la configuración de su dispositivo o desde la configuración de la plataforma, cuando corresponda.',
+      ],
+    },
+    {
+      id: 'guidelines',
+      title: 'Normas de la comunidad',
+      summary: 'Comportamiento esperado dentro de la comunidad Foundy.',
+      paragraphs: [
+        'Fomentamos la comunicación respetuosa, la conducta profesional y la transparencia. Los miembros deben evitar el spam, el lenguaje abusivo, las afirmaciones engañosas o cualquier actividad destinada a perjudicar a otros.',
+        'Si crees que un perfil, mensaje o proyecto infringe nuestras normas, puedes denunciarlo mediante los canales de soporte disponibles en la aplicación.',
+        'Foundy puede revisar los reportes, aplicar medidas correctivas y eliminar contenido que infrinja estas normas.',
+      ],
+    },
+  ],
+};
 
 export default function Policies({ onBack }) {
+  const { t, language } = useI18n();
+  const sections = policySections[language];
   return (
     <div className="min-h-screen bg-[#f5f2eb] px-4 py-5 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
@@ -51,24 +99,24 @@ export default function Policies({ onBack }) {
               type="button"
               onClick={onBack}
               className="inline-flex h-14 w-14 items-center justify-center rounded-full border-[3px] border-[#6fa795] bg-[#dff4ee] text-[32px] font-black leading-none text-[#1a3a3e] shadow-sm transition hover:bg-[#cfeae3]"
-              aria-label="Back to Settings"
-              title="Back to Settings"
+              aria-label={`${t('back')} ${t('settings')}`}
+              title={`${t('back')} ${t('settings')}`}
             >
               <span aria-hidden="true" className="relative -top-[1px]">←</span>
             </button>
 
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1ca38b]">LEGAL</p>
-              <h1 className="mt-2 text-3xl font-black tracking-tight text-[#193b40] sm:text-4xl">Policies</h1>
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1ca38b]">{t('legal')}</p>
+              <h1 className="mt-2 text-3xl font-black tracking-tight text-[#193b40] sm:text-4xl">{t('policies')}</h1>
             </div>
           </div>
 
           <p className="mb-8 text-sm leading-6 text-[#5d7277] sm:text-base">
-            Please review the policies below to understand how Foundy protects your data, supports respectful use, and defines the responsibilities of all users.
+            {t('policiesIntro')}
           </p>
 
           <main className="space-y-8 rounded-[24px] border border-[#dfe7e5] bg-[#f8fbfa] p-5 shadow-sm sm:p-6 lg:p-8">
-            {policySections.map((section) => (
+            {sections.map((section) => (
               <section key={section.id} className="scroll-mt-6">
                 <div className="mb-3">
                   <h2 className="text-2xl font-black tracking-tight text-[#1a3a3e] sm:text-3xl">

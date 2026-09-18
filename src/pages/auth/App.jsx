@@ -5,7 +5,6 @@ import Registro from './registro.jsx';
 import Inicio from '../emprendedor/inicio.jsx';
 import Landing from './landing.jsx';
 import HomeInversionista from '../inversionista/HomeInversionista.jsx';
-import DashboardInversionista from '../inversionista/DashboardInversionista.jsx';
 import Investments from '../inversionista/investments.jsx';
 import FoundyCard from '../inversionista/FoundyCard.jsx';
 import PerfilConfiguracion from '../shared/PerfilConfiguracion.jsx';
@@ -18,6 +17,27 @@ import Statistics from '../emprendedor/Statistics.jsx';
 import Notifications from '../inversionista/Notifications.jsx';
 import Support from '../shared/Support.jsx';
 import Policies from '../shared/Policies.jsx';
+import { useI18n } from '../../services/i18n.js';
+
+function LanguageSelector() {
+  const { language, setLanguage, t } = useI18n();
+
+  return (
+    <label className="fixed right-5 top-5 z-[60] flex items-center gap-2 rounded-full border border-[#c9d1ce] bg-white/95 px-3 py-2 text-xs font-semibold text-[#506466] shadow-sm">
+      <span aria-hidden="true">{language === 'es' ? '🇪🇸' : '🇺🇸'}</span>
+      <span className="sr-only">{t('language')}</span>
+      <select
+        value={language}
+        onChange={(event) => setLanguage(event.target.value)}
+        className="bg-transparent text-xs font-semibold outline-none"
+        aria-label={t('language')}
+      >
+        <option value="es">{t('spanish')}</option>
+        <option value="en">{t('english')}</option>
+      </select>
+    </label>
+  );
+}
 
 function App() {
   const [mostrarLanding, setMostrarLanding] = useState(true);
@@ -89,26 +109,29 @@ function App() {
   const esInversionista = usuarioLogueado?.tipo_usuario === 'Inversionista';
 
   const renderWithDashboardLayout = (content, options = {}) => (
-    <DashboardLayout
-      usuarioData={usuarioLogueado}
-      onCerrarSesion={handleCerrarSesion}
-      onBackHome={irAHome}
-      onOpenSettings={irAConfiguracion}
-      onOpenChat={() => setPantallaLogueado('chat')}
-      onOpenProjects={() => setPantallaLogueado('create-project')}
-      onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
-      onOpenStatistics={() => setPantallaLogueado('statistics')}
-      onOpenInvestments={() => setPantallaLogueado('investments')}
-      onOpenNotifications={() => setPantallaLogueado('notifications')}
-      onOpenSupport={() => setPantallaLogueado('support')}
-      onOpenInvestorProfile={irAPerfilPublico}
-      investorMode={esInversionista}
-      activeNav={options.activeNav || 'dashboard'}
-      showSearch={options.showSearch ?? true}
-      showStatistics
-    >
-      {content}
-    </DashboardLayout>
+    <>
+      <LanguageSelector />
+      <DashboardLayout
+        usuarioData={usuarioLogueado}
+        onCerrarSesion={handleCerrarSesion}
+        onBackHome={irAHome}
+        onOpenSettings={irAConfiguracion}
+        onOpenChat={() => setPantallaLogueado('chat')}
+        onOpenProjects={() => setPantallaLogueado('create-project')}
+        onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
+        onOpenStatistics={() => setPantallaLogueado('statistics')}
+        onOpenInvestments={() => setPantallaLogueado('investments')}
+        onOpenNotifications={() => setPantallaLogueado('notifications')}
+        onOpenSupport={() => setPantallaLogueado('support')}
+        onOpenInvestorProfile={irAPerfilPublico}
+        investorMode={esInversionista}
+        activeNav={options.activeNav || 'dashboard'}
+        showSearch={options.showSearch ?? true}
+        showStatistics
+      >
+        {content}
+      </DashboardLayout>
+    </>
   );
 
   if (usuarioLogueado) {

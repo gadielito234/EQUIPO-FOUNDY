@@ -11,27 +11,28 @@ import {
   Wallet,
   X,
 } from 'lucide-react';
+import { useI18n } from '../../services/i18n.js';
 
 const defaultSidebarItems = [
-  { label: 'Home', icon: Home, key: 'home' },
-  { label: 'My projects', icon: FolderKanban, key: 'projects' },
-  { label: 'Messages', icon: MessageSquareText, key: 'messages' },
-  { label: 'Settings', icon: Settings, key: 'settings' },
-  { label: 'Notifications', icon: Bell, key: 'notifications' },
+  { labelKey: 'home', icon: Home, key: 'home' },
+  { labelKey: 'myProjects', icon: FolderKanban, key: 'projects' },
+  { labelKey: 'messages', icon: MessageSquareText, key: 'messages' },
+  { labelKey: 'settings', icon: Settings, key: 'settings' },
+  { labelKey: 'notifications', icon: Bell, key: 'notifications' },
 ];
 
 const defaultTopNav = [
-  { label: 'Dashboard', key: 'dashboard' },
-  { label: 'Statistics', key: 'statistics' },
-  { label: 'Foundy card', key: 'foundy-card' },
+  { labelKey: 'dashboard', key: 'dashboard' },
+  { labelKey: 'statistics', key: 'statistics' },
+  { labelKey: 'foundyCard', key: 'foundy-card' },
 ];
 
 const investorSidebarItems = [
-  { label: 'Home', icon: Home, key: 'home' },
-  { label: 'My investments', icon: Wallet, key: 'investments' },
-  { label: 'Messages', icon: MessageSquareText, key: 'messages' },
-  { label: 'Settings', icon: Settings, key: 'settings' },
-  { label: 'Notifications', icon: Bell, key: 'notifications' },
+  { labelKey: 'home', icon: Home, key: 'home' },
+  { labelKey: 'myInvestments', icon: Wallet, key: 'investments' },
+  { labelKey: 'messages', icon: MessageSquareText, key: 'messages' },
+  { labelKey: 'settings', icon: Settings, key: 'settings' },
+  { labelKey: 'notifications', icon: Bell, key: 'notifications' },
 ];
 
 export default function DashboardLayout({
@@ -57,32 +58,33 @@ export default function DashboardLayout({
   showStatistics = true,
   footerContent,
 }) {
+  const { t } = useI18n();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const nombreUsuario = usuarioData?.usuario || 'Usuario';
-  const visibleTopNav = topNav.filter(({ key }) => showStatistics || key !== 'statistics');
-  const visibleSidebarItems = investorMode ? investorSidebarItems : sidebarItems;
+  const visibleTopNav = topNav.filter(({ key }) => showStatistics || key !== 'statistics').map((item) => ({ ...item, label: t(item.labelKey || item.key) }));
+  const visibleSidebarItems = (investorMode ? investorSidebarItems : sidebarItems).map((item) => ({ ...item, label: t(item.labelKey || item.key) }));
   const searchOptions = [
     ...visibleTopNav,
     ...visibleSidebarItems,
-    { label: 'Support', key: 'support' },
+    { label: t('support'), key: 'support' },
   ].filter((item, index, items) => items.findIndex((candidate) => candidate.key === item.key) === index);
   const searchResults = searchOptions.filter((item) => item.label.toLowerCase().includes(searchTerm.trim().toLowerCase())).slice(0, 5);
 
-  const handleSidebarAction = (label) => {
-    if (label === 'Home') onBackHome?.();
-    if (label === 'My projects') onOpenProjects?.();
-    if (label === 'My investments') onOpenInvestments?.();
-    if (label === 'Messages') onOpenChat?.();
-    if (label === 'Settings') onOpenSettings?.();
-    if (label === 'Notifications') onOpenNotifications?.();
+  const handleSidebarAction = (key) => {
+    if (key === 'home') onBackHome?.();
+    if (key === 'projects') onOpenProjects?.();
+    if (key === 'investments') onOpenInvestments?.();
+    if (key === 'messages') onOpenChat?.();
+    if (key === 'settings') onOpenSettings?.();
+    if (key === 'notifications') onOpenNotifications?.();
   };
 
-  const handleTopNavAction = (label) => {
-    if (label === 'Dashboard') onBackHome?.();
-    if (label === 'Statistics') onOpenStatistics?.();
-    if (label === 'Foundy card') onOpenFoundyCard?.();
+  const handleTopNavAction = (key) => {
+    if (key === 'dashboard') onBackHome?.();
+    if (key === 'statistics') onOpenStatistics?.();
+    if (key === 'foundy-card') onOpenFoundyCard?.();
   };
 
   const handleSearchAction = (key) => {
@@ -133,7 +135,7 @@ export default function DashboardLayout({
               type="button"
               onClick={() => setSidebarOpen((value) => !value)}
               className="flex h-12 w-12 items-center justify-center rounded-full hover:bg-[#efeae2]"
-              aria-label={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
+              aria-label={sidebarOpen ? t('collapseSidebar') : t('expandSidebar')}
             >
               <img
                 src="/images/foundy-negro.png"
@@ -174,7 +176,7 @@ export default function DashboardLayout({
                 <button
                   key={key || label}
                   type="button"
-                  onClick={() => handleSidebarAction(label)}
+                  onClick={() => handleSidebarAction(key)}
                   className={[
                     'group flex w-full items-center rounded-xl px-2 py-2.5 text-left text-sm transition-all duration-200',
                     isActive ? 'bg-[#0b5d61] text-white shadow-sm' : 'text-[#4f5d5f] hover:bg-[#efeae2] hover:text-[#183f43]',
@@ -208,7 +210,7 @@ export default function DashboardLayout({
                 'flex w-full items-center rounded-xl px-2 py-2.5 text-left text-sm text-[#4f5d5f] transition hover:bg-[#efeae2] hover:text-[#183f43]',
                 sidebarOpen ? 'justify-start gap-3' : 'justify-center gap-0',
               ].join(' ')}
-              title="Support"
+              title={t('support')}
               style={{ minHeight: '42px' }}
             >
               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-base font-bold leading-none">
@@ -221,7 +223,7 @@ export default function DashboardLayout({
                 ].join(' ')}
                 style={{ display: sidebarOpen ? 'inline' : 'none' }}
               >
-                Support
+                {t('support')}
               </span>
             </button>
             <button
@@ -231,7 +233,7 @@ export default function DashboardLayout({
                 'flex w-full items-center rounded-xl px-2 py-2.5 text-left text-sm text-[#4f5d5f] transition hover:bg-[#efeae2] hover:text-[#183f43]',
                 sidebarOpen ? 'justify-start gap-3' : 'justify-center gap-0',
               ].join(' ')}
-              title="Logout"
+              title={t('logout')}
               style={{ minHeight: '42px' }}
             >
               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-base font-bold leading-none">
@@ -244,7 +246,7 @@ export default function DashboardLayout({
                 ].join(' ')}
                 style={{ display: sidebarOpen ? 'inline' : 'none' }}
               >
-                Logout
+                {t('logout')}
               </span>
             </button>
           </div>
@@ -258,7 +260,7 @@ export default function DashboardLayout({
                   <button
                     key={key || label}
                     type="button"
-                    onClick={() => handleTopNavAction(label)}
+                    onClick={() => handleTopNavAction(key)}
                     className={[
                       'relative pb-1',
                       activeNav === key ? 'border-b-2 border-[#0d5d61] text-[#0d5d61]' : 'hover:text-[#0d5d61]',
@@ -269,7 +271,8 @@ export default function DashboardLayout({
                 ))}
               </nav>
 
-              {showSearch && (
+              <div className="flex items-center gap-3">
+                {showSearch && (
                 <div className="relative flex items-center justify-end">
                   <div className="flex items-center gap-2 rounded-full border border-[#c9d1ce] bg-[#f0f3f0] px-3 py-2 text-sm text-[#5f7274] shadow-sm focus-within:border-[#0b817d] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#0b817d]/15">
                     <Search className="h-4 w-4" />
@@ -281,9 +284,9 @@ export default function DashboardLayout({
                         if (event.key === 'Escape') setSearchTerm('');
                       }}
                       type="text"
-                      placeholder={searchPlaceholder}
+                      placeholder={searchPlaceholder === 'Search' ? t('search') : searchPlaceholder}
                       className="w-28 border-0 bg-transparent text-sm text-[#485d60] outline-none placeholder:text-[#7a8a8b] sm:w-40"
-                      aria-label="Search"
+                      aria-label={t('search')}
                     />
                   </div>
                   {searchTerm.trim() && (
@@ -297,11 +300,12 @@ export default function DashboardLayout({
                         >
                           {result.label}
                         </button>
-                      )) : <p className="px-3 py-3 text-xs text-[#718083]">No sections found.</p>}
+                      )) : <p className="px-3 py-3 text-xs text-[#718083]">{t('noSectionsFound')}</p>}
                     </div>
                   )}
                 </div>
               )}
+              </div>
             </div>
           </header>
 
@@ -322,19 +326,19 @@ export default function DashboardLayout({
                 </div>
 
                 <div>
-                  <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-white">Explora</h2>
+                    <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-white">{t('explore')}</h2>
                   <div className="mt-4 space-y-3 text-sm text-teal-100">
-                    <button type="button" className="block hover:text-white">Home</button>
-                    <button type="button" className="block hover:text-white">My investments</button>
-                    <button type="button" className="block hover:text-white">Messages</button>
+                    <button type="button" className="block hover:text-white">{t('home')}</button>
+                    <button type="button" className="block hover:text-white">{t('myInvestments')}</button>
+                    <button type="button" className="block hover:text-white">{t('messages')}</button>
                   </div>
                 </div>
 
                 <div>
-                  <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-white">Cuenta</h2>
+                    <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-white">{t('account')}</h2>
                   <div className="mt-4 space-y-3 text-sm text-teal-100">
-                    <button type="button" className="block hover:text-white">Sign in</button>
-                    <button type="button" className="block hover:text-white">Sign up</button>
+                    <button type="button" className="block hover:text-white">{t('signIn')}</button>
+                    <button type="button" className="block hover:text-white">{t('signUp')}</button>
                   </div>
                 </div>
               </div>
@@ -357,8 +361,8 @@ export default function DashboardLayout({
                   <LogOut size={19} />
                 </div>
                 <div>
-                  <h2 id="logout-title" className="text-lg font-bold text-[#1d3f42]">Log out of Foundy?</h2>
-                  <p id="logout-description" className="mt-1 text-sm leading-5 text-[#687577]">You will need to sign in again to access your account.</p>
+                  <h2 id="logout-title" className="text-lg font-bold text-[#1d3f42]">{t('logoutTitle')}</h2>
+                  <p id="logout-description" className="mt-1 text-sm leading-5 text-[#687577]">{t('logoutDescription')}</p>
                 </div>
               </div>
               <button type="button" onClick={() => setLogoutConfirmOpen(false)} className="rounded-full p-1.5 text-[#718083] transition hover:bg-[#eef1ef] hover:text-[#29494c]" aria-label="Close logout confirmation">
@@ -366,8 +370,8 @@ export default function DashboardLayout({
               </button>
             </div>
             <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-              <button type="button" autoFocus onClick={() => setLogoutConfirmOpen(false)} className="rounded-xl border border-[#ccd8d5] px-4 py-2.5 text-xs font-semibold text-[#526164] transition hover:bg-[#f0f3f0]">Cancel</button>
-              <button type="button" onClick={confirmLogout} className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#b85c3d] px-4 py-2.5 text-xs font-bold text-white transition hover:bg-[#98472f]"><LogOut size={14} /> Log out</button>
+              <button type="button" autoFocus onClick={() => setLogoutConfirmOpen(false)} className="rounded-xl border border-[#ccd8d5] px-4 py-2.5 text-xs font-semibold text-[#526164] transition hover:bg-[#f0f3f0]">{t('cancel')}</button>
+              <button type="button" onClick={confirmLogout} className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#b85c3d] px-4 py-2.5 text-xs font-bold text-white transition hover:bg-[#98472f]"><LogOut size={14} /> {t('logOut')}</button>
             </div>
           </div>
         </div>

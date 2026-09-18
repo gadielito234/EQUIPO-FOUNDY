@@ -1,6 +1,7 @@
 ﻿import { useEffect, useState } from 'react';
 import { ArrowRight, MapPin } from 'lucide-react';
 import { supabase } from '../../services/supabase.js';
+import { useI18n } from '../../services/i18n.js';
 
 async function readPublishedProjects() {
   const { data, error } = await supabase.from('proyecto').select('*').eq('estado', 'publicado');
@@ -20,6 +21,7 @@ async function readPublishedProjects() {
 }
 
 export default function HomeInversionista({ usuarioData, onOpenInvestments }) {
+  const { t } = useI18n();
   const [opportunities, setOpportunities] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -52,10 +54,10 @@ export default function HomeInversionista({ usuarioData, onOpenInvestments }) {
         <section className="relative overflow-hidden rounded-[28px] bg-[#0b5d61] px-6 py-8 text-white shadow-[0_16px_32px_rgba(11,93,97,0.16)] sm:px-8 sm:py-10">
           <div className="absolute -right-12 -top-20 h-56 w-56 rounded-full border-[28px] border-white/10" aria-hidden="true" />
           <div className="relative max-w-2xl">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#b9eee0]">Investor home</p>
-            <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Hello, {nombre}</h1>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#b9eee0]">{t('investorHome')}</p>
+            <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">{t('hello')}, {nombre}</h1>
             <p className="mt-3 max-w-xl text-sm leading-6 text-white/75">
-              Discover available projects and find new opportunities to invest in.
+              {t('discoverProjects')}
             </p>
           </div>
         </section>
@@ -63,14 +65,14 @@ export default function HomeInversionista({ usuarioData, onOpenInvestments }) {
         <section className="mt-7 rounded-[26px] border border-[#e9e2d8] bg-white p-6 sm:p-7">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#168b68]">Catalog</p>
-              <h2 className="mt-2 text-xl font-bold text-[#1e4043]">Available projects</h2>
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#168b68]">{t('catalog')}</p>
+              <h2 className="mt-2 text-xl font-bold text-[#1e4043]">{t('availableProjects')}</h2>
             </div>
-            <span className="text-xs font-semibold text-[#718083]">{opportunities.length} projects</span>
+            <span className="text-xs font-semibold text-[#718083]">{opportunities.length} {t(opportunities.length === 1 ? 'project' : 'projects')}</span>
           </div>
 
           {loading ? (
-            <p className="mt-8 text-sm text-[#718083]">Loading available projects...</p>
+            <p className="mt-8 text-sm text-[#718083]">{t('loadingProjects')}</p>
           ) : opportunities.length > 0 ? (
             <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
               {opportunities.map((item) => (
@@ -78,7 +80,7 @@ export default function HomeInversionista({ usuarioData, onOpenInvestments }) {
                   {item.image ? (
                     <img src={item.image} alt={item.title} className="h-36 w-full object-cover" />
                   ) : (
-                    <div className="grid h-36 place-items-center bg-[#e8efed] text-xs text-[#5d6d6d]">No image</div>
+                    <div className="grid h-36 place-items-center bg-[#e8efed] text-xs text-[#5d6d6d]">{t('noImage')}</div>
                   )}
 
                   <div className="p-4">
@@ -97,13 +99,13 @@ export default function HomeInversionista({ usuarioData, onOpenInvestments }) {
                     <p className="mt-3 text-[11px] leading-5 text-[#5d6d6d]">{item.objective}</p>
 
                     <div className="mt-4 flex items-center justify-between border-t border-[#edf0ed] pt-3 text-[10px] text-[#718083]">
-                      <span>Goal <strong className="text-[#1e4043]">{item.goal}</strong></span>
+                      <span>{t('goal')} <strong className="text-[#1e4043]">{item.goal}</strong></span>
                       <button
                         type="button"
                         onClick={onOpenInvestments}
                         className="inline-flex items-center gap-1 font-bold text-[#0b5d61]"
                       >
-                        View more
+                        {t('viewMore')}
                         <ArrowRight size={12} />
                       </button>
                     </div>
@@ -113,7 +115,7 @@ export default function HomeInversionista({ usuarioData, onOpenInvestments }) {
             </div>
           ) : (
             <div className="mt-8 rounded-xl border border-dashed border-[#cbd4d3] bg-[#f8f7f5] p-10 text-center text-sm text-[#446062]">
-              There are no projects available at the moment.
+              {t('noProjectsAvailable')}
             </div>
           )}
         </section>

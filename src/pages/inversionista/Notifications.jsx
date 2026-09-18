@@ -6,6 +6,7 @@ import {
   subscribeToNotifications,
   unsubscribeChannel,
 } from '../../services/notifications.js';
+import { useI18n } from '../../services/i18n.js';
 
 const filterOptions = [
   { value: 'all', label: 'All' },
@@ -14,6 +15,7 @@ const filterOptions = [
 ];
 
 export default function Notifications({ user, usuarioData, role }) {
+  const { t, language } = useI18n();
   const currentUser = user ?? usuarioData ?? null;
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -88,7 +90,7 @@ export default function Notifications({ user, usuarioData, role }) {
     if (!value) return 'Just now';
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) return 'Just now';
-    return date.toLocaleString('en-US', {
+    return date.toLocaleString(language === 'es' ? 'es-ES' : 'en-US', {
       day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit',
     });
   };
@@ -99,20 +101,20 @@ export default function Notifications({ user, usuarioData, role }) {
         <header className="mt-8 rounded-[28px] border border-[#dfe5e5] bg-white px-5 py-5 shadow-[0_10px_30px_rgba(17,52,60,0.04)] sm:px-6">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-[.18em] text-[#1b7f61]">{isInvestor ? 'Investor' : 'User'} activity center</p>
-              <h1 className="mt-2 text-2xl font-bold tracking-tight text-[#004e56] sm:text-[2rem]">Notifications</h1>
+              <p className="text-[10px] font-bold uppercase tracking-[.18em] text-[#1b7f61]">{isInvestor ? t('investor') : t('account')} activity center</p>
+              <h1 className="mt-2 text-2xl font-bold tracking-tight text-[#004e56] sm:text-[2rem]">{t('notifications')}</h1>
               <p className="mt-1 text-xs leading-5 text-[#687577] sm:text-sm">Stay up to date with your investment activity.</p>
             </div>
             <div className="flex items-center gap-3 self-start rounded-full bg-[#dfeeed] px-3 py-2 text-[#006b73] shadow-inner sm:self-auto">
-              <Bell size={18} className="fill-current" /><span className="text-xs font-semibold">{summary.unread} new</span>
+              <Bell size={18} className="fill-current" /><span className="text-xs font-semibold">{summary.unread} {t('new').toLowerCase()}</span>
             </div>
           </div>
 
           <div className="mt-6 grid gap-3 sm:grid-cols-3">
             {[
-              ['Total', summary.total, 'bg-[#f6fbfa] text-[#0d464d]'],
-              ['Unread', summary.unread, 'bg-[#eef9f4] text-[#1b7f61]'],
-              ['Read', summary.read, 'bg-[#f3f7f8] text-[#31474a]'],
+              [language === 'es' ? 'Total' : 'Total', summary.total, 'bg-[#f6fbfa] text-[#0d464d]'],
+              [t('unread'), summary.unread, 'bg-[#eef9f4] text-[#1b7f61]'],
+              [t('read'), summary.read, 'bg-[#f3f7f8] text-[#31474a]'],
             ].map(([label, value, colors]) => (
               <div key={label} className={`rounded-2xl border border-[#dfe7e5] p-4 ${colors}`}>
                 <p className="text-[10px] font-bold uppercase tracking-[0.18em] opacity-75">{label}</p>
@@ -126,15 +128,15 @@ export default function Notifications({ user, usuarioData, role }) {
 
         {loading && (
           <div className="mt-8 flex items-center justify-center gap-2 rounded-2xl border border-[#dfe5e5] bg-white py-16 text-sm text-[#687577] shadow-[0_10px_30px_rgba(17,52,60,0.02)]">
-            <LoaderCircle size={16} className="animate-spin" /> Loading notifications...
+            <LoaderCircle size={16} className="animate-spin" /> {t('loadingNotifications')}
           </div>
         )}
 
         {!loading && !notifications.length && (
           <div className="mt-8 rounded-[28px] border border-dashed border-[#cbd8d6] bg-white p-10 text-center shadow-[0_10px_30px_rgba(17,52,60,0.02)]">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#edf8f4] text-[#1b7f61]"><Sparkles size={24} /></div>
-            <h2 className="mt-5 text-lg font-semibold text-[#1d3f42]">Everything is in order</h2>
-            <p className="mt-2 text-sm text-[#687577]">You do not have any notifications yet.</p>
+            <h2 className="mt-5 text-lg font-semibold text-[#1d3f42]">{t('everythingInOrder')}</h2>
+            <p className="mt-2 text-sm text-[#687577]">{t('noNotifications')}</p>
           </div>
         )}
 
@@ -143,13 +145,13 @@ export default function Notifications({ user, usuarioData, role }) {
             <div className="mb-4 flex flex-wrap items-center gap-2">
               {filterOptions.map((option) => (
                 <button key={option.value} type="button" onClick={() => setFilter(option.value)} className={`rounded-full border px-3 py-1.5 text-[11px] font-semibold transition ${filter === option.value ? 'border-[#006b73] bg-[#006b73] text-white shadow-sm' : 'border-[#dfe5e5] bg-white text-[#4f5d5f] hover:border-[#b9d9d5] hover:text-[#004e56]'}`}>
-                  {option.label}
+                  {option.value === 'all' ? t('all') : option.value === 'unread' ? t('unread') : t('read')}
                 </button>
               ))}
             </div>
 
             {visibleNotifications.length === 0 ? (
-              <div className="rounded-[24px] border border-dashed border-[#cbd8d6] bg-white p-10 text-center text-sm text-[#687577]">There are no notifications in this filter.</div>
+              <div className="rounded-[24px] border border-dashed border-[#cbd8d6] bg-white p-10 text-center text-sm text-[#687577]">{t('noNotificationsFilter')}</div>
             ) : (
               <div className="divide-y divide-[#e1e6e6] overflow-hidden rounded-[24px] border border-[#e0e7e7] bg-white shadow-[0_12px_30px_rgba(17,52,60,0.03)]" aria-label="Notification list">
                 {visibleNotifications.map((notification) => (
@@ -159,7 +161,7 @@ export default function Notifications({ user, usuarioData, role }) {
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-start justify-between gap-3">
-                        <div className="min-w-0"><h2 className="text-sm font-semibold text-[#1d3f42]">{notification.title}</h2>{!notification.is_read && <span className="mt-1 inline-flex items-center rounded-full bg-[#dff5ee] px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em] text-[#1b7f61]">New</span>}</div>
+                        <div className="min-w-0"><h2 className="text-sm font-semibold text-[#1d3f42]">{notification.title}</h2>{!notification.is_read && <span className="mt-1 inline-flex items-center rounded-full bg-[#dff5ee] px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em] text-[#1b7f61]">{t('new')}</span>}</div>
                         <div className="flex items-center gap-2 text-[10px] text-[#899395]"><Clock3 size={11} /><time dateTime={notification.created_at}>{formatTime(notification.created_at)}</time></div>
                       </div>
                       {notification.body && <p className="mt-2 text-xs leading-5 text-[#5f7274]">{notification.body}</p>}

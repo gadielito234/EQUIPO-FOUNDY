@@ -1,6 +1,7 @@
 ﻿import { useEffect, useState } from "react";
 import { ArrowLeft, MessageCircle, MoreHorizontal, Paperclip, Phone, Plus, Search, Send, X } from "lucide-react";
 import { supabase } from '../../services/supabase.js';
+import { useI18n } from '../../services/i18n.js';
 
 function Avatar({ person }) {
   return (
@@ -15,6 +16,7 @@ function Avatar({ person }) {
 }
 
 function Chat({ usuarioData }) {
+  const { t } = useI18n();
   const [activeConversation, setActiveConversation] = useState(null);
   const [conversations, setConversations] = useState([]);
   const [messages, setMessages] = useState([]);
@@ -42,16 +44,16 @@ function Chat({ usuarioData }) {
         setConversations((data || []).map((person, index) => ({
           dui: person.dui,
           name: person.nombre && person.apellidos ? `${person.nombre} ${person.apellidos}` : person.usuario,
-          role: person.tipo_usuario === 'Inversionista' ? 'Investor' : 'Entrepreneur',
+          role: person.tipo_usuario === 'Inversionista' ? 'investor' : 'entrepreneur',
           color: ['#0b817d', '#d17b4a', '#6f7db8'][index % 3],
           time: '',
-          preview: 'Start a conversation.',
+          preview: t('noConversationSelected'),
         })));
       }
     };
     loadPeople();
     return () => { mounted = false; };
-  }, [currentDui]);
+  }, [currentDui, t]);
 
   useEffect(() => {
     let mounted = true;
@@ -216,7 +218,7 @@ function Chat({ usuarioData }) {
                       {conversation.preview}
                     </span>
                     <span className="mt-1 block text-[10px] font-semibold text-[#00634b]">
-                      {conversation.role}
+                      {t(conversation.role)}
                     </span>
                   </span>
                 </button>
@@ -245,7 +247,7 @@ function Chat({ usuarioData }) {
                         {activeConversation.name}
                       </h2>
                       <p className="text-[11px] text-[#00634b]">
-                        Active now · {activeConversation.role}
+                        {t('activeNow')} · {t(activeConversation.role)}
                       </p>
                     </div>
                   </div>
@@ -303,22 +305,22 @@ function Chat({ usuarioData }) {
                 >
                   <button
                     type="button"
-                    onClick={() => setNotice("Attach a file to your message.")}
+                    onClick={() => setNotice(t('attachFile'))}
                     className="grid h-9 w-9 place-items-center rounded-full text-lg text-[#424a4c]/70 hover:bg-[#006b73]/9 hover:text-[#006b73]"
-                    aria-label="Attach file"
+                    aria-label={t('attachFile')}
                   >
                     <Paperclip size={16} />
                   </button>
                   <input
                     value={draft}
                     onChange={(event) => setDraft(event.target.value)}
-                    placeholder="Type a message..."
+                    placeholder={t('typeMessage')}
                     className="min-w-0 flex-1 rounded-full border border-[#424a4c]/15 bg-[#424a4c]/4 px-4 py-3 text-xs outline-none focus:border-[#006b73] focus:bg-white focus:ring-2 focus:ring-[#006b73]/15"
                   />
                   <button
                     type="submit"
                     className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#00634b] text-sm text-white hover:bg-[#004c3a]"
-                    aria-label="Send message"
+                    aria-label={t('sendMessage')}
                   >
                     <Send size={16} />
                   </button>
@@ -330,21 +332,21 @@ function Chat({ usuarioData }) {
                   <MessageCircle size={34} />
                 </div>
                 <h2 className="text-xl font-semibold text-[#424a4c]">
-                  Your messages
+                  {t('yourMessages')}
                 </h2>
                 <p className="mt-2 max-w-xs text-sm leading-6 text-[#424a4c]/60">
-                  Send private messages to a friend or group.
+                  {t('privateMessages')}
                 </p>
                 <button
                   type="button"
                   onClick={() =>
                     setNotice(
-                      "Select a conversation from your inbox to start messaging.",
+                      t('selectConversation'),
                     )
                   }
                   className="mt-5 rounded-lg bg-[#006b73] px-5 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[#00545b]"
                 >
-                  Send message
+                  {t('sendMessage')}
                 </button>
               </div>
             )}
@@ -364,13 +366,13 @@ function Chat({ usuarioData }) {
                 id="new-message-title"
                 className="text-sm font-bold text-[#424a4c]"
               >
-                New message
+                {t('newMessage')}
               </h2>
               <button
                 type="button"
                 onClick={() => setNewMessageOpen(false)}
                 className="grid h-9 w-9 place-items-center rounded-full text-lg text-[#424a4c]/70 hover:bg-[#006b73]/9 hover:text-[#006b73]"
-                aria-label="Close new message"
+                aria-label={t('close')}
               >
                 <X size={17} />
               </button>
@@ -380,14 +382,14 @@ function Chat({ usuarioData }) {
                 htmlFor="recipient"
                 className="text-xs font-bold text-[#424a4c]"
               >
-                To:
+                {t('to')}:
               </label>
               <input
                 id="recipient"
                 value={recipientSearch}
                 onChange={(event) => setRecipientSearch(event.target.value)}
                 autoFocus
-                placeholder="Search people"
+                placeholder={t('searchPeople')}
                 className="min-w-0 flex-1 border-0 text-xs outline-none focus:ring-0"
               />
             </div>
@@ -408,13 +410,13 @@ function Chat({ usuarioData }) {
                       {conversations[0].name}
                     </strong>
                     <small className="text-[11px] text-[#424a4c]/60">
-                      {conversations[0].role}
+                      {t(conversations[0].role)}
                     </small>
                   </span>
                 </button>
               ) : (
                 <p className="text-center text-xs text-[#424a4c]/50">
-                  Search for someone to start a conversation.
+                  {t('searchToStart')}
                 </p>
               )}
             </div>

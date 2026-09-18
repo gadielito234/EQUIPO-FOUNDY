@@ -1,5 +1,6 @@
 ﻿import { useEffect, useState } from 'react';
 import { supabase } from '../../services/supabase.js';
+import { useI18n } from '../../services/i18n.js';
 
 function Switch({ enabled, onChange }) {
   return (
@@ -31,10 +32,10 @@ export default function PerfilConfiguracion({
   onSavePublicProfile,
   onOpenPolicies,
 }) {
+  const { t, language, setLanguage } = useI18n();
   const isProfileMode = mode === 'profile';
   const [transactionAlerts, setTransactionAlerts] = useState(true);
   const [marketingInsights, setMarketingInsights] = useState(false);
-  const [preferredLanguage, setPreferredLanguage] = useState('English');
   const [theme, setTheme] = useState('Light');
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState('');
@@ -166,22 +167,22 @@ export default function PerfilConfiguracion({
         <>
           <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1ca38b]">INVESTOR PROFILE</p>
-              <h2 className="mt-3 text-4xl font-black tracking-tight text-[#193b40]">Your profile information</h2>
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1ca38b]">{t('investorProfile')}</p>
+              <h2 className="mt-3 text-4xl font-black tracking-tight text-[#193b40]">{t('profileInformation')}</h2>
             </div>
           </div>
 
           <div className="grid gap-6 lg:grid-cols-2">
             <section className="rounded-[26px] border border-[#dfe7e5] bg-white p-5 shadow-sm sm:p-6">
               <div className="flex items-center justify-between gap-3">
-                <h3 className="text-2xl font-bold text-[#1d3f42]">Personal data</h3>
-                <button type="button" className="rounded-full bg-[#0d5c5d] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0a4b4d]">Edit</button>
+                <h3 className="text-2xl font-bold text-[#1d3f42]">{t('personalData')}</h3>
+                <button type="button" className="rounded-full bg-[#0d5c5d] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0a4b4d]">{t('edit')}</button>
               </div>
-              <p className="mt-2 text-sm text-[#5d7277]">Basic account information.</p>
+              <p className="mt-2 text-sm text-[#5d7277]">{t('basicAccountInformation')}</p>
 
               <div className="mt-6 space-y-5">
                 <label className="block text-sm font-medium text-[#314f52]">
-                  <span className="mb-2 block">Profile photo</span>
+                  <span className="mb-2 block">{t('profilePhoto')}</span>
                   <input
                     type="file"
                     accept="image/*"
@@ -197,7 +198,7 @@ export default function PerfilConfiguracion({
                 )}
 
                 <label className="block text-sm font-medium text-[#314f52]">
-                  <span className="mb-2 block">Name</span>
+                  <span className="mb-2 block">{t('name')}</span>
                   <input
                     type="text"
                     value={form.displayName}
@@ -207,7 +208,7 @@ export default function PerfilConfiguracion({
                 </label>
 
                 <label className="block text-sm font-medium text-[#314f52]">
-                  <span className="mb-2 block">Email</span>
+                  <span className="mb-2 block">{t('email')}</span>
                   <input
                     type="email"
                     value={form.email}
@@ -217,12 +218,12 @@ export default function PerfilConfiguracion({
                 </label>
 
                 <label className="block text-sm font-medium text-[#314f52]">
-                  <span className="mb-2 block">Password</span>
+                  <span className="mb-2 block">{t('password')}</span>
                   <input
                     type="password"
                     value={form.password}
                     onChange={(event) => updateField('password', event.target.value)}
-                    placeholder="Leave blank to keep current password"
+                    placeholder={t('leaveBlank')}
                     className="w-full rounded-xl border border-[#dce7e4] bg-[#f8fbfa] px-4 py-3 text-[#1d3f42] outline-none transition focus:border-[#1ca38b] focus:ring-2 focus:ring-[#dff5f0]"
                   />
                 </label>
@@ -231,14 +232,14 @@ export default function PerfilConfiguracion({
 
             <section className="rounded-[26px] border border-[#dfe7e5] bg-white p-5 shadow-sm sm:p-6">
               <div className="flex items-center justify-between gap-3">
-                <h3 className="text-2xl font-bold text-[#1d3f42]">Public profile</h3>
-                <button type="button" className="rounded-full bg-[#0d5c5d] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0a4b4d]">Edit</button>
+                <h3 className="text-2xl font-bold text-[#1d3f42]">{t('publicProfile')}</h3>
+                <button type="button" className="rounded-full bg-[#0d5c5d] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0a4b4d]">{t('edit')}</button>
               </div>
-              <p className="mt-2 text-sm text-[#5d7277]">What other users can learn about you.</p>
+              <p className="mt-2 text-sm text-[#5d7277]">{t('publicProfileDescription')}</p>
 
               <div className="mt-6 space-y-5">
                 <label className="block text-sm font-medium text-[#314f52]">
-                  <span className="mb-2 block">Interests</span>
+                    <span className="mb-2 block">{t('interests')}</span>
                   <input
                     type="text"
                     value={form.interests}
@@ -248,7 +249,7 @@ export default function PerfilConfiguracion({
                 </label>
 
                 <label className="block text-sm font-medium text-[#314f52]">
-                  <span className="mb-2 block">Biography</span>
+                    <span className="mb-2 block">{t('biography')}</span>
                   <textarea
                     value={form.biography}
                     rows={4}
@@ -259,7 +260,7 @@ export default function PerfilConfiguracion({
 
                 <div className="grid gap-5 md:grid-cols-2">
                   <label className="block text-sm font-medium text-[#314f52]">
-                    <span className="mb-2 block">Range</span>
+                    <span className="mb-2 block">{t('range')}</span>
                     <input
                       type="text"
                       value={form.investmentRange}
@@ -269,21 +270,21 @@ export default function PerfilConfiguracion({
                   </label>
 
                   <label className="block text-sm font-medium text-[#314f52]">
-                    <span className="mb-2 block">Risk</span>
+                    <span className="mb-2 block">{t('risk')}</span>
                     <select
                       value={form.riskLevel}
                       onChange={(event) => updateField('riskLevel', event.target.value)}
                       className="w-full rounded-xl border border-[#dce7e4] bg-[#f8fbfa] px-4 py-3 text-[#1d3f42] outline-none transition focus:border-[#1ca38b] focus:ring-2 focus:ring-[#dff5f0]"
                     >
-                      <option value="Low">Low</option>
-                      <option value="Medium">Medium</option>
-                      <option value="High">High</option>
+                      <option value="Low">{t('low')}</option>
+                      <option value="Medium">{t('medium')}</option>
+                      <option value="High">{t('high')}</option>
                     </select>
                   </label>
                 </div>
 
                 <label className="block text-sm font-medium text-[#314f52]">
-                  <span className="mb-2 block">Contact</span>
+                  <span className="mb-2 block">{t('contact')}</span>
                   <input
                     type="text"
                     value={form.contactAvailability}
@@ -296,39 +297,39 @@ export default function PerfilConfiguracion({
           </div>
 
           <div className="flex flex-wrap items-center justify-end gap-3">
-            <button type="button" onClick={onBackHome} className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">Back</button>
+            <button type="button" onClick={onBackHome} className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">{t('back')}</button>
             <button type="button" onClick={handleSaveProfile} disabled={saving} className="rounded-full bg-[#0d5c5d] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#0a4b4d] disabled:opacity-60">
-              {saving ? 'Saving...' : 'Save changes'}
+              {saving ? t('saving') : t('saveChanges')}
             </button>
           </div>
         </>
       ) : (
         <div className="space-y-6">
           <section className="rounded-[24px] border border-[#dfe7e5] bg-white p-6 shadow-sm sm:p-8">
-            <h2 className="text-2xl font-black tracking-tight text-[#1a3a3e]">Platform settings</h2>
+            <h2 className="text-2xl font-black tracking-tight text-[#1a3a3e]">{t('platformSettings')}</h2>
 
             <div className="mt-6 space-y-5">
               <div>
-                <label className="mb-2 block text-sm font-medium text-[#314f52]">Preferred language</label>
+                <label className="mb-2 block text-sm font-medium text-[#314f52]">{t('preferredLanguage')}</label>
                 <select
-                  value={preferredLanguage}
-                  onChange={(event) => setPreferredLanguage(event.target.value)}
+                  value={language}
+                  onChange={(event) => setLanguage(event.target.value)}
                   className="w-full rounded-xl border border-[#dce7e4] bg-[#f8fbfa] px-3 py-2.5 text-sm text-[#1d3f42] outline-none transition focus:border-[#1ca38b] focus:ring-2 focus:ring-[#dff5f0]"
                 >
-                  <option value="English">English</option>
-                  <option value="Spanish">Spanish</option>
+                  <option value="es">{t('spanish')}</option>
+                  <option value="en">{t('english')}</option>
                 </select>
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-medium text-[#314f52]">Theme</label>
+                <label className="mb-2 block text-sm font-medium text-[#314f52]">{t('theme')}</label>
                 <select
                   value={theme}
                   onChange={(event) => setTheme(event.target.value)}
                   className="w-full rounded-xl border border-[#dce7e4] bg-[#f8fbfa] px-3 py-2.5 text-sm text-[#1d3f42] outline-none transition focus:border-[#1ca38b] focus:ring-2 focus:ring-[#dff5f0]"
                 >
-                  <option value="Light">Light</option>
-                  <option value="Dark">Dark</option>
+                  <option value="Light">{t('light')}</option>
+                  <option value="Dark">{t('dark')}</option>
                 </select>
               </div>
             </div>
@@ -337,8 +338,8 @@ export default function PerfilConfiguracion({
           <section className="rounded-[24px] border border-[#dfe7e5] bg-white p-6 shadow-sm sm:p-8">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <h2 className="text-2xl font-black tracking-tight text-[#1a3a3e]">Notifications</h2>
-                <p className="mt-1 text-sm text-[#5d7277]">Choose which alerts you want to receive.</p>
+                <h2 className="text-2xl font-black tracking-tight text-[#1a3a3e]">{t('notificationsTitle')}</h2>
+                <p className="mt-1 text-sm text-[#5d7277]">{t('chooseAlerts')}</p>
               </div>
               <button
                 type="button"
@@ -348,23 +349,23 @@ export default function PerfilConfiguracion({
                 }}
                 className="rounded-full border border-[#d7e4e2] bg-[#f3f7f6] px-4 py-2 text-sm font-semibold text-[#476164] transition hover:bg-[#edf4f2]"
               >
-                Manage All
+                {t('manageAll')}
               </button>
             </div>
 
             <div className="mt-5 space-y-3">
               <div className="flex items-center justify-between gap-4 rounded-[18px] border border-[#dce7e4] bg-[#f8fbfa] px-4 py-3">
                 <div>
-                  <p className="text-base font-bold text-[#1d3f42]">Transaction Alerts</p>
-                  <p className="mt-1 text-sm text-[#5d7277]">Get notified when payments or transfers are made.</p>
+                  <p className="text-base font-bold text-[#1d3f42]">{t('transactionAlerts')}</p>
+                  <p className="mt-1 text-sm text-[#5d7277]">{t('transactionAlertsDescription')}</p>
                 </div>
                 <Switch enabled={transactionAlerts} onChange={setTransactionAlerts} />
               </div>
 
               <div className="flex items-center justify-between gap-4 rounded-[18px] border border-[#dce7e4] bg-[#f8fbfa] px-4 py-3">
                 <div>
-                  <p className="text-base font-bold text-[#1d3f42]">Marketing Insights</p>
-                  <p className="mt-1 text-sm text-[#5d7277]">Receive helpful campaign and growth suggestions.</p>
+                  <p className="text-base font-bold text-[#1d3f42]">{t('marketingInsights')}</p>
+                  <p className="mt-1 text-sm text-[#5d7277]">{t('marketingInsightsDescription')}</p>
                 </div>
                 <Switch enabled={marketingInsights} onChange={setMarketingInsights} />
               </div>
@@ -374,15 +375,15 @@ export default function PerfilConfiguracion({
           <section className="rounded-[24px] border border-[#dfe7e5] bg-white p-6 shadow-sm sm:p-8">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h2 className="text-xl font-black tracking-tight text-[#1a3a3e]">Policies</h2>
-                <p className="mt-1 text-sm text-[#5d7277]">Review our privacy, terms, and platform guidelines.</p>
+                <h2 className="text-xl font-black tracking-tight text-[#1a3a3e]">{t('policies')}</h2>
+                <p className="mt-1 text-sm text-[#5d7277]">{t('policiesDescription')}</p>
               </div>
               <button
                 type="button"
                 onClick={openPolicies}
                 className="rounded-full bg-[#0d5c5d] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0a4b4d]"
               >
-                View Policies
+                {t('viewPolicies')}
               </button>
             </div>
           </section>
@@ -390,9 +391,9 @@ export default function PerfilConfiguracion({
           <section className="rounded-[24px] border border-[#f0b8b5] bg-[#fef0ef] p-6 shadow-sm sm:p-8">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h2 className="text-2xl font-black tracking-tight text-[#d84848]">Danger Zone</h2>
+                <h2 className="text-2xl font-black tracking-tight text-[#d84848]">{t('dangerZone')}</h2>
                 <p className="mt-1 max-w-2xl text-sm text-[#d84848]">
-                  Deactivating your account will disable your access and hide your profile from other users.
+                  {t('deactivateDescription')}
                 </p>
               </div>
 
@@ -401,7 +402,7 @@ export default function PerfilConfiguracion({
                 onClick={handleDeactivate}
                 className="rounded-full bg-[#d33f3f] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c13434]"
               >
-                Deactivate
+                {t('deactivate')}
               </button>
             </div>
           </section>
@@ -437,10 +438,10 @@ export default function PerfilConfiguracion({
               </div>
               <div>
                 <h3 id="confirm-deactivate-title" className="text-xl font-black text-[#1d3f42]">
-                  Confirm deactivation
+                  {t('confirmDeactivation')}
                 </h3>
                 <p id="confirm-deactivate-description" className="mt-2 text-sm leading-6 text-[#5d7277]">
-                  Are you sure you want to deactivate your account? This action will disable your access and hide your profile from other users.
+                  {t('confirmDeactivationDescription')}
                 </p>
               </div>
             </div>
@@ -451,14 +452,14 @@ export default function PerfilConfiguracion({
                 onClick={() => setConfirmDeactivateOpen(false)}
                 className="rounded-xl border border-[#ccd8d5] px-4 py-2.5 text-sm font-semibold text-[#526164] transition hover:bg-[#f0f3f0]"
               >
-                Cancel
+                {t('cancel')}
               </button>
               <button
                 type="button"
                 onClick={confirmDeactivate}
                 className="rounded-xl bg-[#d33f3f] px-4 py-2.5 text-sm font-bold text-white transition hover:bg-[#c13434]"
               >
-                Deactivate
+                {t('deactivate')}
               </button>
             </div>
           </div>
