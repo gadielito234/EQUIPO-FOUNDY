@@ -1,7 +1,10 @@
-﻿const navigation = [
+﻿import { ChartNoAxesCombined, Sprout } from 'lucide-react';
+
+const navigation = [
     { name: 'How it works', href: '#function' },
-    { name: 'About us', href: '#about' },
-    { name: 'Details', href: '#details' },
+    { name: 'Entrepreneurs', href: '#pathways-title' },
+    { name: 'Investors', href: '#showcase-title' },
+    { name: 'About Foundy', href: '#about' },
 ];
 
 const features = [
@@ -19,12 +22,6 @@ const features = [
     },
 ];
 
-const steps = [
-    { number: '01', title: 'Create your profile', description: 'Tell us who you are and what you want to build.' },
-    { number: '02', title: 'Explore the community', description: 'Discover relevant projects, ideas, and opportunities.' },
-    { number: '03', title: 'Start collaborating', description: 'Take the next step and turn your ideas into results.' },
-];
-
 const showcase = [
     { image: '/images/Cafemonteverde.png', label: 'Local commerce', title: 'Ideas rooted in community', description: 'Support businesses with a clear purpose and a path to grow.' },
     { image: '/images/Artesaníaselfaro.png', label: 'Creative economy', title: 'Talent that deserves momentum', description: 'Connect local makers with people ready to open new doors.' },
@@ -34,27 +31,27 @@ const showcase = [
 export default function Landing({ onLogin, onRegister }) {
     return (
         <div className="min-h-screen bg-white text-slate-800">
-            <header className="landing-reveal bg-[#006b70] shadow-sm">
-                <nav className="mx-auto flex h-[4.25rem] max-w-7xl items-center justify-between px-6 sm:px-10 lg:px-12" aria-label="Main navigation">
+            <header className="landing-reveal border-b border-[#dcebe6] bg-white shadow-sm">
+                <nav className="mx-auto flex h-[4.75rem] max-w-7xl items-center justify-between px-6 sm:px-10 lg:px-12" aria-label="Main navigation">
                     <a href="#top" className="flex shrink-0 items-center" aria-label="Foundy home">
-                        <img src="/images/foundy-negro.png" alt="Foundy" className="foundy-logo-glow h-10 w-auto object-contain" />
+                        <img src="/images/foundy-negro.png" alt="Foundy" className="foundy-logo-glow h-9 w-auto object-contain" />
                     </a>
-                    <div className="hidden items-center gap-7 text-sm font-medium lg:flex">
+                    <div className="hidden items-center gap-6 text-sm font-semibold text-[#315d60] lg:flex">
                         {navigation.map((item, index) => (
                             <a
                                 key={item.name}
                                 href={item.href}
-                                className={`border-b pb-1 text-white transition hover:text-teal-200 ${index === 0 ? 'border-white' : 'border-transparent'}`}
+                                className={`border-b-2 pb-1 transition hover:border-[#21a99b] hover:text-[#006b70] ${index === 0 ? 'border-[#21a99b] text-[#006b70]' : 'border-transparent'}`}
                             >
                                 {item.name}
                             </a>
                         ))}
                     </div>
                     <div className="flex items-center gap-2">
-                        <button type="button" onClick={onRegister} className="rounded-full bg-white px-5 py-2 text-xs font-semibold text-[#006b70] shadow-sm transition hover:bg-teal-50 transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500">
+                        <button type="button" onClick={onRegister} className="rounded-md bg-[#006b70] px-5 py-2.5 text-xs font-semibold text-white shadow-sm transition hover:-translate-y-1 hover:bg-[#00545a]">
                             Sign up
                         </button>
-                        <button type="button" onClick={onLogin} className="rounded-full border border-white/80 px-5 py-2 text-xs font-semibold text-white transition hover:bg-white/10 transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500">
+                        <button type="button" onClick={onLogin} className="hidden rounded-md border border-[#9bc7bd] px-5 py-2.5 text-xs font-semibold text-[#006b70] transition hover:-translate-y-1 hover:bg-[#eff9f5] sm:block">
                             Login
                         </button>
                     </div>
@@ -62,18 +59,55 @@ export default function Landing({ onLogin, onRegister }) {
             </header>
 
             <main id="top">
-                <section id="function" className="relative mx-5 mt-7 h-[30rem] overflow-hidden rounded-[0.35rem] sm:mx-8 sm:h-[34rem] lg:mx-12 lg:h-[calc(100vh-9rem)] lg:min-h-[34rem]" aria-labelledby="landing-title">
-                    <img src="/images/emprendedores-negocios.jpg" alt="Emprendedores y productos locales" className="landing-hero-image absolute inset-0 h-full w-full object-cover blur-[2px]" />
-                    <div aria-hidden="true" className="landing-hero-overlay absolute inset-0 bg-[#005f68]/55" />
-                    <div className="relative z-10 flex h-full items-center justify-center px-5">
-                        <div className="landing-reveal landing-reveal-delay-2 max-w-[25rem] rounded-lg bg-white px-6 py-6 text-center shadow-xl sm:px-8 sm:py-7">
-                            <h1 id="landing-title" className="landing-reveal landing-reveal-delay-3 text-[1.45rem] font-extrabold leading-[1.03] tracking-tight text-[#006b75] sm:text-[1.7rem]">
-                                Investments that foster entrepreneurship in <span className="text-[#21a99b]">El Salvador</span>
-                            </h1>
-                            <p className="landing-reveal landing-reveal-delay-4 mt-4 text-sm leading-6 text-slate-600">
-                                A platform that turns connections into opportunities.
-                            </p>
+                <section id="function" className="mx-5 mt-7 overflow-hidden rounded-[1.5rem] bg-[#e8f4f0] sm:mx-8 lg:mx-12" aria-labelledby="landing-title">
+                    <div className="mx-auto grid min-h-[36rem] max-w-7xl items-center gap-10 px-6 py-10 sm:px-10 sm:py-14 lg:grid-cols-[0.85fr_1.15fr] lg:px-14 lg:py-16">
+                        <div className="landing-reveal max-w-xl">
+                            <p className="text-xs font-black uppercase tracking-[0.22em] text-[#0b817d]">Invest. Build. Grow.</p>
+                            <h1 id="landing-title" className="mt-5 text-4xl font-black leading-[0.98] tracking-tight text-[#073f4a] sm:text-6xl">Connecting capital with the future of El Salvador.</h1>
+                            <p className="mt-6 max-w-lg text-base leading-7 text-[#4b686c] sm:text-lg">Foundy brings promising projects, ambitious entrepreneurs, and thoughtful investors into one trusted network.</p>
+                            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                                <button type="button" onClick={onRegister} className="rounded-md bg-[#006b70] px-5 py-3 text-sm font-bold text-white shadow-[0_10px_20px_rgba(0,107,112,0.18)] transition hover:-translate-y-1 hover:bg-[#00545a]">Join Foundy</button>
+                                <button type="button" onClick={onLogin} className="rounded-md border border-[#8dbbb2] bg-white/60 px-5 py-3 text-sm font-bold text-[#006b70] transition hover:-translate-y-1 hover:bg-white">Explore opportunities</button>
+                            </div>
+                            <div className="mt-10 grid max-w-md grid-cols-3 gap-4 border-t border-[#b9d9d1] pt-5">
+                                <div><p className="text-2xl font-black text-[#006b70]">01</p><p className="mt-1 text-xs leading-4 text-[#5d7779]">One place to connect</p></div>
+                                <div><p className="text-2xl font-black text-[#006b70]">02</p><p className="mt-1 text-xs leading-4 text-[#5d7779]">Clearer opportunities</p></div>
+                                <div><p className="text-2xl font-black text-[#006b70]">03</p><p className="mt-1 text-xs leading-4 text-[#5d7779]">Momentum that lasts</p></div>
+                            </div>
                         </div>
+                        <div className="landing-reveal landing-reveal-delay-2 relative min-h-[23rem] overflow-hidden rounded-[1.25rem] bg-[#0b5d61] shadow-[0_24px_45px_rgba(6,75,78,0.18)] sm:min-h-[30rem]">
+                            <img src="/images/emprendedores-negocios.jpg" alt="Entrepreneurs and local businesses collaborating" className="landing-hero-image absolute inset-0 h-full w-full object-cover opacity-90" />
+                            <div className="absolute inset-0 bg-[#073f4a]/45" />
+                            <div className="absolute bottom-5 left-5 right-5 rounded-xl border border-white/25 bg-[#073f4a]/75 p-4 text-white backdrop-blur-sm sm:bottom-7 sm:left-7 sm:right-7 sm:p-5">
+                                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#a8e7d6]">Built around possibility</p>
+                                <p className="mt-2 text-lg font-bold leading-tight sm:text-xl">The right connection can change the scale of an idea.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section className="mx-auto max-w-7xl px-6 py-16 sm:px-10 lg:px-12" aria-labelledby="pathways-title">
+                    <div className="landing-reveal max-w-2xl">
+                        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#21a99b]">Choose your next move</p>
+                        <h2 id="pathways-title" className="mt-3 text-3xl font-bold tracking-tight text-[#006b70] sm:text-4xl">A platform with room for both sides of the table.</h2>
+                    </div>
+                    <div className="mt-8 grid gap-5 lg:grid-cols-2">
+                        <article className="landing-card landing-reveal landing-reveal-delay-1 grid overflow-hidden rounded-2xl border border-[#d5e9e3] bg-white sm:grid-cols-[0.8fr_1.2fr]">
+                            <div className="relative grid min-h-52 place-items-center overflow-hidden bg-[#dff3eb] text-[#087f78] sm:min-h-full">
+                                <div className="absolute right-6 top-7 h-16 w-3 rotate-45 bg-[#a9ddca]" aria-hidden="true" />
+                                <div className="absolute bottom-8 left-7 h-3 w-20 -rotate-12 bg-[#bce7d8]" aria-hidden="true" />
+                                <div className="relative grid h-20 w-20 place-items-center rounded-2xl border border-[#70c4a9] bg-white shadow-[0_12px_25px_rgba(8,127,120,0.14)]"><Sprout size={38} strokeWidth={1.6} /></div>
+                            </div>
+                            <div className="p-6 sm:p-7"><p className="text-xs font-bold uppercase tracking-[0.16em] text-[#21a99b]">For entrepreneurs</p><h3 className="mt-3 text-2xl font-bold text-[#006b70]">Make your project easier to believe in.</h3><p className="mt-3 text-sm leading-6 text-slate-600">Build a profile, present your project, and find people who can help your next stage become real.</p><button type="button" onClick={onRegister} className="mt-6 text-sm font-bold text-[#006b70] transition hover:translate-x-1">Build your profile →</button></div>
+                        </article>
+                        <article className="landing-card landing-reveal landing-reveal-delay-2 grid overflow-hidden rounded-2xl border border-[#d5e9e3] bg-[#006b70] text-white sm:grid-cols-[0.8fr_1.2fr]">
+                            <div className="relative grid min-h-52 place-items-center overflow-hidden bg-[#0b817d] text-[#d9f8eb] sm:min-h-full">
+                                <div className="absolute right-6 top-7 h-16 w-3 rotate-45 bg-white/15" aria-hidden="true" />
+                                <div className="absolute bottom-8 left-7 h-3 w-20 -rotate-12 bg-white/10" aria-hidden="true" />
+                                <div className="relative grid h-20 w-20 place-items-center rounded-2xl border border-white/40 bg-white/10 shadow-[0_12px_25px_rgba(0,55,60,0.2)]"><ChartNoAxesCombined size={38} strokeWidth={1.6} /></div>
+                            </div>
+                            <div className="p-6 sm:p-7"><p className="text-xs font-bold uppercase tracking-[0.16em] text-[#a8e7d6]">For investors</p><h3 className="mt-3 text-2xl font-bold">Find the story behind the opportunity.</h3><p className="mt-3 text-sm leading-6 text-teal-50/80">Discover published projects, understand their potential, and choose where your support can make a difference.</p><button type="button" onClick={onRegister} className="mt-6 text-sm font-bold text-white transition hover:translate-x-1">Explore opportunities →</button></div>
+                        </article>
                     </div>
                 </section>
 
@@ -141,21 +175,29 @@ export default function Landing({ onLogin, onRegister }) {
                     </div>
                 </section>
 
-                <section id="details" className="mx-auto max-w-7xl px-6 py-20 sm:px-10 lg:px-12" aria-labelledby="steps-title">
-                    <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#21a99b]">Details</p>
-                    <h2 id="steps-title" className="mt-3 text-3xl font-bold tracking-tight text-[#006b70] sm:text-4xl">
-                        Get started in three steps
-                    </h2>
-                    <div className="mt-10 grid gap-8 md:grid-cols-3">
-                        {steps.map((step, index) => (
-                            <div key={step.number} className={`landing-reveal landing-reveal-delay-${Math.min(index + 1, 4)} border-t-2 border-[#21a99b] pt-5`}>
-                                <span className="text-sm font-bold text-[#21a99b]">{step.number}</span>
-                                <h3 className="mt-4 text-lg font-bold text-slate-800">{step.title}</h3>
-                                <p className="mt-2 text-sm leading-6 text-slate-600">{step.description}</p>
-                            </div>
-                        ))}
+                <section className="overflow-hidden bg-[#006b70] text-white" aria-labelledby="roles-title">
+                    <div className="mx-auto grid max-w-7xl gap-10 px-6 py-20 sm:px-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-center lg:px-12">
+                        <div className="landing-reveal">
+                            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#9be4d0]">Your role in the story</p>
+                            <h2 id="roles-title" className="mt-3 text-3xl font-bold leading-tight sm:text-4xl">Build, back, and belong.</h2>
+                            <p className="mt-5 max-w-md text-sm leading-7 text-teal-50/80">Foundy makes the next move easier to see, whether you are shaping an idea or looking for the right one to support.</p>
+                            <button type="button" onClick={onRegister} className="mt-7 rounded-md bg-white px-5 py-3 text-sm font-bold text-[#006b70] transition hover:-translate-y-1 hover:bg-[#e2f8f0]">Start with Foundy</button>
+                        </div>
+                        <div className="grid gap-4 sm:grid-cols-2">
+                            <article className="landing-card landing-reveal landing-reveal-delay-1 rounded-2xl border border-white/20 bg-white/10 p-6 backdrop-blur-sm">
+                                <span className="text-3xl" aria-hidden="true">↗</span>
+                                <h3 className="mt-6 text-xl font-bold">For entrepreneurs</h3>
+                                <p className="mt-3 text-sm leading-6 text-teal-50/75">Present your project, find meaningful connections, and create momentum around your vision.</p>
+                            </article>
+                            <article className="landing-card landing-reveal landing-reveal-delay-2 rounded-2xl border border-white/20 bg-[#21a99b] p-6">
+                                <span className="text-3xl" aria-hidden="true">✦</span>
+                                <h3 className="mt-6 text-xl font-bold">For investors</h3>
+                                <p className="mt-3 text-sm leading-6 text-white/80">Explore published opportunities, understand the story behind them, and choose where to invest.</p>
+                            </article>
+                        </div>
                     </div>
                 </section>
+
             </main>
 
             <footer className="bg-[#006b70] text-white">

@@ -87,7 +87,6 @@ function CrearProyecto({ usuarioData, nombreUsuario = "Entrepreneur", onCerrarSe
       });
       return;
     }
-<<<<<<< HEAD
     setGuardando(true);
     try {
       let imageUrl = null;
@@ -98,6 +97,22 @@ function CrearProyecto({ usuarioData, nombreUsuario = "Entrepreneur", onCerrarSe
         const { error: uploadError } = await supabase.storage.from('project-images').upload(path, firstImage);
         if (uploadError) throw uploadError;
         imageUrl = supabase.storage.from('project-images').getPublicUrl(path).data.publicUrl;
+      }
+
+      let contratoUrl = null;
+      if (contrato) {
+        if (!supabase?.storage?.from) {
+          throw new Error("Configure Supabase Storage before saving the contract.");
+        }
+
+        const extension = contrato.name.split(".").pop() || "pdf";
+        const fileName = `${usuarioData?.dui || "entrepreneur"}/contract-${Date.now()}.${extension}`;
+        const { error: uploadError } = await supabase.storage.from("project-documents").upload(fileName, contrato, {
+          upsert: true,
+        });
+        if (uploadError) throw uploadError;
+        const { data } = supabase.storage.from("project-documents").getPublicUrl(fileName);
+        contratoUrl = data?.publicUrl || null;
       }
 
       const fechaInicio = new Date();
@@ -116,53 +131,13 @@ function CrearProyecto({ usuarioData, nombreUsuario = "Entrepreneur", onCerrarSe
         dui: usuarioData?.dui,
         id_categoria: proyecto.id_categoria || null,
         imagen_url: imageUrl,
+        contrato_url: contratoUrl,
       }]);
       if (error) throw error;
       if (publicar) window.dispatchEvent(new Event("foundy-project-published"));
       setAlerta({ tipo: "success", texto: publicar ? "Project published successfully." : "Project saved as a draft." });
       limpiarFormulario();
     } catch (error) {
-=======
-    const fechaInicio = new Date();
-    const meses = Number.parseInt(proyecto.retorno, 10) || 1;
-    const fechaFin = new Date(fechaInicio);
-    fechaFin.setMonth(fechaFin.getMonth() + meses);
-
-    let contratoUrl = null;
-    if (contrato) {
-      if (!supabase?.storage?.from) {
-        setAlerta({ tipo: "warning", texto: "Configure Supabase Storage before saving the contract." });
-        return;
-      }
-
-      const extension = contrato.name.split(".").pop() || "pdf";
-      const fileName = `${usuarioData?.dui || "entrepreneur"}/contract-${Date.now()}.${extension}`;
-      const { error: uploadError } = await supabase.storage.from("project-documents").upload(fileName, contrato, {
-        upsert: true,
-      });
-      if (uploadError) {
-        setAlerta({ tipo: "warning", texto: `Could not upload contract: ${uploadError.message}` });
-        return;
-      }
-      const { data } = supabase.storage.from("project-documents").getPublicUrl(fileName);
-      contratoUrl = data?.publicUrl || null;
-    }
-
-    const { error } = await supabase.from("proyecto").insert([{
-      nombre: proyecto.nombre.trim(),
-      descripcion: proyecto.descripcion.trim(),
-      monto_objetivo: proyecto.monto ? Number(proyecto.monto) : 0,
-      monto_recaudado: 0,
-      inversion: 0,
-      estado: publicar ? "publicado" : "borrador",
-      fecha_inicio: fechaInicio.toISOString().slice(0, 10),
-      fecha_fin: fechaFin.toISOString().slice(0, 10),
-      dui: usuarioData?.dui,
-      id_categoria: proyecto.id_categoria || null,
-      contrato_url: contratoUrl,
-    }]);
-    if (error) {
->>>>>>> eeb427c5cac2d0415fcd5730a21704e213a9f22b
       setAlerta({ tipo: "warning", texto: `Could not save project: ${error.message}` });
     } finally {
       setGuardando(false);
