@@ -104,3 +104,32 @@ end $$;
 insert into storage.buckets (id, name, public)
 values ('project-images', 'project-images', true)
 on conflict (id) do update set public = excluded.public;
+
+insert into storage.buckets (id, name, public)
+values ('profile-images', 'profile-images', true)
+on conflict (id) do update set public = excluded.public;
+
+do $$
+begin
+  if not exists (select 1 from pg_policies where schemaname = 'storage' and tablename = 'objects' and policyname = 'Public can upload profile images') then
+    create policy "Public can upload profile images"
+      on storage.objects for insert
+      to public
+      with check (bucket_id = 'profile-images');
+  end if;
+
+  if not exists (select 1 from pg_policies where schemaname = 'storage' and tablename = 'objects' and policyname = 'Public can update profile images') then
+    create policy "Public can update profile images"
+      on storage.objects for update
+      to public
+      using (bucket_id = 'profile-images')
+      with check (bucket_id = 'profile-images');
+  end if;
+
+  if not exists (select 1 from pg_policies where schemaname = 'storage' and tablename = 'objects' and policyname = 'Public can read profile images') then
+    create policy "Public can read profile images"
+      on storage.objects for select
+      to public
+      using (bucket_id = 'profile-images');
+  end if;
+end $$;
