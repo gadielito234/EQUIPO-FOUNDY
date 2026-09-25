@@ -115,6 +115,13 @@ export default function PerfilConfiguracion({
     setForm((current) => ({ ...current, [field]: value }));
   };
 
+  const readFileAsDataUrl = (file) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error('No se pudo leer la imagen seleccionada.'));
+    reader.readAsDataURL(file);
+  });
+
   const handleProfilePhotoChange = async (event) => {
     const file = event.target.files?.[0];
 
@@ -123,23 +130,24 @@ export default function PerfilConfiguracion({
     }
 
     try {
+      const localPreview = await readFileAsDataUrl(file);
+      updateField('profilePicture', localPreview);
       const storage = supabase?.storage;
 
       if (storage?.from) {
         const extension = file.name.split('.').pop() || 'png';
-        const fileName = `${usuarioData?.dui || 'avatar'}-${Date.now()}.${extension}`;
-        const { error: uploadError } = await storage.from('project-images').upload(fileName, file, {
+        const fileName = `${usuarioData?.dui || 'avatar'}/profile-${Date.now()}.${extension}`;
+        const { error: uploadError } = await storage.from('profile-images').upload(fileName, file, {
           upsert: true,
         });
 
         if (uploadError) {
-          throw uploadError;
+          setNotice('La foto se guardará con el perfil cuando pulses Guardar cambios.');
+          return;
         }
 
-        const { data } = storage.from('project-images').getPublicUrl(fileName);
+        const { data } = storage.from('profile-images').getPublicUrl(fileName);
         updateField('profilePicture', data?.publicUrl || '');
-      } else {
-        updateField('profilePicture', URL.createObjectURL(file));
       }
     } catch (error) {
       setNotice(error.message || 'No se pudo subir la foto de perfil.');
