@@ -11,14 +11,26 @@ function makeStub() {
 	const chainable = () => ({
 		select: () => chainable(),
 		eq: () => chainable(),
+		neq: () => chainable(),
+		in: () => chainable(),
+		limit: () => chainable(),
 		order: () => chainable(),
 		update: () => chainable(),
+		upsert: async () => ({ error: { message: 'Supabase no configurado' } }),
 		single: async () => noop(),
 		maybeSingle: async () => ({ data: null }),
 		insert: async () => ({ error: { message: 'Supabase no configurado' } }),
 	});
 	return {
 		from: () => chainable(),
+		storage: {
+			from: () => ({
+				upload: async () => ({ error: { message: 'Supabase no configurado' } }),
+				getPublicUrl: () => ({ data: { publicUrl: '' } }),
+			}),
+		},
+		channel: () => ({ on: () => ({ subscribe: () => undefined }) }),
+		removeChannel: async () => undefined,
 	};
 }
 

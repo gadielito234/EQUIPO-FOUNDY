@@ -1,7 +1,7 @@
 ﻿import { useState } from 'react';
 import { supabase } from '../../services/supabase.js';
 
-function Register({ onSwitchToLogin }) {
+function Register({ onSwitchToLogin, onBackToLanding }) {
     const [formData, setFormData] = useState({
         nombre: '',
         apellidos: '',
@@ -136,7 +136,7 @@ function Register({ onSwitchToLogin }) {
             <section className="relative overflow-hidden px-6 py-7 sm:px-10 lg:flex lg:min-h-screen lg:flex-col lg:px-[clamp(2.5rem,7vw,7rem)] lg:py-10">
                 <div className="absolute -left-28 -top-28 h-72 w-72 rounded-full bg-[#b9e8dd]/45" aria-hidden="true" />
                 <div className="relative z-10 flex items-center justify-between">
-                    <img className="h-9 w-auto object-contain brightness-0 invert" src="/images/foundy-logo.png" alt="Foundy" />
+                    <img className="foundy-logo-glow h-9 w-auto object-contain" src="/images/foundy-negro.png" alt="Foundy" />
                     <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[#5d8888]">Join Foundy</span>
                 </div>
                 <div className="relative z-10 mx-auto mt-14 w-full max-w-xl lg:my-auto lg:py-12">
@@ -161,6 +161,7 @@ function Register({ onSwitchToLogin }) {
                         <button className="mt-8 h-12 w-full rounded-lg bg-[#087f78] text-sm font-bold text-white shadow-[0_8px_18px_rgba(8,127,120,0.2)] transition hover:-translate-y-0.5 hover:bg-[#066b67] focus:outline-none focus:ring-4 focus:ring-[#079184]/25 disabled:cursor-not-allowed disabled:opacity-60 disabled:transform-none" type="submit" disabled={loading}>{loading ? 'Creating account...' : 'Create my account'}</button>
                     </form>
                     <p className="mt-6 text-center text-sm text-[#6d7f83]">Already have an account? <button className="font-bold text-[#087f78] hover:underline" type="button" onClick={onSwitchToLogin}>Sign in</button></p>
+                    <button type="button" onClick={onBackToLanding} className="mt-3 block w-full text-center text-xs font-bold text-[#087f78] transition hover:text-[#066b67]">← Back to landing</button>
                 </div>
             </section>
             <section className="relative hidden min-h-screen overflow-hidden bg-[#075d65] lg:block" aria-label="Emprendimiento y comercio local">

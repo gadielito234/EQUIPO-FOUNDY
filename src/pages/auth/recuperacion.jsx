@@ -1,6 +1,6 @@
 ﻿import { useState } from 'react';
 
-function Recuperacion({ onVolver, onContinuar }) {
+function Recuperacion({ onVolver, onContinuar, onBackToLanding }) {
     const [correo, setCorreo] = useState('');
     const [contrasena, setContrasena] = useState('');
     const [confirmarContrasena, setConfirmarContrasena] = useState('');
@@ -57,7 +57,7 @@ function Recuperacion({ onVolver, onContinuar }) {
             <section className="relative flex min-h-screen flex-col overflow-hidden px-6 py-7 sm:px-10 lg:px-[clamp(2.5rem,7vw,7rem)] lg:py-10">
                 <div className="absolute -left-28 -top-28 h-72 w-72 rounded-full bg-[#b9e8dd]/45" aria-hidden="true" />
                 <div className="relative z-10 flex items-center justify-between">
-                    <img className="h-9 w-auto object-contain brightness-0 invert" src="/images/foundy-logo.png" alt="Foundy" />
+                    <img className="foundy-logo-glow h-9 w-auto object-contain" src="/images/foundy-negro.png" alt="Foundy" />
                     <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[#5d8888]">Account access</span>
                 </div>
 
@@ -98,6 +98,7 @@ function Recuperacion({ onVolver, onContinuar }) {
                     </form>
 
                     <button onClick={onVolver} className="mt-7 flex w-full items-center justify-center gap-2 border-0 bg-transparent text-sm font-bold text-[#087f78] transition hover:text-[#066b67]" type="button"><span aria-hidden="true">&larr;</span> Back to sign in</button>
+                    <button onClick={onBackToLanding} className="mt-3 flex w-full items-center justify-center border-0 bg-transparent text-xs font-bold text-[#087f78] transition hover:text-[#066b67]" type="button">Back to landing</button>
                 </div>
             </section>
 

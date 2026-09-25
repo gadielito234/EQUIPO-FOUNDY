@@ -25,13 +25,19 @@ const steps = [
     { number: '03', title: 'Start collaborating', description: 'Take the next step and turn your ideas into results.' },
 ];
 
+const showcase = [
+    { image: '/images/Cafemonteverde.png', label: 'Local commerce', title: 'Ideas rooted in community', description: 'Support businesses with a clear purpose and a path to grow.' },
+    { image: '/images/Artesaníaselfaro.png', label: 'Creative economy', title: 'Talent that deserves momentum', description: 'Connect local makers with people ready to open new doors.' },
+    { image: '/images/tatipupuseria.png', label: 'Entrepreneurship', title: 'Small businesses, bigger possibilities', description: 'Turn a promising idea into a project people can believe in.' },
+];
+
 export default function Landing({ onLogin, onRegister }) {
     return (
         <div className="min-h-screen bg-white text-slate-800">
-            <header className="bg-[#006b70] shadow-sm">
+            <header className="landing-reveal bg-[#006b70] shadow-sm">
                 <nav className="mx-auto flex h-[4.25rem] max-w-7xl items-center justify-between px-6 sm:px-10 lg:px-12" aria-label="Main navigation">
                     <a href="#top" className="flex shrink-0 items-center" aria-label="Foundy home">
-                        <img src="/images/foundy-logo.png" alt="Foundy" className="h-10 w-auto object-contain brightness-0 invert" />
+                        <img src="/images/foundy-negro.png" alt="Foundy" className="foundy-logo-glow h-10 w-auto object-contain" />
                     </a>
                     <div className="hidden items-center gap-7 text-sm font-medium lg:flex">
                         {navigation.map((item, index) => (
@@ -57,14 +63,14 @@ export default function Landing({ onLogin, onRegister }) {
 
             <main id="top">
                 <section id="function" className="relative mx-5 mt-7 h-[30rem] overflow-hidden rounded-[0.35rem] sm:mx-8 sm:h-[34rem] lg:mx-12 lg:h-[calc(100vh-9rem)] lg:min-h-[34rem]" aria-labelledby="landing-title">
-                    <img src="/images/emprendedores-negocios.jpg" alt="Emprendedores y productos locales" className="absolute inset-0 h-full w-full object-cover blur-[2px]" />
-                    <div aria-hidden="true" className="absolute inset-0 bg-[#005f68]/55" />
+                    <img src="/images/emprendedores-negocios.jpg" alt="Emprendedores y productos locales" className="landing-hero-image absolute inset-0 h-full w-full object-cover blur-[2px]" />
+                    <div aria-hidden="true" className="landing-hero-overlay absolute inset-0 bg-[#005f68]/55" />
                     <div className="relative z-10 flex h-full items-center justify-center px-5">
-                        <div className="max-w-[25rem] rounded-lg bg-white px-6 py-6 text-center shadow-xl sm:px-8 sm:py-7">
-                            <h1 id="landing-title" className="text-[1.45rem] font-extrabold leading-[1.03] tracking-tight text-[#006b75] sm:text-[1.7rem]">
+                        <div className="landing-reveal landing-reveal-delay-2 max-w-[25rem] rounded-lg bg-white px-6 py-6 text-center shadow-xl sm:px-8 sm:py-7">
+                            <h1 id="landing-title" className="landing-reveal landing-reveal-delay-3 text-[1.45rem] font-extrabold leading-[1.03] tracking-tight text-[#006b75] sm:text-[1.7rem]">
                                 Investments that foster entrepreneurship in <span className="text-[#21a99b]">El Salvador</span>
                             </h1>
-                            <p className="mt-4 text-sm leading-6 text-slate-600">
+                            <p className="landing-reveal landing-reveal-delay-4 mt-4 text-sm leading-6 text-slate-600">
                                 A platform that turns connections into opportunities.
                             </p>
                         </div>
@@ -72,7 +78,7 @@ export default function Landing({ onLogin, onRegister }) {
                 </section>
 
                 <section className="mx-auto max-w-7xl px-6 py-20 sm:px-10 lg:px-12" aria-labelledby="features-title">
-                    <div className="max-w-2xl">
+                    <div className="landing-reveal max-w-2xl">
                         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#21a99b]">What can you do?</p>
                         <h2 id="features-title" className="mt-3 text-3xl font-bold tracking-tight text-[#006b70] sm:text-4xl">
                             Everything you need to get started
@@ -83,7 +89,7 @@ export default function Landing({ onLogin, onRegister }) {
                     </div>
                     <div className="mt-10 grid gap-5 md:grid-cols-3">
                         {features.map((feature, index) => (
-                            <article key={feature.title} className="rounded-2xl border border-teal-100 bg-teal-50/50 p-6 transition hover:-translate-y-1 hover:shadow-lg">
+                            <article key={feature.title} className="landing-card landing-reveal landing-reveal-delay-1 rounded-2xl border border-teal-100 bg-teal-50/50 p-6">
                                 <span className="text-3xl font-bold text-[#21a99b]">0{index + 1}</span>
                                 <h3 className="mt-8 text-lg font-bold text-[#006b70]">{feature.title}</h3>
                                 <p className="mt-3 text-sm leading-6 text-slate-600">{feature.description}</p>
@@ -94,7 +100,7 @@ export default function Landing({ onLogin, onRegister }) {
 
                 <section id="about" className="bg-slate-50" aria-labelledby="about-title">
                     <div className="mx-auto grid max-w-7xl gap-12 px-6 py-20 sm:px-10 lg:grid-cols-2 lg:items-center lg:px-12">
-                        <div>
+                        <div className="landing-reveal">
                             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#21a99b]">About us</p>
                             <h2 id="about-title" className="mt-3 text-3xl font-bold tracking-tight text-[#006b70] sm:text-4xl">
                                 A community that drives new possibilities
@@ -106,9 +112,32 @@ export default function Landing({ onLogin, onRegister }) {
                                 Join Foundy
                             </button>
                         </div>
-                        <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+                        <div className="landing-card landing-reveal landing-reveal-delay-2 rounded-xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
                             <p className="text-sm leading-6 text-slate-500">Discover opportunities and meaningful connections in one growing community.</p>
                         </div>
+                    </div>
+                </section>
+
+                <section className="mx-auto max-w-7xl px-6 py-20 sm:px-10 lg:px-12" aria-labelledby="showcase-title">
+                    <div className="landing-reveal flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+                        <div className="max-w-2xl">
+                            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#21a99b]">Made possible together</p>
+                            <h2 id="showcase-title" className="mt-3 text-3xl font-bold tracking-tight text-[#006b70] sm:text-4xl">Real ideas. Real people. Real progress.</h2>
+                            <p className="mt-4 text-base leading-7 text-slate-600">Explore the kind of local businesses and ambitious projects that Foundy helps move forward.</p>
+                        </div>
+                        <button type="button" onClick={onRegister} className="w-fit rounded-md border border-[#006b70] px-5 py-3 text-sm font-semibold text-[#006b70] transition hover:bg-[#006b70] hover:text-white">Join the community</button>
+                    </div>
+                    <div className="mt-10 grid gap-5 md:grid-cols-3">
+                        {showcase.map((item, index) => (
+                            <article key={item.title} className={`landing-card landing-reveal landing-reveal-delay-${index + 1} overflow-hidden rounded-2xl border border-slate-200 bg-white`}>
+                                <img src={item.image} alt={item.title} className="h-52 w-full object-cover transition duration-500 hover:scale-105" />
+                                <div className="p-5">
+                                    <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#21a99b]">{item.label}</p>
+                                    <h3 className="mt-2 text-lg font-bold text-[#006b70]">{item.title}</h3>
+                                    <p className="mt-2 text-sm leading-6 text-slate-600">{item.description}</p>
+                                </div>
+                            </article>
+                        ))}
                     </div>
                 </section>
 
@@ -118,8 +147,8 @@ export default function Landing({ onLogin, onRegister }) {
                         Get started in three steps
                     </h2>
                     <div className="mt-10 grid gap-8 md:grid-cols-3">
-                        {steps.map((step) => (
-                            <div key={step.number} className="border-t-2 border-[#21a99b] pt-5">
+                        {steps.map((step, index) => (
+                            <div key={step.number} className={`landing-reveal landing-reveal-delay-${Math.min(index + 1, 4)} border-t-2 border-[#21a99b] pt-5`}>
                                 <span className="text-sm font-bold text-[#21a99b]">{step.number}</span>
                                 <h3 className="mt-4 text-lg font-bold text-slate-800">{step.title}</h3>
                                 <p className="mt-2 text-sm leading-6 text-slate-600">{step.description}</p>

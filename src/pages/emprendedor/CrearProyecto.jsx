@@ -15,6 +15,7 @@ function CrearProyecto({ usuarioData, nombreUsuario = "Entrepreneur", onCerrarSe
   const [imagenes, setImagenes] = useState([]);
   const [alerta, setAlerta] = useState(null);
   const [categorias, setCategorias] = useState([]);
+  const [guardando, setGuardando] = useState(false);
   const inputImagenes = useRef(null);
 
   useEffect(() => {
@@ -56,6 +57,7 @@ function CrearProyecto({ usuarioData, nombreUsuario = "Entrepreneur", onCerrarSe
 
   const guardarProyecto = async (event, publicar = false) => {
     event.preventDefault();
+    if (guardando) return;
     if (!proyecto.nombre.trim() || !proyecto.descripcion.trim()) {
       setAlerta({
         tipo: "warning",
@@ -63,33 +65,44 @@ function CrearProyecto({ usuarioData, nombreUsuario = "Entrepreneur", onCerrarSe
       });
       return;
     }
-    const fechaInicio = new Date();
-    const meses = Number.parseInt(proyecto.retorno, 10) || 1;
-    const fechaFin = new Date(fechaInicio);
-    fechaFin.setMonth(fechaFin.getMonth() + meses);
-    const { error } = await supabase.from("proyecto").insert([{
-      nombre: proyecto.nombre.trim(),
-      descripcion: proyecto.descripcion.trim(),
-      monto_objetivo: proyecto.monto ? Number(proyecto.monto) : 0,
-      monto_recaudado: 0,
-      inversion: 0,
-      estado: publicar ? "publicado" : "borrador",
-      fecha_inicio: fechaInicio.toISOString().slice(0, 10),
-      fecha_fin: fechaFin.toISOString().slice(0, 10),
-      dui: usuarioData?.dui,
-      id_categoria: proyecto.id_categoria || null,
-    }]);
-    if (error) {
+    setGuardando(true);
+    try {
+      let imageUrl = null;
+      const firstImage = imagenes[0];
+      if (firstImage) {
+        const safeName = firstImage.name.replace(/[^a-zA-Z0-9._-]/g, '-');
+        const path = `${usuarioData?.dui || 'anonymous'}/${Date.now()}-${safeName}`;
+        const { error: uploadError } = await supabase.storage.from('project-images').upload(path, firstImage);
+        if (uploadError) throw uploadError;
+        imageUrl = supabase.storage.from('project-images').getPublicUrl(path).data.publicUrl;
+      }
+
+      const fechaInicio = new Date();
+      const meses = Number.parseInt(proyecto.retorno, 10) || 1;
+      const fechaFin = new Date(fechaInicio);
+      fechaFin.setMonth(fechaFin.getMonth() + meses);
+      const { error } = await supabase.from("proyecto").insert([{
+        nombre: proyecto.nombre.trim(),
+        descripcion: proyecto.descripcion.trim(),
+        monto_objetivo: proyecto.monto ? Number(proyecto.monto) : 0,
+        monto_recaudado: 0,
+        inversion: 0,
+        estado: publicar ? "publicado" : "borrador",
+        fecha_inicio: fechaInicio.toISOString().slice(0, 10),
+        fecha_fin: fechaFin.toISOString().slice(0, 10),
+        dui: usuarioData?.dui,
+        id_categoria: proyecto.id_categoria || null,
+        imagen_url: imageUrl,
+      }]);
+      if (error) throw error;
+      if (publicar) window.dispatchEvent(new Event("foundy-project-published"));
+      setAlerta({ tipo: "success", texto: publicar ? "Project published successfully." : "Project saved as a draft." });
+      limpiarFormulario();
+    } catch (error) {
       setAlerta({ tipo: "warning", texto: `Could not save project: ${error.message}` });
-      return;
+    } finally {
+      setGuardando(false);
     }
-    if (publicar) window.dispatchEvent(new Event("foundy-project-published"));
-    setAlerta({
-      tipo: "success",
-      texto: publicar
-        ? "Project published successfully."
-        : "Project saved as a draft.",
-    });
   };
 
   return (

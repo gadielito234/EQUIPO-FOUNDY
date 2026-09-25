@@ -70,6 +70,22 @@ export default function PerfilConfiguracion({
     });
   }, [usuarioData]);
 
+  useEffect(() => {
+    if (!usuarioData?.dui || isProfileMode) return undefined;
+    let active = true;
+    supabase
+      .from('preferencias_usuario')
+      .select('alertas_transacciones, sugerencias_marketing')
+      .eq('dui', usuarioData.dui)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!active || !data) return;
+        setTransactionAlerts(data.alertas_transacciones);
+        setMarketingInsights(data.sugerencias_marketing);
+      });
+    return () => { active = false; };
+  }, [isProfileMode, usuarioData?.dui]);
+
   const handleDeactivate = () => {
     setConfirmDeactivateOpen(true);
   };
@@ -82,6 +98,17 @@ export default function PerfilConfiguracion({
 
   const openPolicies = () => {
     onOpenPolicies?.();
+  };
+
+  const savePreferences = async (values) => {
+    if (!usuarioData?.dui) return;
+    const nextValues = {
+      dui: usuarioData.dui,
+      alertas_transacciones: values.alertas_transacciones,
+      sugerencias_marketing: values.sugerencias_marketing,
+    };
+    const { error } = await supabase.from('preferencias_usuario').upsert(nextValues, { onConflict: 'dui' });
+    if (error) setNotice(`No se pudo guardar la preferencia: ${error.message}`);
   };
 
   const updateField = (field, value) => {
@@ -345,6 +372,7 @@ export default function PerfilConfiguracion({
                 onClick={() => {
                   setTransactionAlerts(true);
                   setMarketingInsights(true);
+                  savePreferences({ alertas_transacciones: true, sugerencias_marketing: true });
                 }}
                 className="rounded-full border border-[#d7e4e2] bg-[#f3f7f6] px-4 py-2 text-sm font-semibold text-[#476164] transition hover:bg-[#edf4f2]"
               >
@@ -358,7 +386,7 @@ export default function PerfilConfiguracion({
                   <p className="text-base font-bold text-[#1d3f42]">Transaction Alerts</p>
                   <p className="mt-1 text-sm text-[#5d7277]">Get notified when payments or transfers are made.</p>
                 </div>
-                <Switch enabled={transactionAlerts} onChange={setTransactionAlerts} />
+                <Switch enabled={transactionAlerts} onChange={(value) => { setTransactionAlerts(value); savePreferences({ alertas_transacciones: value, sugerencias_marketing: marketingInsights }); }} />
               </div>
 
               <div className="flex items-center justify-between gap-4 rounded-[18px] border border-[#dce7e4] bg-[#f8fbfa] px-4 py-3">
@@ -366,7 +394,7 @@ export default function PerfilConfiguracion({
                   <p className="text-base font-bold text-[#1d3f42]">Marketing Insights</p>
                   <p className="mt-1 text-sm text-[#5d7277]">Receive helpful campaign and growth suggestions.</p>
                 </div>
-                <Switch enabled={marketingInsights} onChange={setMarketingInsights} />
+                <Switch enabled={marketingInsights} onChange={(value) => { setMarketingInsights(value); savePreferences({ alertas_transacciones: transactionAlerts, sugerencias_marketing: value }); }} />
               </div>
             </div>
           </section>

@@ -138,7 +138,7 @@ export default function DashboardLayout({
               <img
                 src="/images/foundy-negro.png"
                 alt="Foundy"
-                className="h-8 w-auto object-contain"
+                className="foundy-logo-glow h-8 w-auto object-contain"
               />
             </button>
           </div>
@@ -305,7 +305,7 @@ export default function DashboardLayout({
             </div>
           </header>
 
-          <div className="min-w-0 px-4 py-4 sm:px-6 lg:px-8">{children}</div>
+          <div className="app-page-content min-w-0 px-4 py-4 sm:px-6 lg:px-8">{children}</div>
 
           </main>
         </div>

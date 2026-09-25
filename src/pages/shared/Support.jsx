@@ -1,5 +1,6 @@
 ﻿import { useState } from 'react';
 import { BookOpen, CheckCircle2, ChevronDown, Mail, MessageCircleQuestion, Send } from 'lucide-react';
+import { supabase } from '../../services/supabase.js';
 
 const faqs = [
   {
@@ -20,13 +21,24 @@ const faqs = [
   },
 ];
 
-export default function Support({ onOpenChat }) {
+export default function Support({ onOpenChat, usuarioData }) {
   const [openFaq, setOpenFaq] = useState(0);
   const [form, setForm] = useState({ subject: '', message: '' });
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    setError('');
+    const { error: insertError } = await supabase.from('support_requests').insert({
+      dui: usuarioData?.dui,
+      subject: form.subject.trim(),
+      message: form.message.trim(),
+    });
+    if (insertError) {
+      setError(`Your request could not be sent: ${insertError.message}`);
+      return;
+    }
     setSent(true);
     setForm({ subject: '', message: '' });
   };
@@ -96,6 +108,7 @@ export default function Support({ onOpenChat }) {
               </button>
             </form>
 
+            {error && <p role="alert" className="mt-4 rounded-xl bg-red-50 px-3 py-2.5 text-xs font-semibold text-red-700">{error}</p>}
             {sent && <p role="status" className="mt-4 flex items-center gap-2 rounded-xl bg-[#eaf8f1] px-3 py-2.5 text-xs font-semibold text-[#1b7f61]"><CheckCircle2 size={15} /> Your request has been received.</p>}
 
             <div className="mt-6 border-t border-[#e5e9e8] pt-5">

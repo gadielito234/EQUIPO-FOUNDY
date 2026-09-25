@@ -12,8 +12,13 @@ async function readPublishedProjects() {
     category: project.id_categoria || 'Uncategorized',
     objective: project.descripcion || 'No description available.',
     image: project.imagen_url || '',
+    goalAmount: Number(project.monto_objetivo || 0),
+    raisedAmount: Number(project.monto_recaudado || 0),
     goal: project.monto_objetivo ? `$${Number(project.monto_objetivo).toLocaleString('en-US')}` : 'Not available',
+    raised: `$${Number(project.monto_recaudado || 0).toLocaleString('en-US')}`,
     term: project.fecha_fin && project.fecha_inicio ? `${project.fecha_inicio} - ${project.fecha_fin}` : 'Not available',
+    startDate: project.fecha_inicio || 'Not available',
+    endDate: project.fecha_fin || 'Not available',
   }));
 }
 
@@ -54,8 +59,13 @@ function DashboardInversionista({ usuarioData }) {
       showNotice('Enter a valid amount to invest.');
       return;
     }
+    const remainingAmount = Math.max(selectedOpportunity.goalAmount - selectedOpportunity.raisedAmount, 0);
+    if (remainingAmount > 0 && amount > remainingAmount) {
+      showNotice(`The maximum available amount is $${remainingAmount.toLocaleString('en-US')}.`);
+      return;
+    }
     setInvirtiendo(true);
-    const goal = Number.parseFloat(String(selectedOpportunity.goal).replace(/[^0-9.]/g, '')) || 0;
+    const goal = selectedOpportunity.goalAmount;
     const participation = goal > 0 ? (amount / goal) * 100 : 0;
     const { data: investment, error: investmentError } = await supabase.from('inversion').insert({
       fecha: new Date().toISOString().slice(0, 10),
@@ -137,7 +147,7 @@ function DashboardInversionista({ usuarioData }) {
                 <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
                   {[['Goal', opportunities[0].goal], ['Category', opportunities[0].category], ['Term', opportunities[0].term]].map(([label, value]) => <div key={label} className="rounded-lg bg-[#1b8c8d]/30 p-2 text-center"><p className="text-[9px] uppercase text-[#d4efee]">{label}</p><p className="mt-1 text-sm font-bold">{value}</p></div>)}
                 </div>
-                <button type="button" onClick={() => setSelectedOpportunity(opportunities[0])} className="mt-5 rounded-md bg-[#dfece4] px-4 py-2 text-[10px] font-bold uppercase text-[#0d5d61] hover:bg-white">View details</button>
+                <button type="button" onClick={() => setSelectedOpportunity(opportunities[0])} className="mt-5 rounded-md bg-[#dfece4] px-4 py-2 text-[10px] font-bold uppercase text-[#0d5d61] hover:bg-white">View details and invest</button>
               </div>
             </div>
           </section>
@@ -156,7 +166,38 @@ function DashboardInversionista({ usuarioData }) {
       </div>
 
       {notice && <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-lg bg-[#173f43] px-4 py-3 text-xs font-semibold text-white shadow-lg">{notice}</div>}
-      {selectedOpportunity && <div className="fixed inset-0 z-50 grid place-items-center bg-[#173f43]/40 p-4" role="dialog" aria-modal="true"><div className="w-full max-w-md rounded-xl bg-[#f8f4ef] p-5 shadow-2xl"><div className="flex items-start justify-between"><div><p className="text-[10px] font-bold uppercase tracking-wider text-[#1b7f61]">Investment opportunity</p><h2 className="mt-1 text-lg font-semibold text-[#1d3f42]">{selectedOpportunity.title}</h2></div><button type="button" onClick={() => setSelectedOpportunity(null)} className="text-[#526164]" aria-label="Close"><X size={18} /></button></div><p className="mt-4 text-sm leading-6 text-[#5d6d6d]">{selectedOpportunity.objective}</p><label className="mt-4 block text-xs font-semibold text-[#526164]">Investment amount<input type="number" min="1" value={montoInversion} onChange={(event) => setMontoInversion(event.target.value)} className="mt-2 w-full rounded-md border border-[#ccd6d3] bg-white px-3 py-2 text-sm outline-none focus:border-[#006b73]" placeholder="500" /></label><div className="mt-5 flex gap-2"><button type="button" onClick={confirmInvestment} disabled={invirtiendo} className="flex-1 rounded-md bg-[#006b73] px-4 py-2 text-xs font-bold uppercase text-white hover:bg-[#005159] disabled:opacity-60">{invirtiendo ? 'Saving...' : 'Confirm investment'}</button><button type="button" onClick={() => { setSelectedOpportunity(null); setMontoInversion(''); }} className="rounded-md border border-[#ccd6d3] px-4 py-2 text-xs font-semibold text-[#526164]">Close</button></div></div></div>}
+      {selectedOpportunity && (() => {
+        const progress = selectedOpportunity.goalAmount > 0
+          ? Math.min((selectedOpportunity.raisedAmount / selectedOpportunity.goalAmount) * 100, 100)
+          : 0;
+        const amount = Number(montoInversion || 0);
+        const available = Math.max(selectedOpportunity.goalAmount - selectedOpportunity.raisedAmount, 0);
+        return (
+          <div className="fixed inset-0 z-50 overflow-y-auto bg-[#173f43]/55 p-4 sm:p-8" role="dialog" aria-modal="true" aria-labelledby="investment-detail-title">
+            <div className="mx-auto my-6 w-full max-w-2xl overflow-hidden rounded-2xl bg-[#f8f4ef] shadow-2xl">
+              <div className="relative h-48 bg-[#dcece8]">
+                {selectedOpportunity.image ? <img src={selectedOpportunity.image} alt="" className="h-full w-full object-cover" /> : <div className="grid h-full place-items-center text-sm text-[#5d6d6d]">No project image</div>}
+                <button type="button" onClick={() => { setSelectedOpportunity(null); setMontoInversion(''); }} className="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full bg-white/90 text-[#526164] shadow" aria-label="Close"><X size={18} /></button>
+              </div>
+              <div className="p-5 sm:p-7">
+                <p className="text-[10px] font-bold uppercase tracking-[.16em] text-[#1b7f61]">Project details</p>
+                <h2 id="investment-detail-title" className="mt-2 text-2xl font-bold text-[#1d3f42]">{selectedOpportunity.title}</h2>
+                <div className="mt-4 grid gap-3 sm:grid-cols-4">
+                  {[
+                    ['Category', selectedOpportunity.category],
+                    ['Goal', selectedOpportunity.goal],
+                    ['Raised', selectedOpportunity.raised],
+                    ['Available', `$${available.toLocaleString('en-US')}`],
+                  ].map(([label, value]) => <div key={label} className="rounded-lg bg-white p-3"><p className="text-[10px] uppercase tracking-wide text-[#899496]">{label}</p><p className="mt-1 text-sm font-bold text-[#1d3f42]">{value}</p></div>)}
+                </div>
+                <div className="mt-5"><div className="flex justify-between text-[10px] font-semibold text-[#687577]"><span>Funding progress</span><span>{progress.toFixed(0)}%</span></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-[#dce6e2]"><div className="h-full rounded-full bg-[#168b68]" style={{ width: `${progress}%` }} /></div></div>
+                <div className="mt-5 grid gap-4 sm:grid-cols-2"><div><p className="text-[10px] uppercase tracking-wide text-[#899496]">Project period</p><p className="mt-1 text-sm font-semibold text-[#1d3f42]">{selectedOpportunity.startDate} to {selectedOpportunity.endDate}</p></div><div><p className="text-[10px] uppercase tracking-wide text-[#899496]">Description</p><p className="mt-1 text-sm leading-5 text-[#5d6d6d]">{selectedOpportunity.objective}</p></div></div>
+                <div className="mt-6 border-t border-[#e0d9cf] pt-5"><p className="text-sm font-bold text-[#1d3f42]">Decide your investment</p><p className="mt-1 text-xs text-[#687577]">The investment will be recorded as pending payment.</p><label className="mt-4 block text-xs font-semibold text-[#526164]">Amount to invest<input type="number" min="1" max={available || undefined} value={montoInversion} onChange={(event) => setMontoInversion(event.target.value)} className="mt-2 w-full rounded-md border border-[#ccd6d3] bg-white px-3 py-2.5 text-sm outline-none focus:border-[#006b73]" placeholder="500" /></label>{amount > 0 && <p className="mt-2 text-xs text-[#1b7f61]">This represents {selectedOpportunity.goalAmount > 0 ? ((amount / selectedOpportunity.goalAmount) * 100).toFixed(2) : '0.00'}% of the project goal.</p>}<div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end"><button type="button" onClick={() => { setSelectedOpportunity(null); setMontoInversion(''); }} className="rounded-md border border-[#ccd6d3] px-4 py-2.5 text-xs font-semibold text-[#526164]">Cancel</button><button type="button" onClick={confirmInvestment} disabled={invirtiendo} className="rounded-md bg-[#006b73] px-5 py-2.5 text-xs font-bold uppercase text-white hover:bg-[#005159] disabled:opacity-60">{invirtiendo ? 'Saving...' : 'Confirm investment'}</button></div></div>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </main>
   );
 }

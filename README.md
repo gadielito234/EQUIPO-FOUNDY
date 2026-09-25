@@ -9,7 +9,7 @@ npm install
 npm run dev
 ```
 
-Configura las variables de Supabase en `.env`:
+Configura las variables de Supabase en `.env` (puedes partir de `.env.example`):
 
 ```env
 VITE_SUPABASE_URL=...
@@ -18,7 +18,11 @@ VITE_SUPABASE_PUBLISHABLE_KEY=...
 
 ## Base de datos
 
-El archivo [supabase/persistence.sql](supabase/persistence.sql) contiene cambios adicionales para inversiones, pagos y preferencias. No se ejecuta automáticamente: debes copiarlo y ejecutarlo manualmente en el SQL Editor de Supabase.
+Ejecuta primero tu esquema base en el SQL Editor de Supabase y después ejecuta [supabase/persistence.sql](supabase/persistence.sql). Ese segundo script crea los IDs automáticos de proyectos, corrige las relaciones de inversiones y pagos, agrega preferencias, soporte, notificaciones, chat, categorías iniciales y el bucket de imágenes.
+
+La aplicación usa actualmente la tabla `Usuario` como autenticación heredada. Para producción debes migrar el login a Supabase Auth y reemplazar las políticas públicas del bucket por políticas basadas en `auth.uid()`; la clave publishable no debe considerarse un mecanismo de seguridad.
+
+Después de ejecutar ambos scripts, inicia con `npm run dev` y registra un usuario nuevo para comprobar registro, login, perfil, proyecto, inversión, notificaciones, chat y soporte.
 
 ## Organización
 

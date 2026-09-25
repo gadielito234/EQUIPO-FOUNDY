@@ -1,10 +1,9 @@
-﻿import { useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { supabase } from '../../services/supabase.js';
 import Recuperacion from './recuperacion.jsx';
 import Registro from './registro.jsx';
 import Inicio from '../emprendedor/inicio.jsx';
 import Landing from './landing.jsx';
-import HomeInversionista from '../inversionista/HomeInversionista.jsx';
 import DashboardInversionista from '../inversionista/DashboardInversionista.jsx';
 import Investments from '../inversionista/investments.jsx';
 import FoundyCard from '../inversionista/FoundyCard.jsx';
@@ -29,6 +28,23 @@ function App() {
   const [contrasena, setContrasena] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+
+  useEffect(() => {
+    const storedDui = window.localStorage.getItem('foundy-user-dui');
+    if (!storedDui) return undefined;
+
+    let active = true;
+    supabase
+      .from('Usuario')
+      .select('*')
+      .eq('dui', Number(storedDui))
+      .maybeSingle()
+      .then(({ data }) => {
+        if (active && data) setUsuarioLogueado(data);
+      });
+
+    return () => { active = false; };
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -61,6 +77,7 @@ function App() {
       }
 
       setUsuarioLogueado(data);
+      window.localStorage.setItem('foundy-user-dui', String(data.dui));
       setPantallaLogueado('home');
     } catch {
       setErrorMsg('An error occurred while signing in.');
@@ -71,6 +88,7 @@ function App() {
 
   const handleCerrarSesion = () => {
     setUsuarioLogueado(null);
+    window.localStorage.removeItem('foundy-user-dui');
     setPantallaLogueado('home');
     setUsuario('');
     setContrasena('');
@@ -121,7 +139,7 @@ function App() {
 
     if (pantallaLogueado === 'support') {
       return renderWithDashboardLayout(
-        <Support onBack={irAHome} onOpenChat={() => setPantallaLogueado('chat')} />,
+        <Support usuarioData={usuarioLogueado} onBack={irAHome} onOpenChat={() => setPantallaLogueado('chat')} />,
         { activeNav: 'support', showSearch: true }
       );
     }
@@ -232,10 +250,8 @@ function App() {
 
     if ((pantallaLogueado === 'home' || pantallaLogueado === 'dashboard') && esInversionista) {
       return renderWithDashboardLayout(
-        <HomeInversionista
+        <DashboardInversionista
           usuarioData={usuarioLogueado}
-          onOpenInvestments={() => setPantallaLogueado('investments')}
-          onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
         />,
         { activeNav: 'dashboard', showSearch: true }
       );
@@ -276,13 +292,14 @@ function App() {
   }
 
   if (esRegistro) {
-    return <Registro onSwitchToLogin={() => setEsRegistro(false)} />;
+    return <Registro onSwitchToLogin={() => setEsRegistro(false)} onBackToLanding={() => { setEsRegistro(false); setMostrarLanding(true); }} />;
   }
 
   if (esRecuperacion) {
     return (
       <Recuperacion
         onVolver={() => setEsRecuperacion(false)}
+        onBackToLanding={() => { setEsRecuperacion(false); setMostrarLanding(true); }}
         onContinuar={async (correo, nuevaContrasena) => {
           const { data: usuarioEncontrado, error: consultaError } = await supabase
             .from('Usuario')
@@ -311,13 +328,14 @@ function App() {
       <section className="relative flex min-h-screen flex-col overflow-hidden px-6 py-7 sm:px-10 lg:px-[clamp(2.5rem,7vw,7rem)] lg:py-10">
         <div className="absolute -right-24 -top-24 h-64 w-64 rounded-full bg-[#b9e8dd]/45" aria-hidden="true" />
         <div className="relative z-10 flex items-center justify-between">
-          <img className="h-9 w-auto object-contain brightness-0 invert" src="/images/foundy-logo.png" alt="Foundy" />
+          <img className="foundy-logo-glow h-9 w-auto object-contain" src="/images/foundy-negro.png" alt="Foundy" />
           <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[#5d8888]">Welcome</span>
         </div>
         <div className="relative z-10 mx-auto my-auto w-full max-w-md py-12">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#079184]">Your opportunity space</p>
           <h1 className="mt-3 text-4xl font-bold leading-[1.05] tracking-tight text-[#113b47] sm:text-5xl">Reconnect with your ideas.</h1>
           <p className="mt-5 text-sm leading-6 text-[#5d7277]">Sign in to keep building new opportunities.</p>
+          <button type="button" onClick={() => { setMostrarLanding(true); setEsRecuperacion(false); }} className="mt-4 text-xs font-bold text-[#087f78] transition hover:text-[#066b67]">← Back to landing</button>
           {errorMsg && <div className="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">{errorMsg}</div>}
           <form className="mt-8" onSubmit={handleLogin}>
             <label className="block text-xs font-semibold text-[#31515a]">
