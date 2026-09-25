@@ -13,9 +13,11 @@ const initialProject = {
 function CrearProyecto({ usuarioData, nombreUsuario = "Entrepreneur", onCerrarSesion, onBackHome }) {
   const [proyecto, setProyecto] = useState(initialProject);
   const [imagenes, setImagenes] = useState([]);
+  const [contrato, setContrato] = useState(null);
   const [alerta, setAlerta] = useState(null);
   const [categorias, setCategorias] = useState([]);
   const inputImagenes = useRef(null);
+  const inputContrato = useRef(null);
 
   useEffect(() => {
     const cargarCategorias = async () => {
@@ -48,9 +50,29 @@ function CrearProyecto({ usuarioData, nombreUsuario = "Entrepreneur", onCerrarSe
     }
   };
 
+  const seleccionarContrato = (event) => {
+    const archivo = event.target.files?.[0];
+    if (!archivo) return;
+
+    const tiposPermitidos = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
+    if (!tiposPermitidos.includes(archivo.type) || archivo.size > 10 * 1024 * 1024) {
+      setAlerta({ tipo: "warning", texto: "Select a PDF, DOC, or DOCX file up to 10 MB." });
+      event.target.value = "";
+      return;
+    }
+
+    setContrato(archivo);
+    setAlerta({ tipo: "success", texto: "Business contract selected." });
+  };
+
   const limpiarFormulario = () => {
     setProyecto(initialProject);
     setImagenes([]);
+    setContrato(null);
     setAlerta(null);
   };
 
@@ -67,6 +89,27 @@ function CrearProyecto({ usuarioData, nombreUsuario = "Entrepreneur", onCerrarSe
     const meses = Number.parseInt(proyecto.retorno, 10) || 1;
     const fechaFin = new Date(fechaInicio);
     fechaFin.setMonth(fechaFin.getMonth() + meses);
+
+    let contratoUrl = null;
+    if (contrato) {
+      if (!supabase?.storage?.from) {
+        setAlerta({ tipo: "warning", texto: "Configure Supabase Storage before saving the contract." });
+        return;
+      }
+
+      const extension = contrato.name.split(".").pop() || "pdf";
+      const fileName = `${usuarioData?.dui || "entrepreneur"}/contract-${Date.now()}.${extension}`;
+      const { error: uploadError } = await supabase.storage.from("project-documents").upload(fileName, contrato, {
+        upsert: true,
+      });
+      if (uploadError) {
+        setAlerta({ tipo: "warning", texto: `Could not upload contract: ${uploadError.message}` });
+        return;
+      }
+      const { data } = supabase.storage.from("project-documents").getPublicUrl(fileName);
+      contratoUrl = data?.publicUrl || null;
+    }
+
     const { error } = await supabase.from("proyecto").insert([{
       nombre: proyecto.nombre.trim(),
       descripcion: proyecto.descripcion.trim(),
@@ -78,6 +121,7 @@ function CrearProyecto({ usuarioData, nombreUsuario = "Entrepreneur", onCerrarSe
       fecha_fin: fechaFin.toISOString().slice(0, 10),
       dui: usuarioData?.dui,
       id_categoria: proyecto.id_categoria || null,
+      contrato_url: contratoUrl,
     }]);
     if (error) {
       setAlerta({ tipo: "warning", texto: `Could not save project: ${error.message}` });
@@ -228,6 +272,33 @@ function CrearProyecto({ usuarioData, nombreUsuario = "Entrepreneur", onCerrarSe
                       className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-normal normal-case outline-none focus:border-[#168b88] focus:bg-white focus:ring-4 focus:ring-[#168b88]/10"
                     />
                   </label>
+                </div>
+                <div className="mt-6">
+                  <p className="mb-2 text-xs font-bold uppercase tracking-wide text-[#424a4c]">
+                    Business contract
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => inputContrato.current?.click()}
+                    className="flex min-h-24 w-full flex-col items-center justify-center rounded-xl border border-dashed border-[#006b73]/45 bg-[#006b73]/3 px-4 py-4 text-center transition hover:border-[#00634b] hover:bg-[#00634b]/4"
+                  >
+                    <span className="grid h-8 w-8 place-items-center rounded-full border border-[#006b73] text-lg text-[#006b73]">
+                      +
+                    </span>
+                    <span className="mt-1 text-xs font-semibold text-[#00634b]">
+                      {contrato ? contrato.name : "Upload your contract"}
+                    </span>
+                    <span className="mt-1 text-[11px] text-[#424a4c]/60">
+                      PDF, DOC, or DOCX up to 10 MB
+                    </span>
+                  </button>
+                  <input
+                    ref={inputContrato}
+                    onChange={seleccionarContrato}
+                    type="file"
+                    accept="application/pdf,.doc,.docx"
+                    className="hidden"
+                  />
                 </div>
                 <div className="mt-7">
                   <p className="mb-2 text-xs font-bold uppercase tracking-wide text-[#424a4c]">

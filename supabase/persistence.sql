@@ -22,6 +22,9 @@ alter table public."Usuario"
 alter table public.proyecto
   add column if not exists imagen_url text;
 
+alter table public.proyecto
+  add column if not exists contrato_url text;
+
 alter table public.inversion
   add column if not exists id_inversionista numeric;
 
@@ -108,6 +111,21 @@ on conflict (id) do update set public = excluded.public;
 insert into storage.buckets (id, name, public)
 values ('profile-images', 'profile-images', true)
 on conflict (id) do update set public = excluded.public;
+
+insert into storage.buckets (id, name, public)
+values ('project-documents', 'project-documents', true)
+on conflict (id) do update set public = excluded.public;
+
+do $$
+begin
+  if not exists (select 1 from pg_policies where schemaname = 'storage' and tablename = 'objects' and policyname = 'Public can manage project documents') then
+    create policy "Public can manage project documents"
+      on storage.objects for all
+      to public
+      using (bucket_id = 'project-documents')
+      with check (bucket_id = 'project-documents');
+  end if;
+end $$;
 
 do $$
 begin
