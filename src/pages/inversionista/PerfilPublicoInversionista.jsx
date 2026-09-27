@@ -4,7 +4,6 @@ import { supabase } from '../../services/supabase.js';
 
 export default function PerfilPublicoInversionista({
   usuarioData,
-  onOpenProfileSettings,
   onSavePublicProfile,
 }) {
   const [editorOpen, setEditorOpen] = useState(false);
@@ -71,7 +70,7 @@ export default function PerfilPublicoInversionista({
         setAvatar(URL.createObjectURL(file));
       }
     } catch (error) {
-      setNotice(error.message || 'No se pudo subir la foto de perfil.');
+      setNotice(error.message || 'The profile photo could not be uploaded.');
     } finally {
       setPhotoUploading(false);
     }

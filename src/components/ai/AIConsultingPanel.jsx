@@ -4,15 +4,15 @@ import { askGemini } from '../../services/aiService';
 const quickPrompts = [
   {
     label: 'Generate name',
-    prompt: 'Sugiere tres nombres memorables para este proyecto y explica brevemente la mejor opcion.',
+    prompt: 'Suggest three memorable names for this project and briefly explain the best option.',
   },
   {
     label: 'Improve description',
-    prompt: 'Mejora la descripcion de este proyecto para que sea clara, convincente y util para potenciales inversionistas.',
+    prompt: 'Improve this project description so it is clear, compelling, and useful to potential investors.',
   },
   {
     label: 'Calculate investment',
-    prompt: 'Analiza el monto solicitado y el plazo de retorno. Indica que informacion financiera adicional deberia considerar.',
+    prompt: 'Analyze the requested amount and expected return period. Identify additional financial information I should consider.',
   },
 ];
 
@@ -26,15 +26,15 @@ function formatAssistantReply(response) {
     try {
       const parsedReply = JSON.parse(withoutCodeFence.slice(objectStart, objectEnd + 1));
       if (parsedReply.nombre || parsedReply.descripcion || parsedReply.monto || parsedReply.retorno) {
-        const nombre = parsedReply.nombre ? `Una buena opción sería ${parsedReply.nombre}.` : '';
-        const descripcion = parsedReply.descripcion ? `Se trata de ${parsedReply.descripcion.replace(/[()]/g, '')}` : '';
-        const monto = parsedReply.monto ? `La inversión puede comenzar desde ${parsedReply.monto.replace(/[()]/g, '')}.` : '';
-        const retorno = parsedReply.retorno ? `El retorno es ${parsedReply.retorno.replace(/[()]/g, '')}.` : '';
+        const nombre = parsedReply.nombre ? `One good option would be ${parsedReply.nombre}.` : '';
+        const descripcion = parsedReply.descripcion ? `It is ${parsedReply.descripcion.replace(/[()]/g, '')}` : '';
+        const monto = parsedReply.monto ? `Investment can start at ${parsedReply.monto.replace(/[()]/g, '')}.` : '';
+        const retorno = parsedReply.retorno ? `The return is ${parsedReply.retorno.replace(/[()]/g, '')}.` : '';
 
         return [nombre, descripcion, monto, retorno].filter(Boolean).join(' ');
       }
     } catch {
-      // Mantiene la respuesta original si no es un JSON válido.
+      // Keep the original response when it is not valid JSON.
     }
   }
 
@@ -96,7 +96,7 @@ function AIConsultingPanel({ project, onMessage }) {
       <div className="mt-7 rounded-xl border border-[#424a4c]/10 bg-[#424a4c]/4 p-4">
         <div className="flex gap-2">
           <span className="grid h-6 w-6 shrink-0 place-items-center rounded-md bg-[#006b73] text-[10px] font-bold text-white">AI</span>
-          <p className="m-0 whitespace-pre-wrap text-xs leading-5 text-[#424a4c]/75">{loading ? 'Pensando...' : reply}</p>
+          <p className="m-0 whitespace-pre-wrap text-xs leading-5 text-[#424a4c]/75">{loading ? 'Thinking...' : reply}</p>
         </div>
         {error && <p className="mt-3 text-xs leading-5 text-red-700" role="alert">{error}</p>}
         <form className="mt-5 flex items-center gap-2 rounded-lg border border-[#424a4c]/15 bg-white px-3 py-2" onSubmit={(event) => { event.preventDefault(); sendQuery(); }}>
@@ -105,10 +105,10 @@ function AIConsultingPanel({ project, onMessage }) {
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Write here..."
-            aria-label="Consulta para el asistente"
+            aria-label="Ask the assistant"
             className="min-w-0 flex-1 bg-transparent text-[11px] text-[#424a4c] outline-none placeholder:text-[#424a4c]/60"
           />
-          <button type="submit" disabled={loading || !query.trim()} className="text-[#00634b] disabled:opacity-40" aria-label="Enviar consulta">
+          <button type="submit" disabled={loading || !query.trim()} className="text-[#00634b] disabled:opacity-40" aria-label="Send request">
             &#10148;
           </button>
         </form>

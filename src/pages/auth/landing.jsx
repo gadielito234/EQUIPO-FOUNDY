@@ -207,7 +207,7 @@ export default function Landing({ onLogin, onRegister }) {
                         <p className="mt-4 max-w-sm text-sm leading-6 text-teal-100">We connect ideas, entrepreneurs, and investors to build new opportunities in El Salvador.</p>
                     </div>
                     <div>
-                        <h2 className="text-sm font-semibold">Explora</h2>
+                        <h2 className="text-sm font-semibold">Explore</h2>
                         <div className="mt-4 space-y-3 text-sm text-teal-100">
                             {navigation.map((item) => <a key={item.name} className="block hover:text-white" href={item.href}>{item.name}</a>)}
                         </div>

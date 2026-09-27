@@ -11,6 +11,7 @@ import {
   Wallet,
   X,
 } from 'lucide-react';
+import { useLanguage } from '../../components/LanguageContext.jsx';
 
 const defaultSidebarItems = [
   { label: 'Home', icon: Home, key: 'home' },
@@ -57,6 +58,7 @@ export default function DashboardLayout({
   showStatistics = true,
   footerContent,
 }) {
+  const { t } = useLanguage();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -68,7 +70,7 @@ export default function DashboardLayout({
     ...visibleSidebarItems,
     { label: 'Support', key: 'support' },
   ].filter((item, index, items) => items.findIndex((candidate) => candidate.key === item.key) === index);
-  const searchResults = searchOptions.filter((item) => item.label.toLowerCase().includes(searchTerm.trim().toLowerCase())).slice(0, 5);
+  const searchResults = searchOptions.filter((item) => t(item.label).toLowerCase().includes(searchTerm.trim().toLowerCase())).slice(0, 5);
 
   const handleSidebarAction = (label) => {
     if (label === 'Home') onBackHome?.();
@@ -193,7 +195,7 @@ export default function DashboardLayout({
                     ].join(' ')}
                     style={{ display: sidebarOpen ? 'inline' : 'none' }}
                   >
-                    {label}
+                    {t(label)}
                   </span>
                 </button>
               );
@@ -221,7 +223,7 @@ export default function DashboardLayout({
                 ].join(' ')}
                 style={{ display: sidebarOpen ? 'inline' : 'none' }}
               >
-                Support
+                {t('Support')}
               </span>
             </button>
             <button
@@ -244,7 +246,7 @@ export default function DashboardLayout({
                 ].join(' ')}
                 style={{ display: sidebarOpen ? 'inline' : 'none' }}
               >
-                Logout
+                {t('Logout')}
               </span>
             </button>
           </div>
@@ -264,7 +266,7 @@ export default function DashboardLayout({
                       activeNav === key ? 'border-b-2 border-[#0d5d61] text-[#0d5d61]' : 'hover:text-[#0d5d61]',
                     ].join(' ')}
                   >
-                    {label}
+                    {t(label)}
                   </button>
                 ))}
               </nav>
@@ -322,7 +324,7 @@ export default function DashboardLayout({
                 </div>
 
                 <div>
-                  <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-white">Explora</h2>
+                  <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-white">{t('Explore')}</h2>
                   <div className="mt-4 space-y-3 text-sm text-teal-100">
                     <button type="button" className="block hover:text-white">Home</button>
                     <button type="button" className="block hover:text-white">My investments</button>
@@ -331,7 +333,7 @@ export default function DashboardLayout({
                 </div>
 
                 <div>
-                  <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-white">Cuenta</h2>
+                  <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-white">{t('Account')}</h2>
                   <div className="mt-4 space-y-3 text-sm text-teal-100">
                     <button type="button" className="block hover:text-white">Sign in</button>
                     <button type="button" className="block hover:text-white">Sign up</button>
@@ -339,7 +341,7 @@ export default function DashboardLayout({
                 </div>
               </div>
               <div className="border-t border-white/20 px-6 py-5 text-center text-xs text-teal-100 sm:px-10">
-                © 2026 Foundy. Todos los derechos reservados.
+                © 2026 Foundy. {t('All rights reserved.')}
               </div>
             </>
           )}

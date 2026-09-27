@@ -17,8 +17,10 @@ import Statistics from '../emprendedor/Statistics.jsx';
 import Notifications from '../inversionista/Notifications.jsx';
 import Support from '../shared/Support.jsx';
 import Policies from '../shared/Policies.jsx';
+import { useLanguage } from '../../components/LanguageContext.jsx';
 
 function App() {
+  const { language, setLanguage } = useLanguage();
   const [mostrarLanding, setMostrarLanding] = useState(true);
   const [esRegistro, setEsRegistro] = useState(false);
   const [esRecuperacion, setEsRecuperacion] = useState(false);
@@ -121,6 +123,7 @@ function App() {
       onOpenSupport={() => setPantallaLogueado('support')}
       onOpenInvestorProfile={irAPerfilPublico}
       investorMode={esInversionista}
+      language={language}
       activeNav={options.activeNav || 'dashboard'}
       showSearch={options.showSearch ?? true}
       showStatistics
@@ -176,6 +179,8 @@ function App() {
           onSavePublicProfile={actualizarPerfilPublico}
           onOpenPolicies={() => setPantallaLogueado('policies')}
           mode="platform"
+          language={language}
+          onLanguageChange={setLanguage}
         />,
         { activeNav: 'settings', showSearch: true }
       );
@@ -359,7 +364,7 @@ function App() {
         <div className="absolute inset-0 bg-[#075d65]/55" />
         <div className="absolute inset-x-12 bottom-14 max-w-lg text-white">
           <div className="mb-7 h-1 w-16 bg-[#64d2b8]" />
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#b8f0df]">Conecta. Crece. Hazlo posible.</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#b8f0df]">Connect. Grow. Make it happen.</p>
           <h2 className="mt-4 text-5xl font-bold leading-[1.02] tracking-tight">Las grandes ideas no crecen solas.</h2>
           <p className="mt-5 max-w-sm text-base leading-7 text-white/80">Find the people and opportunities that can move your next step forward.</p>
         </div>

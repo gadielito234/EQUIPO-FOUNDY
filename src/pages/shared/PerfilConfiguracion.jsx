@@ -1,5 +1,25 @@
 ﻿import { useEffect, useState } from 'react';
 import { supabase } from '../../services/supabase.js';
+import { useLanguage } from '../../components/LanguageContext.jsx';
+
+function createInitialForm(usuarioData) {
+  const profilePicture = usuarioData?.avatar || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=500&q=80';
+  const interests = Array.isArray(usuarioData?.intereses) && usuarioData.intereses.length
+    ? usuarioData.intereses
+    : ['Technology', 'Retail', 'Agriculture', 'Sustainability'];
+
+  return {
+    email: usuarioData?.correo || '',
+    displayName: usuarioData?.usuario || 'Maya Johnson',
+    password: '',
+    profilePicture,
+    biography: usuarioData?.biografia || '',
+    interests: interests.join(', '),
+    investmentRange: usuarioData?.rango_inversion || '$25,000 - $50,000',
+    riskLevel: usuarioData?.nivel_riesgo || 'Medium',
+    contactAvailability: usuarioData?.disponibilidad_contacto || 'Available for new conversations',
+  };
+}
 
 function Switch({ enabled, onChange }) {
   return (
@@ -25,50 +45,21 @@ export default function PerfilConfiguracion({
   usuarioData,
   onCerrarSesion,
   onBackHome,
-  onOpenFoundyCard,
-  onOpenChat,
   mode = 'platform',
   onSavePublicProfile,
   onOpenPolicies,
+  language = 'English',
+  onLanguageChange,
 }) {
+  const { t } = useLanguage();
   const isProfileMode = mode === 'profile';
   const [transactionAlerts, setTransactionAlerts] = useState(true);
   const [marketingInsights, setMarketingInsights] = useState(false);
-  const [preferredLanguage, setPreferredLanguage] = useState('English');
   const [theme, setTheme] = useState('Light');
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState('');
   const [confirmDeactivateOpen, setConfirmDeactivateOpen] = useState(false);
-  const [form, setForm] = useState({
-    email: '',
-    displayName: '',
-    password: '',
-    profilePicture: '',
-    biography: '',
-    interests: '',
-    investmentRange: '',
-    riskLevel: 'Medium',
-    contactAvailability: '',
-  });
-
-  useEffect(() => {
-    const profilePicture = usuarioData?.avatar || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=500&q=80';
-    const interests = Array.isArray(usuarioData?.intereses) && usuarioData.intereses.length
-      ? usuarioData.intereses
-      : ['Technology', 'Retail', 'Agriculture', 'Sustainability'];
-
-    setForm({
-      email: usuarioData?.correo || '',
-      displayName: usuarioData?.usuario || 'Maya Johnson',
-      password: '',
-      profilePicture,
-      biography: usuarioData?.biografia || '',
-      interests: interests.join(', '),
-      investmentRange: usuarioData?.rango_inversion || '$25,000 - $50,000',
-      riskLevel: usuarioData?.nivel_riesgo || 'Medium',
-      contactAvailability: usuarioData?.disponibilidad_contacto || 'Available for new conversations',
-    });
-  }, [usuarioData]);
+  const [form, setForm] = useState(() => createInitialForm(usuarioData));
 
   useEffect(() => {
     if (!usuarioData?.dui || isProfileMode) return undefined;
@@ -108,7 +99,7 @@ export default function PerfilConfiguracion({
       sugerencias_marketing: values.sugerencias_marketing,
     };
     const { error } = await supabase.from('preferencias_usuario').upsert(nextValues, { onConflict: 'dui' });
-    if (error) setNotice(`No se pudo guardar la preferencia: ${error.message}`);
+    if (error) setNotice(`Could not save your preference: ${error.message}`);
   };
 
   const updateField = (field, value) => {
@@ -118,7 +109,7 @@ export default function PerfilConfiguracion({
   const readFileAsDataUrl = (file) => new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(reader.result);
-    reader.onerror = () => reject(new Error('No se pudo leer la imagen seleccionada.'));
+    reader.onerror = () => reject(new Error('The selected image could not be read.'));
     reader.readAsDataURL(file);
   });
 
@@ -142,7 +133,7 @@ export default function PerfilConfiguracion({
         });
 
         if (uploadError) {
-          setNotice('La foto se guardará con el perfil cuando pulses Guardar cambios.');
+          setNotice('The photo will be saved with your profile when you click Save changes.');
           return;
         }
 
@@ -150,7 +141,7 @@ export default function PerfilConfiguracion({
         updateField('profilePicture', data?.publicUrl || '');
       }
     } catch (error) {
-      setNotice(error.message || 'No se pudo subir la foto de perfil.');
+      setNotice(error.message || 'The profile photo could not be uploaded.');
     }
   };
 
@@ -189,7 +180,7 @@ export default function PerfilConfiguracion({
       onSavePublicProfile?.(payload);
       setNotice('Perfil actualizado correctamente.');
     } catch (error) {
-      setNotice(`No se pudo guardar el perfil: ${error.message}`);
+      setNotice(`Could not save your profile: ${error.message}`);
     } finally {
       setSaving(false);
     }
@@ -340,14 +331,14 @@ export default function PerfilConfiguracion({
       ) : (
         <div className="space-y-6">
           <section className="rounded-[24px] border border-[#dfe7e5] bg-white p-6 shadow-sm sm:p-8">
-            <h2 className="text-2xl font-black tracking-tight text-[#1a3a3e]">Platform settings</h2>
+              <h2 className="text-2xl font-black tracking-tight text-[#1a3a3e]">{t('Platform settings')}</h2>
 
             <div className="mt-6 space-y-5">
               <div>
-                <label className="mb-2 block text-sm font-medium text-[#314f52]">Preferred language</label>
+                <label className="mb-2 block text-sm font-medium text-[#314f52]">{t('Preferred language')}</label>
                 <select
-                  value={preferredLanguage}
-                  onChange={(event) => setPreferredLanguage(event.target.value)}
+                  value={language}
+                  onChange={(event) => onLanguageChange?.(event.target.value)}
                   className="w-full rounded-xl border border-[#dce7e4] bg-[#f8fbfa] px-3 py-2.5 text-sm text-[#1d3f42] outline-none transition focus:border-[#1ca38b] focus:ring-2 focus:ring-[#dff5f0]"
                 >
                   <option value="English">English</option>
@@ -356,14 +347,14 @@ export default function PerfilConfiguracion({
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-medium text-[#314f52]">Theme</label>
+                <label className="mb-2 block text-sm font-medium text-[#314f52]">{t('Theme')}</label>
                 <select
                   value={theme}
                   onChange={(event) => setTheme(event.target.value)}
                   className="w-full rounded-xl border border-[#dce7e4] bg-[#f8fbfa] px-3 py-2.5 text-sm text-[#1d3f42] outline-none transition focus:border-[#1ca38b] focus:ring-2 focus:ring-[#dff5f0]"
                 >
-                  <option value="Light">Light</option>
-                  <option value="Dark">Dark</option>
+                  <option value="Light">{t('Light')}</option>
+                  <option value="Dark">{t('Dark')}</option>
                 </select>
               </div>
             </div>
@@ -372,8 +363,8 @@ export default function PerfilConfiguracion({
           <section className="rounded-[24px] border border-[#dfe7e5] bg-white p-6 shadow-sm sm:p-8">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <h2 className="text-2xl font-black tracking-tight text-[#1a3a3e]">Notifications</h2>
-                <p className="mt-1 text-sm text-[#5d7277]">Choose which alerts you want to receive.</p>
+                <h2 className="text-2xl font-black tracking-tight text-[#1a3a3e]">{t('Notifications')}</h2>
+                  <p className="mt-1 text-sm text-[#5d7277]">{t('Choose which alerts you want to receive.')}</p>
               </div>
               <button
                 type="button"
@@ -384,23 +375,23 @@ export default function PerfilConfiguracion({
                 }}
                 className="rounded-full border border-[#d7e4e2] bg-[#f3f7f6] px-4 py-2 text-sm font-semibold text-[#476164] transition hover:bg-[#edf4f2]"
               >
-                Manage All
+                {t('Manage All')}
               </button>
             </div>
 
             <div className="mt-5 space-y-3">
               <div className="flex items-center justify-between gap-4 rounded-[18px] border border-[#dce7e4] bg-[#f8fbfa] px-4 py-3">
                 <div>
-                  <p className="text-base font-bold text-[#1d3f42]">Transaction Alerts</p>
-                  <p className="mt-1 text-sm text-[#5d7277]">Get notified when payments or transfers are made.</p>
+                  <p className="text-base font-bold text-[#1d3f42]">{t('Transaction Alerts')}</p>
+                  <p className="mt-1 text-sm text-[#5d7277]">{t('Get notified when payments or transfers are made.')}</p>
                 </div>
                 <Switch enabled={transactionAlerts} onChange={(value) => { setTransactionAlerts(value); savePreferences({ alertas_transacciones: value, sugerencias_marketing: marketingInsights }); }} />
               </div>
 
               <div className="flex items-center justify-between gap-4 rounded-[18px] border border-[#dce7e4] bg-[#f8fbfa] px-4 py-3">
                 <div>
-                  <p className="text-base font-bold text-[#1d3f42]">Marketing Insights</p>
-                  <p className="mt-1 text-sm text-[#5d7277]">Receive helpful campaign and growth suggestions.</p>
+                  <p className="text-base font-bold text-[#1d3f42]">{t('Marketing Insights')}</p>
+                  <p className="mt-1 text-sm text-[#5d7277]">{t('Receive helpful campaign and growth suggestions.')}</p>
                 </div>
                 <Switch enabled={marketingInsights} onChange={(value) => { setMarketingInsights(value); savePreferences({ alertas_transacciones: transactionAlerts, sugerencias_marketing: value }); }} />
               </div>
@@ -410,15 +401,15 @@ export default function PerfilConfiguracion({
           <section className="rounded-[24px] border border-[#dfe7e5] bg-white p-6 shadow-sm sm:p-8">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h2 className="text-xl font-black tracking-tight text-[#1a3a3e]">Policies</h2>
-                <p className="mt-1 text-sm text-[#5d7277]">Review our privacy, terms, and platform guidelines.</p>
+                <h2 className="text-xl font-black tracking-tight text-[#1a3a3e]">{t('Policies')}</h2>
+                <p className="mt-1 text-sm text-[#5d7277]">{t('Review our privacy, terms, and platform guidelines.')}</p>
               </div>
               <button
                 type="button"
                 onClick={openPolicies}
                 className="rounded-full bg-[#0d5c5d] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0a4b4d]"
               >
-                View Policies
+                {t('View Policies')}
               </button>
             </div>
           </section>
@@ -426,9 +417,9 @@ export default function PerfilConfiguracion({
           <section className="rounded-[24px] border border-[#f0b8b5] bg-[#fef0ef] p-6 shadow-sm sm:p-8">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h2 className="text-2xl font-black tracking-tight text-[#d84848]">Danger Zone</h2>
+                <h2 className="text-2xl font-black tracking-tight text-[#d84848]">{t('Danger Zone')}</h2>
                 <p className="mt-1 max-w-2xl text-sm text-[#d84848]">
-                  Deactivating your account will disable your access and hide your profile from other users.
+                  {t('Deactivating your account will disable your access and hide your profile from other users.')}
                 </p>
               </div>
 
@@ -437,7 +428,7 @@ export default function PerfilConfiguracion({
                 onClick={handleDeactivate}
                 className="rounded-full bg-[#d33f3f] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c13434]"
               >
-                Deactivate
+                {t('Deactivate')}
               </button>
             </div>
           </section>
@@ -473,10 +464,10 @@ export default function PerfilConfiguracion({
               </div>
               <div>
                 <h3 id="confirm-deactivate-title" className="text-xl font-black text-[#1d3f42]">
-                  Confirm deactivation
+                  {t('Confirm deactivation')}
                 </h3>
                 <p id="confirm-deactivate-description" className="mt-2 text-sm leading-6 text-[#5d7277]">
-                  Are you sure you want to deactivate your account? This action will disable your access and hide your profile from other users.
+                  {t('Are you sure you want to deactivate your account? This action will disable your access and hide your profile from other users.')}
                 </p>
               </div>
             </div>
@@ -487,14 +478,14 @@ export default function PerfilConfiguracion({
                 onClick={() => setConfirmDeactivateOpen(false)}
                 className="rounded-xl border border-[#ccd8d5] px-4 py-2.5 text-sm font-semibold text-[#526164] transition hover:bg-[#f0f3f0]"
               >
-                Cancel
+                {t('Cancel')}
               </button>
               <button
                 type="button"
                 onClick={confirmDeactivate}
                 className="rounded-xl bg-[#d33f3f] px-4 py-2.5 text-sm font-bold text-white transition hover:bg-[#c13434]"
               >
-                Deactivate
+                {t('Deactivate')}
               </button>
             </div>
           </div>

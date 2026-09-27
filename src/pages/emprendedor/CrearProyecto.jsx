@@ -10,7 +10,7 @@ const initialProject = {
   id_categoria: "",
 };
 
-function CrearProyecto({ usuarioData, nombreUsuario = "Entrepreneur", onCerrarSesion, onBackHome }) {
+function CrearProyecto({ usuarioData }) {
   const [proyecto, setProyecto] = useState(initialProject);
   const [imagenes, setImagenes] = useState([]);
   const [contrato, setContrato] = useState(null);

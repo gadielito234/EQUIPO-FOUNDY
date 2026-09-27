@@ -220,7 +220,7 @@ function Statistics({ usuarioData }) {
   const chartAreaPath = `${chartPath} L ${datosPorPeriodo[datosPorPeriodo.length - 1].cx} 120 L ${datosPorPeriodo[0].cx} 120 Z`;
 
   return (
-    <div className="min-h-screen bg-[#f4f6f7] text-[#31474a]">
+    <div className="min-h-screen bg-[#f4f6f7] text-[#31474a]" aria-busy={loading}>
       <main className="mx-auto max-w-6xl px-4 py-5 sm:px-6 lg:px-8">
         <section className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
