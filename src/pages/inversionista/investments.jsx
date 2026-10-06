@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../services/supabase.js';
+import InvestmentContracts from '../../components/InvestmentContracts.jsx';
 
 function Investments({ onBackHome, usuarioData }) {
   const [filter, setFilter] = useState('All');
@@ -120,6 +121,8 @@ function Investments({ onBackHome, usuarioData }) {
             {!loading && visibleInvestments.length === 0 && <p className="p-8 text-center text-sm text-[#687577]">No investments found.</p>}
           </div>
         </section>
+
+        <InvestmentContracts userId={usuarioData?.dui} party="investor" />
       </div>
       {notice && <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-lg bg-[#173f43] px-4 py-3 text-xs font-semibold text-white shadow-lg">{notice}</div>}
     </main>

@@ -6,6 +6,7 @@ const initialProject = {
   nombre: "",
   descripcion: "",
   monto: "",  
+  ganancia_esperada: "",
   retorno: "",
   id_categoria: "",
 };
@@ -87,6 +88,20 @@ function CrearProyecto({ usuarioData }) {
       });
       return;
     }
+    if (publicar && (
+      !Number.isFinite(Number(proyecto.monto))
+      || Number(proyecto.monto) <= 0
+      || !Number.isFinite(Number(proyecto.ganancia_esperada))
+      || Number(proyecto.ganancia_esperada) <= 0
+      || !Number.isInteger(Number(proyecto.retorno))
+      || Number(proyecto.retorno) <= 0
+    )) {
+      setAlerta({
+        tipo: "warning",
+        texto: "Enter a requested amount, the project's expected total profit, and a return period in months before publishing.",
+      });
+      return;
+    }
     setGuardando(true);
     try {
       let imageUrl = null;
@@ -123,6 +138,8 @@ function CrearProyecto({ usuarioData }) {
         nombre: proyecto.nombre.trim(),
         descripcion: proyecto.descripcion.trim(),
         monto_objetivo: proyecto.monto ? Number(proyecto.monto) : 0,
+        ganancia_esperada: proyecto.ganancia_esperada ? Number(proyecto.ganancia_esperada) : null,
+        plazo_retorno_meses: proyecto.retorno ? meses : null,
         monto_recaudado: 0,
         inversion: 0,
         estado: publicar ? "publicado" : "borrador",
@@ -271,16 +288,35 @@ function CrearProyecto({ usuarioData }) {
                     />
                   </label>
                   <label className="text-xs font-bold uppercase tracking-wide text-slate-600">
-                    Return timeline
+                    Expected total project profit (USD)
+                    <input
+                      name="ganancia_esperada"
+                      type="number"
+                      min="0.01"
+                      step="0.01"
+                      value={proyecto.ganancia_esperada}
+                      onChange={actualizarCampo}
+                      placeholder="E.g. 5000"
+                      className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-normal normal-case outline-none focus:border-[#168b88] focus:bg-white focus:ring-4 focus:ring-[#168b88]/10"
+                    />
+                  </label>
+                  <label className="text-xs font-bold uppercase tracking-wide text-slate-600">
+                    Estimated return period (months)
                     <input
                       name="retorno"
+                      type="number"
+                      min="1"
+                      step="1"
                       value={proyecto.retorno}
                       onChange={actualizarCampo}
-                      placeholder="E.g. 12 months"
+                      placeholder="E.g. 12"
                       className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-normal normal-case outline-none focus:border-[#168b88] focus:bg-white focus:ring-4 focus:ring-[#168b88]/10"
                     />
                   </label>
                 </div>
+                <p className="mt-2 text-xs leading-5 text-slate-500">
+                  The expected profit and period will be included in the agreement. Each investor's estimated share is calculated according to their participation; this is a projection, not a guaranteed return.
+                </p>
                 <div className="mt-6">
                   <p className="mb-2 text-xs font-bold uppercase tracking-wide text-[#424a4c]">
                     Business contract

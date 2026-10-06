@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { ArrowUpRight, FolderKanban, Plus, Target, Users } from 'lucide-react';
 import { supabase } from '../../services/supabase.js';
 import { useLanguage } from '../../components/LanguageContext.jsx';
+import InvestmentContracts from '../../components/InvestmentContracts.jsx';
 
 const formatMoney = (value) => `$${Number(value || 0).toLocaleString('en-US')}`;
 
@@ -86,6 +87,7 @@ function Inicio({ usuarioData, onOpenCreateProject }) {
           <div className="flex items-center justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-[0.16em] text-[#168b68]">Your projects</p><h2 className="mt-2 text-xl font-bold">Overview</h2></div><span className="text-xs font-semibold text-[#718083]">{proyectos.length} {proyectos.length === 1 ? 'project' : 'projects'}</span></div>
           {loading ? <p className="py-10 text-center text-sm text-[#718083]">Loading your projects...</p> : proyectos.length === 0 ? <p className="py-10 text-center text-sm text-[#718083]">You have no registered projects yet.</p> : <div className="mt-5 grid gap-3 md:grid-cols-2">{proyectos.map((proyecto) => <article key={proyecto.id_proyecto} className="rounded-lg border border-[#edf0ed] bg-[#fbfcfa] p-4"><div className="flex items-start justify-between gap-3"><h3 className="font-bold">{proyecto.nombre}</h3><span className="rounded-full bg-[#e5f3ed] px-2.5 py-1 text-[10px] font-bold uppercase text-[#168b68]">{proyecto.estado || 'draft'}</span></div><p className="mt-2 line-clamp-2 text-sm leading-5 text-[#718083]">{proyecto.descripcion || 'No description available.'}</p><div className="mt-4 flex justify-between border-t border-[#edf0ed] pt-3 text-xs text-[#718083]"><span>Raised: <strong className="text-[#1e4043]">{formatMoney(proyecto.monto_recaudado)}</strong></span><span>Goal: <strong className="text-[#1e4043]">{formatMoney(proyecto.monto_objetivo)}</strong></span></div></article>)}</div>}
         </section>
+        <InvestmentContracts userId={usuarioData?.dui} party="entrepreneur" />
       </div>
     </div>
   );

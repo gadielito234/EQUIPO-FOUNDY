@@ -23,6 +23,12 @@ function makeStub() {
 	});
 	return {
 		from: () => chainable(),
+		functions: {
+			invoke: async () => ({
+				data: null,
+				error: { message: 'Configura Supabase en VITE_SUPABASE_URL y VITE_SUPABASE_PUBLISHABLE_KEY.' },
+			}),
+		},
 		storage: {
 			from: () => ({
 				upload: async () => ({ error: { message: 'Supabase no configurado' } }),

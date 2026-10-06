@@ -25,6 +25,14 @@ alter table public.proyecto
 alter table public.proyecto
   add column if not exists contrato_url text;
 
+alter table public.proyecto
+  add column if not exists ganancia_esperada numeric
+    check (ganancia_esperada is null or ganancia_esperada > 0);
+
+alter table public.proyecto
+  add column if not exists plazo_retorno_meses integer
+    check (plazo_retorno_meses is null or plazo_retorno_meses > 0);
+
 alter table public.inversion
   add column if not exists id_inversionista numeric;
 
@@ -183,15 +191,15 @@ insert into storage.buckets (id, name, public)
 values ('project-images', 'project-images', true)
 on conflict (id) do update set public = excluded.public;
 
-<<<<<<< HEAD
 do $$
 begin
-  create policy project_images_public_read
-    on storage.objects for select
-    using (bucket_id = 'project-images');
-exception
-  when duplicate_object then null;
-=======
+  if not exists (select 1 from pg_policies where schemaname = 'storage' and tablename = 'objects' and policyname = 'project_images_public_read') then
+    create policy project_images_public_read
+      on storage.objects for select
+      using (bucket_id = 'project-images');
+  end if;
+end $$;
+
 insert into storage.buckets (id, name, public)
 values ('profile-images', 'profile-images', true)
 on conflict (id) do update set public = excluded.public;
@@ -209,18 +217,16 @@ begin
       using (bucket_id = 'project-documents')
       with check (bucket_id = 'project-documents');
   end if;
->>>>>>> eeb427c5cac2d0415fcd5730a21704e213a9f22b
 end $$;
 
 do $$
 begin
-<<<<<<< HEAD
-  create policy project_images_public_upload
-    on storage.objects for insert
-    with check (bucket_id = 'project-images');
-exception
-  when duplicate_object then null;
-=======
+  if not exists (select 1 from pg_policies where schemaname = 'storage' and tablename = 'objects' and policyname = 'project_images_public_upload') then
+    create policy project_images_public_upload
+      on storage.objects for insert
+      with check (bucket_id = 'project-images');
+  end if;
+
   if not exists (select 1 from pg_policies where schemaname = 'storage' and tablename = 'objects' and policyname = 'Public can upload profile images') then
     create policy "Public can upload profile images"
       on storage.objects for insert
@@ -242,5 +248,162 @@ exception
       to public
       using (bucket_id = 'profile-images');
   end if;
->>>>>>> eeb427c5cac2d0415fcd5730a21704e213a9f22b
 end $$;
+
+-- A confirmed payment produces an immutable snapshot of the investment terms.
+create table if not exists public.investment_contracts (
+  id_inversion bigint primary key references public.inversion(id_inversion) on delete restrict,
+  id_proyecto integer not null references public.proyecto(id_proyecto) on delete restrict,
+  id_inversionista numeric not null references public."Usuario"(dui) on delete restrict,
+  id_emprendedor numeric not null references public."Usuario"(dui) on delete restrict,
+  inversionista_nombre text not null,
+  emprendedor_nombre text not null,
+  proyecto_nombre text not null,
+  monto numeric not null check (monto > 0),
+  participacion numeric not null check (participacion >= 0),
+  ganancia_esperada_proyecto numeric,
+  ganancia_estimada_inversionista numeric,
+  plazo_retorno_meses integer,
+  fecha_pago date not null,
+  fecha_inicio date,
+  fecha_limite_retorno date,
+  created_at timestamptz not null default now()
+);
+
+alter table public.investment_contracts
+  add column if not exists ganancia_esperada_proyecto numeric;
+
+alter table public.investment_contracts
+  add column if not exists ganancia_estimada_inversionista numeric;
+
+alter table public.investment_contracts
+  add column if not exists plazo_retorno_meses integer;
+
+create index if not exists investment_contracts_emprendedor_idx
+  on public.investment_contracts (id_emprendedor, created_at desc);
+
+create or replace function public.create_investment_contract_for_confirmed_payment()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $$
+begin
+  if lower(trim(coalesce(new.estado, ''))) not in (
+    'paid', 'completed', 'confirmed', 'confirmado', 'pagado', 'completado'
+  ) then
+    return new;
+  end if;
+
+  if new.id_inversion is null then
+    return new;
+  end if;
+
+  insert into public.investment_contracts (
+    id_inversion,
+    id_proyecto,
+    id_inversionista,
+    id_emprendedor,
+    inversionista_nombre,
+    emprendedor_nombre,
+    proyecto_nombre,
+    monto,
+    participacion,
+    ganancia_esperada_proyecto,
+    ganancia_estimada_inversionista,
+    plazo_retorno_meses,
+    fecha_pago,
+    fecha_inicio,
+    fecha_limite_retorno
+  )
+  select
+    i.id_inversion,
+    p.id_proyecto,
+    i.id_inversionista,
+    p.dui,
+    coalesce(nullif(trim(concat_ws(' ', inversionista.nombre, inversionista.apellidos)), ''), 'Inversionista'),
+    coalesce(nullif(trim(concat_ws(' ', emprendedor.nombre, emprendedor.apellidos)), ''), 'Emprendedor'),
+    p.nombre,
+    i.monto,
+    coalesce(i.participacion, 0),
+    p.ganancia_esperada,
+    p.ganancia_esperada * coalesce(i.participacion, 0) / 100,
+    p.plazo_retorno_meses,
+    coalesce(new.fecha, current_date),
+    p.fecha_inicio,
+    case
+      when p.plazo_retorno_meses > 0
+        then (coalesce(new.fecha, current_date) + p.plazo_retorno_meses * interval '1 month')::date
+      else p.fecha_fin
+    end
+  from public.inversion i
+  join public.proyecto p on p.id_proyecto = i.id_proyecto
+  left join public."Usuario" inversionista on inversionista.dui = i.id_inversionista
+  left join public."Usuario" emprendedor on emprendedor.dui = p.dui
+  where i.id_inversion = new.id_inversion
+  on conflict (id_inversion) do nothing;
+
+  if not found and not exists (
+    select 1
+    from public.investment_contracts c
+    where c.id_inversion = new.id_inversion
+  ) then
+    raise exception 'Could not create investment contract for investment %', new.id_inversion;
+  end if;
+
+  return new;
+end;
+$$;
+
+drop trigger if exists pago_create_investment_contract on public.pago;
+create trigger pago_create_investment_contract
+after insert or update on public.pago
+for each row
+execute function public.create_investment_contract_for_confirmed_payment();
+
+insert into public.investment_contracts (
+  id_inversion,
+  id_proyecto,
+  id_inversionista,
+  id_emprendedor,
+  inversionista_nombre,
+  emprendedor_nombre,
+  proyecto_nombre,
+  monto,
+  participacion,
+  ganancia_esperada_proyecto,
+  ganancia_estimada_inversionista,
+  plazo_retorno_meses,
+  fecha_pago,
+  fecha_inicio,
+  fecha_limite_retorno
+)
+select
+  i.id_inversion,
+  p.id_proyecto,
+  i.id_inversionista,
+  p.dui,
+  coalesce(nullif(trim(concat_ws(' ', inversionista.nombre, inversionista.apellidos)), ''), 'Inversionista'),
+  coalesce(nullif(trim(concat_ws(' ', emprendedor.nombre, emprendedor.apellidos)), ''), 'Emprendedor'),
+  p.nombre,
+  i.monto,
+  coalesce(i.participacion, 0),
+  p.ganancia_esperada,
+  p.ganancia_esperada * coalesce(i.participacion, 0) / 100,
+  p.plazo_retorno_meses,
+  coalesce(pg.fecha, current_date),
+  p.fecha_inicio,
+  case
+    when p.plazo_retorno_meses > 0
+      then (coalesce(pg.fecha, current_date) + p.plazo_retorno_meses * interval '1 month')::date
+    else p.fecha_fin
+  end
+from public.pago pg
+join public.inversion i on i.id_inversion = pg.id_inversion
+join public.proyecto p on p.id_proyecto = i.id_proyecto
+left join public."Usuario" inversionista on inversionista.dui = i.id_inversionista
+left join public."Usuario" emprendedor on emprendedor.dui = p.dui
+where lower(trim(coalesce(pg.estado, ''))) in (
+  'paid', 'completed', 'confirmed', 'confirmado', 'pagado', 'completado'
+)
+on conflict (id_inversion) do nothing;
