@@ -14,12 +14,10 @@ const initialProject = {
 function CrearProyecto({ usuarioData }) {
   const [proyecto, setProyecto] = useState(initialProject);
   const [imagenes, setImagenes] = useState([]);
-  const [contrato, setContrato] = useState(null);
   const [alerta, setAlerta] = useState(null);
   const [categorias, setCategorias] = useState([]);
   const [guardando, setGuardando] = useState(false);
   const inputImagenes = useRef(null);
-  const inputContrato = useRef(null);
 
   useEffect(() => {
     const cargarCategorias = async () => {
@@ -52,29 +50,9 @@ function CrearProyecto({ usuarioData }) {
     }
   };
 
-  const seleccionarContrato = (event) => {
-    const archivo = event.target.files?.[0];
-    if (!archivo) return;
-
-    const tiposPermitidos = [
-      "application/pdf",
-      "application/msword",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    ];
-    if (!tiposPermitidos.includes(archivo.type) || archivo.size > 10 * 1024 * 1024) {
-      setAlerta({ tipo: "warning", texto: "Select a PDF, DOC, or DOCX file up to 10 MB." });
-      event.target.value = "";
-      return;
-    }
-
-    setContrato(archivo);
-    setAlerta({ tipo: "success", texto: "Business contract selected." });
-  };
-
   const limpiarFormulario = () => {
     setProyecto(initialProject);
     setImagenes([]);
-    setContrato(null);
     setAlerta(null);
   };
 
@@ -114,22 +92,6 @@ function CrearProyecto({ usuarioData }) {
         imageUrl = supabase.storage.from('project-images').getPublicUrl(path).data.publicUrl;
       }
 
-      let contratoUrl = null;
-      if (contrato) {
-        if (!supabase?.storage?.from) {
-          throw new Error("Configure Supabase Storage before saving the contract.");
-        }
-
-        const extension = contrato.name.split(".").pop() || "pdf";
-        const fileName = `${usuarioData?.dui || "entrepreneur"}/contract-${Date.now()}.${extension}`;
-        const { error: uploadError } = await supabase.storage.from("project-documents").upload(fileName, contrato, {
-          upsert: true,
-        });
-        if (uploadError) throw uploadError;
-        const { data } = supabase.storage.from("project-documents").getPublicUrl(fileName);
-        contratoUrl = data?.publicUrl || null;
-      }
-
       const fechaInicio = new Date();
       const meses = Number.parseInt(proyecto.retorno, 10) || 1;
       const fechaFin = new Date(fechaInicio);
@@ -148,7 +110,6 @@ function CrearProyecto({ usuarioData }) {
         dui: usuarioData?.dui,
         id_categoria: proyecto.id_categoria || null,
         imagen_url: imageUrl,
-        contrato_url: contratoUrl,
       }]);
       if (error) throw error;
       if (publicar) window.dispatchEvent(new Event("foundy-project-published"));
@@ -317,32 +278,13 @@ function CrearProyecto({ usuarioData }) {
                 <p className="mt-2 text-xs leading-5 text-slate-500">
                   The expected profit and period will be included in the agreement. Each investor's estimated share is calculated according to their participation; this is a projection, not a guaranteed return.
                 </p>
-                <div className="mt-6">
-                  <p className="mb-2 text-xs font-bold uppercase tracking-wide text-[#424a4c]">
-                    Business contract
+                <div className="mt-6 rounded-xl border border-[#b9ded4] bg-[#f2faf7] p-4">
+                  <p className="text-xs font-bold uppercase tracking-wide text-[#00634b]">
+                    Investment agreement
                   </p>
-                  <button
-                    type="button"
-                    onClick={() => inputContrato.current?.click()}
-                    className="flex min-h-24 w-full flex-col items-center justify-center rounded-xl border border-dashed border-[#006b73]/45 bg-[#006b73]/3 px-4 py-4 text-center transition hover:border-[#00634b] hover:bg-[#00634b]/4"
-                  >
-                    <span className="grid h-8 w-8 place-items-center rounded-full border border-[#006b73] text-lg text-[#006b73]">
-                      +
-                    </span>
-                    <span className="mt-1 text-xs font-semibold text-[#00634b]">
-                      {contrato ? contrato.name : "Upload your contract"}
-                    </span>
-                    <span className="mt-1 text-[11px] text-[#424a4c]/60">
-                      PDF, DOC, or DOCX up to 10 MB
-                    </span>
-                  </button>
-                  <input
-                    ref={inputContrato}
-                    onChange={seleccionarContrato}
-                    type="file"
-                    accept="application/pdf,.doc,.docx"
-                    className="hidden"
-                  />
+                  <p className="mt-2 text-xs leading-5 text-[#424a4c]/75">
+                    The agreement is generated automatically from these project terms when an investor confirms payment. You do not need to upload a contract.
+                  </p>
                 </div>
                 <div className="mt-7">
                   <p className="mb-2 text-xs font-bold uppercase tracking-wide text-[#424a4c]">

@@ -103,6 +103,7 @@ export default function InvestmentContracts({ userId, party }) {
 
   useEffect(() => {
     let active = true;
+    const column = party === 'investor' ? 'id_inversionista' : 'id_emprendedor';
 
     const loadContracts = async () => {
       if (!userId) {
@@ -112,7 +113,6 @@ export default function InvestmentContracts({ userId, party }) {
       }
 
       setLoading(true);
-      const column = party === 'investor' ? 'id_inversionista' : 'id_emprendedor';
       const { data, error: queryError } = await supabase
         .from('investment_contracts')
         .select('id_inversion, proyecto_nombre, inversionista_nombre, emprendedor_nombre, monto, participacion, ganancia_esperada_proyecto, ganancia_estimada_inversionista, plazo_retorno_meses, fecha_pago, fecha_limite_retorno, created_at')
@@ -126,7 +126,20 @@ export default function InvestmentContracts({ userId, party }) {
     };
 
     loadContracts();
-    return () => { active = false; };
+    const channel = userId
+      ? supabase.channel(`investment-contracts:${party}:${userId}`)
+        .on('postgres_changes', {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'investment_contracts',
+          filter: `${column}=eq.${userId}`,
+        }, loadContracts)
+        .subscribe()
+      : null;
+    return () => {
+      active = false;
+      if (channel) supabase.removeChannel(channel);
+    };
   }, [party, t, userId]);
 
   return (

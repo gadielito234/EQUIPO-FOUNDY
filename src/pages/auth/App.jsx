@@ -5,6 +5,7 @@ import Registro from './registro.jsx';
 import Inicio from '../emprendedor/inicio.jsx';
 import Landing from './landing.jsx';
 import DashboardInversionista from '../inversionista/DashboardInversionista.jsx';
+import ProjectAgreement from '../inversionista/ProjectAgreement.jsx';
 import Investments from '../inversionista/investments.jsx';
 import FoundyCard from '../inversionista/FoundyCard.jsx';
 import PerfilConfiguracion from '../shared/PerfilConfiguracion.jsx';
@@ -26,6 +27,7 @@ function App() {
   const [esRecuperacion, setEsRecuperacion] = useState(false);
   const [usuarioLogueado, setUsuarioLogueado] = useState(null);
   const [pantallaLogueado, setPantallaLogueado] = useState('home');
+  const [selectedProjectId, setSelectedProjectId] = useState(null);
   const [usuario, setUsuario] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [loading, setLoading] = useState(false);
@@ -253,10 +255,25 @@ function App() {
       );
     }
 
+    if (pantallaLogueado === 'project-detail' && esInversionista) {
+      return renderWithDashboardLayout(
+        <ProjectAgreement
+          projectId={selectedProjectId}
+          usuarioData={usuarioLogueado}
+          onBack={() => setPantallaLogueado('dashboard')}
+        />,
+        { activeNav: 'dashboard', showSearch: true }
+      );
+    }
+
     if ((pantallaLogueado === 'home' || pantallaLogueado === 'dashboard') && esInversionista) {
       return renderWithDashboardLayout(
         <DashboardInversionista
           usuarioData={usuarioLogueado}
+          onOpenProject={(projectId) => {
+            setSelectedProjectId(projectId);
+            setPantallaLogueado('project-detail');
+          }}
         />,
         { activeNav: 'dashboard', showSearch: true }
       );

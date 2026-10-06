@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { X } from 'lucide-react';
+import { ExternalLink, FileText, MapPin, X } from 'lucide-react';
 import { supabase } from '../../services/supabase.js';
 import { useLanguage } from '../../components/LanguageContext.jsx';
 
@@ -13,6 +13,7 @@ async function readPublishedProjects() {
     category: project.id_categoria || 'Uncategorized',
     objective: project.descripcion || 'No description available.',
     image: project.imagen_url || '',
+    contractUrl: project.contrato_url || '',
     goalAmount: Number(project.monto_objetivo || 0),
     raisedAmount: Number(project.monto_recaudado || 0),
     expectedProfit: Number(project.ganancia_esperada || 0),
@@ -25,7 +26,7 @@ async function readPublishedProjects() {
   }));
 }
 
-function DashboardInversionista({ usuarioData }) {
+function DashboardInversionista({ usuarioData, onOpenProject }) {
   const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedOpportunity, setSelectedOpportunity] = useState(null);
@@ -151,7 +152,7 @@ function DashboardInversionista({ usuarioData }) {
                 <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
                   {[['Goal', opportunities[0].goal], ['Category', opportunities[0].category], ['Expected project profit', `$${opportunities[0].expectedProfit.toLocaleString('en-US')}`], ['Estimated return period', opportunities[0].returnMonths ? `${opportunities[0].returnMonths} months` : 'Not available']].map(([label, value]) => <div key={label} className="rounded-lg bg-[#1b8c8d]/30 p-2 text-center"><p className="text-[9px] uppercase text-[#d4efee]">{t(label)}</p><p className="mt-1 text-sm font-bold">{value}</p></div>)}
                 </div>
-                <button type="button" onClick={() => setSelectedOpportunity(opportunities[0])} className="mt-5 rounded-md bg-[#dfece4] px-4 py-2 text-[10px] font-bold uppercase text-[#0d5d61] hover:bg-white">{t('View details and invest')}</button>
+                <button type="button" onClick={() => onOpenProject?.(opportunities[0].id)} className="mt-5 rounded-md bg-[#dfece4] px-4 py-2 text-[10px] font-bold uppercase text-[#0d5d61] hover:bg-white">{t('View details and invest')}</button>
               </div>
             </div>
           </section>
@@ -161,7 +162,7 @@ function DashboardInversionista({ usuarioData }) {
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3"><div><p className="text-xs font-bold uppercase tracking-[.15em] text-[#1b7f61]">{t('Discover')}</p><h2 className="mt-1 text-2xl font-semibold text-[#1d3f42]">{t('Browse opportunities')}</h2></div><button type="button" onClick={() => setSearchTerm('')} className="text-xs font-semibold text-[#1d4b4c] hover:text-[#0d5d61]">{t('View all')}</button></div>
           <div className="mb-5"><input value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} placeholder={t('Search opportunities')} className="w-full rounded-full border border-[#d7d0c4] bg-white px-4 py-3 text-sm outline-none focus:border-[#006b73] sm:max-w-sm" /></div>
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {filtered.map((item) => <article key={item.id} className="flex flex-col overflow-hidden rounded-lg border border-[#d7d0c4] bg-[#f8f4ef] shadow-sm">{item.image ? <img src={item.image} alt="" className="h-32 w-full object-cover" /> : <div className="grid h-32 place-items-center bg-[#e8efed] text-xs text-[#5d6d6d]">{t('No image')}</div>}<div className="flex flex-1 flex-col p-4"><span className="w-fit rounded-full bg-[#edf5f2] px-2 py-1 text-[9px] font-semibold text-[#1d4b4c]">{item.category}</span><h3 className="mt-2 text-sm font-semibold text-[#1d3f42]">{item.title}</h3><p className="mt-1 text-[10px] text-[#5f7274]">{item.location}</p><p className="mt-3 flex-1 text-[11px] leading-4 text-[#5d6d6d]">{item.objective}</p><div className="mt-3 grid grid-cols-2 gap-2 text-[10px]"><span className="rounded bg-[#f0f3f0] p-2">{t('Goal')} <b className="block text-[#1f4043]">{item.goal}</b></span><span className="rounded bg-[#f0f3f0] p-2">{t('Expected project profit')} <b className="block text-[#1f4043]">${item.expectedProfit.toLocaleString('en-US')}</b></span><span className="col-span-2 rounded bg-[#f0f3f0] p-2">{t('Estimated return period')} <b className="text-[#1f4043]">{item.returnMonths ? `${item.returnMonths} ${t('months')}` : t('Not available')}</b></span></div><button type="button" onClick={() => setSelectedOpportunity(item)} className="mt-3 w-full rounded-md bg-[#006b73] px-3 py-2 text-[10px] font-bold uppercase text-white hover:bg-[#005159]">{t('Invest')}</button></div></article>)}
+            {filtered.map((item) => <article key={item.id} className="flex flex-col overflow-hidden rounded-lg border border-[#d7d0c4] bg-[#f8f4ef] shadow-sm">{item.image ? <img src={item.image} alt="" className="h-32 w-full object-cover" /> : <div className="grid h-32 place-items-center bg-[#e8efed] text-xs text-[#5d6d6d]">{t('No image')}</div>}<div className="flex flex-1 flex-col p-4"><span className="w-fit rounded-full bg-[#edf5f2] px-2 py-1 text-[9px] font-semibold text-[#1d4b4c]">{item.category}</span><h3 className="mt-2 text-sm font-semibold text-[#1d3f42]">{item.title}</h3><p className="mt-1 text-[10px] text-[#5f7274]">{item.location}</p><p className="mt-3 flex-1 text-[11px] leading-4 text-[#5d6d6d]">{item.objective}</p><div className="mt-3 grid grid-cols-2 gap-2 text-[10px]"><span className="rounded bg-[#f0f3f0] p-2">{t('Goal')} <b className="block text-[#1f4043]">{item.goal}</b></span><span className="rounded bg-[#f0f3f0] p-2">{t('Expected project profit')} <b className="block text-[#1f4043]">${item.expectedProfit.toLocaleString('en-US')}</b></span><span className="col-span-2 rounded bg-[#f0f3f0] p-2">{t('Estimated return period')} <b className="text-[#1f4043]">{item.returnMonths ? `${item.returnMonths} ${t('months')}` : t('Not available')}</b></span></div><button type="button" onClick={() => onOpenProject?.(item.id)} className="mt-3 w-full rounded-md bg-[#006b73] px-3 py-2 text-[10px] font-bold uppercase text-white hover:bg-[#005159]">{t('View details')}</button></div></article>)}
           </div>
           {filtered.length === 0 && <p className="rounded-lg border border-dashed border-[#cbd4d3] p-10 text-center text-sm text-[#446062]">{t('No opportunities found.')}</p>}
         </section>
@@ -180,13 +181,14 @@ function DashboardInversionista({ usuarioData }) {
           <div className="fixed inset-0 z-50 overflow-y-auto bg-[#173f43]/55 p-4 sm:p-8" role="dialog" aria-modal="true" aria-labelledby="investment-detail-title">
             <div className="mx-auto my-6 w-full max-w-2xl overflow-hidden rounded-2xl bg-[#f8f4ef] shadow-2xl">
               <div className="relative h-48 bg-[#dcece8]">
-                {selectedOpportunity.image ? <img src={selectedOpportunity.image} alt="" className="h-full w-full object-cover" /> : <div className="grid h-full place-items-center text-sm text-[#5d6d6d]">{t('No project image')}</div>}
+                {selectedOpportunity.image ? <img src={selectedOpportunity.image} alt={selectedOpportunity.title} className="h-full w-full object-cover" /> : <div className="grid h-full place-items-center text-sm text-[#5d6d6d]">{t('No project image')}</div>}
                 <button type="button" onClick={() => { setSelectedOpportunity(null); setMontoInversion(''); }} className="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full bg-white/90 text-[#526164] shadow" aria-label="Close"><X size={18} /></button>
               </div>
               <div className="p-5 sm:p-7">
                 <p className="text-[10px] font-bold uppercase tracking-[.16em] text-[#1b7f61]">{t('Project details')}</p>
                 <h2 id="investment-detail-title" className="mt-2 text-2xl font-bold text-[#1d3f42]">{selectedOpportunity.title}</h2>
-                <div className="mt-4 grid gap-3 sm:grid-cols-4">
+                <p className="mt-2 flex items-center gap-1.5 text-sm text-[#5d6d6d]"><MapPin size={15} className="shrink-0 text-[#168b68]" />{selectedOpportunity.location}</p>
+                <div className="mt-5 grid gap-3 sm:grid-cols-3">
                   {[
                     ['Category', selectedOpportunity.category],
                     ['Goal', selectedOpportunity.goal],
@@ -196,8 +198,10 @@ function DashboardInversionista({ usuarioData }) {
                     ['Estimated return period', selectedOpportunity.returnMonths ? `${selectedOpportunity.returnMonths} ${t('months')}` : t('Not available')],
                   ].map(([label, value]) => <div key={label} className="rounded-lg bg-white p-3"><p className="text-[10px] uppercase tracking-wide text-[#899496]">{t(label)}</p><p className="mt-1 text-sm font-bold text-[#1d3f42]">{value}</p></div>)}
                 </div>
-                <div className="mt-5"><div className="flex justify-between text-[10px] font-semibold text-[#687577]"><span>{t('Funding progress')}</span><span>{progress.toFixed(0)}%</span></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-[#dce6e2]"><div className="h-full rounded-full bg-[#168b68]" style={{ width: `${progress}%` }} /></div></div>
-                <div className="mt-5 grid gap-4 sm:grid-cols-2"><div><p className="text-[10px] uppercase tracking-wide text-[#899496]">Project period</p><p className="mt-1 text-sm font-semibold text-[#1d3f42]">{selectedOpportunity.startDate} to {selectedOpportunity.endDate}</p></div><div><p className="text-[10px] uppercase tracking-wide text-[#899496]">Description</p><p className="mt-1 text-sm leading-5 text-[#5d6d6d]">{selectedOpportunity.objective}</p></div></div>
+                <div className="mt-5 rounded-lg bg-white p-4"><div className="flex justify-between gap-3 text-xs font-semibold text-[#687577]"><span>{t('Funding progress')}</span><span>{progress.toFixed(0)}%</span></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-[#dce6e2]"><div className="h-full rounded-full bg-[#168b68]" style={{ width: `${progress}%` }} /></div><div className="mt-2 flex justify-between gap-3 text-[11px] text-[#687577]"><span>{t('Raised')}: <strong className="text-[#1d3f42]">{selectedOpportunity.raised}</strong></span><span>{t('Goal')}: <strong className="text-[#1d3f42]">{selectedOpportunity.goal}</strong></span></div></div>
+                <section className="mt-5" aria-labelledby="project-description-title"><h3 id="project-description-title" className="text-xs font-bold uppercase tracking-wide text-[#899496]">{t('Project description')}</h3><p className="mt-2 whitespace-pre-line text-sm leading-6 text-[#5d6d6d]">{selectedOpportunity.objective}</p></section>
+                <div className="mt-5 grid gap-4 border-t border-[#e0d9cf] pt-4 sm:grid-cols-2"><div><p className="text-[10px] uppercase tracking-wide text-[#899496]">{t('Project period')}</p><p className="mt-1 text-sm font-semibold text-[#1d3f42]">{selectedOpportunity.startDate} to {selectedOpportunity.endDate}</p></div><div><p className="text-[10px] uppercase tracking-wide text-[#899496]">{t('Estimated return period')}</p><p className="mt-1 text-sm font-semibold text-[#1d3f42]">{selectedOpportunity.returnMonths ? `${selectedOpportunity.returnMonths} ${t('months')}` : t('Not available')}</p></div></div>
+                {selectedOpportunity.contractUrl && <a href={selectedOpportunity.contractUrl} target="_blank" rel="noreferrer" className="mt-5 inline-flex items-center gap-2 rounded-md border border-[#ccd6d3] bg-white px-3 py-2.5 text-xs font-semibold text-[#0b5d61] hover:border-[#0b5d61]"><FileText size={15} />{t('Review project document')}<ExternalLink size={13} /></a>}
                 <div className="mt-6 border-t border-[#e0d9cf] pt-5"><p className="text-sm font-bold text-[#1d3f42]">Decide your investment</p><p className="mt-1 text-xs text-[#687577]">The investment will be recorded as pending payment.</p><label className="mt-4 block text-xs font-semibold text-[#526164]">Amount to invest<input type="number" min="1" max={available || undefined} value={montoInversion} onChange={(event) => setMontoInversion(event.target.value)} className="mt-2 w-full rounded-md border border-[#ccd6d3] bg-white px-3 py-2.5 text-sm outline-none focus:border-[#006b73]" placeholder="500" /></label>{amount > 0 && <div className="mt-2 space-y-1 text-xs text-[#1b7f61]"><p>This represents {selectedOpportunity.goalAmount > 0 ? ((amount / selectedOpportunity.goalAmount) * 100).toFixed(2) : '0.00'}% of the project goal.</p><p>Your estimated share of project profit: ${selectedOpportunity.goalAmount > 0 ? (selectedOpportunity.expectedProfit * amount / selectedOpportunity.goalAmount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'} USD.</p><p>Estimated return period: {selectedOpportunity.returnMonths ? `${selectedOpportunity.returnMonths} months` : 'Not available'}.</p></div>}<p className="mt-2 text-[10px] leading-4 text-[#687577]">Profit and timing are estimates declared by the entrepreneur, not guaranteed returns.</p><div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end"><button type="button" onClick={() => { setSelectedOpportunity(null); setMontoInversion(''); }} className="rounded-md border border-[#ccd6d3] px-4 py-2.5 text-xs font-semibold text-[#526164]">Cancel</button><button type="button" onClick={confirmInvestment} disabled={invirtiendo} className="rounded-md bg-[#006b73] px-5 py-2.5 text-xs font-bold uppercase text-white hover:bg-[#005159] disabled:opacity-60">{invirtiendo ? 'Saving...' : 'Confirm investment'}</button></div></div>
               </div>
             </div>

@@ -14,7 +14,63 @@ function Avatar({ person }) {
   );
 }
 
-function Chat({ usuarioData }) {
+async function getOrCreateConversation(currentDui, contact, projectId) {
+  if (projectId) {
+    const { data: projectConversation, error: projectConversationError } = await supabase
+      .from('chat_conversations')
+      .select('id')
+      .eq('id_proyecto', projectId)
+      .maybeSingle();
+    if (projectConversationError) return { id: null, error: projectConversationError };
+
+    if (projectConversation) {
+      const { data: participants, error: participantsError } = await supabase
+        .from('chat_participants')
+        .select('dui')
+        .eq('conversation_id', projectConversation.id);
+      if (participantsError) return { id: null, error: participantsError };
+      const participantIds = (participants || []).map((participant) => String(participant.dui));
+      if (participantIds.includes(String(currentDui)) && participantIds.includes(String(contact.dui))) {
+        return { id: projectConversation.id, error: null };
+      }
+      return { id: null, error: new Error('The project conversation has different participants.') };
+    }
+  } else {
+    const { data: participantRows, error: participantError } = await supabase
+      .from('chat_participants')
+      .select('conversation_id')
+      .eq('dui', currentDui);
+    if (participantError) return { id: null, error: participantError };
+    const conversationIds = (participantRows || []).map((row) => row.conversation_id);
+    if (conversationIds.length) {
+      const { data: shared, error: sharedError } = await supabase
+        .from('chat_participants')
+        .select('conversation_id')
+        .eq('dui', contact.dui)
+        .in('conversation_id', conversationIds)
+        .limit(1)
+        .maybeSingle();
+      if (sharedError) return { id: null, error: sharedError };
+      if (shared?.conversation_id) return { id: shared.conversation_id, error: null };
+    }
+  }
+
+  const { data: created, error: createError } = await supabase
+    .from('chat_conversations')
+    .insert(projectId ? { id_proyecto: projectId } : {})
+    .select('id')
+    .single();
+  if (createError || !created) return { id: null, error: createError || new Error('Conversation could not be created.') };
+
+  const { error: insertError } = await supabase.from('chat_participants').insert([
+    { conversation_id: created.id, dui: currentDui },
+    { conversation_id: created.id, dui: contact.dui },
+  ]);
+  if (insertError) return { id: null, error: insertError };
+  return { id: created.id, error: null };
+}
+
+function Chat({ usuarioData, initialRecipient, initialProjectId, compact = false }) {
   const [activeConversation, setActiveConversation] = useState(null);
   const [conversations, setConversations] = useState([]);
   const [messages, setMessages] = useState([]);
@@ -24,6 +80,7 @@ function Chat({ usuarioData }) {
   const [mobileView, setMobileView] = useState("inbox");
   const [newMessageOpen, setNewMessageOpen] = useState(false);
   const [recipientSearch, setRecipientSearch] = useState("");
+  const [directLoading, setDirectLoading] = useState(Boolean(initialRecipient));
   const currentDui = usuarioData?.dui;
   const filtered = conversations.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase()),
@@ -33,25 +90,48 @@ function Chat({ usuarioData }) {
     let mounted = true;
     const loadPeople = async () => {
       if (!currentDui) return;
-      const { data, error } = await supabase
+      let peopleQuery = supabase
         .from('Usuario')
         .select('dui, nombre, apellidos, usuario, tipo_usuario')
         .neq('dui', currentDui)
         .order('nombre');
+      if (initialRecipient?.dui) peopleQuery = peopleQuery.eq('dui', initialRecipient.dui);
+      const { data, error } = await peopleQuery;
       if (mounted && !error) {
-        setConversations((data || []).map((person, index) => ({
+        const people = (data || []).map((person, index) => ({
           dui: person.dui,
           name: person.nombre && person.apellidos ? `${person.nombre} ${person.apellidos}` : person.usuario,
           role: person.tipo_usuario === 'Inversionista' ? 'Investor' : 'Entrepreneur',
           color: ['#0b817d', '#d17b4a', '#6f7db8'][index % 3],
           time: '',
           preview: 'Start a conversation.',
-        })));
+        }));
+        setConversations(people);
+        if (initialRecipient?.dui) {
+          const recipient = people[0];
+          if (!recipient) {
+            setNotice('This entrepreneur is not available for chat.');
+            setDirectLoading(false);
+            return;
+          }
+          const { id, error: conversationError } = await getOrCreateConversation(currentDui, recipient, initialProjectId);
+          if (!mounted) return;
+          if (conversationError) {
+            setNotice(`Conversation could not be opened: ${conversationError.message}`);
+          } else {
+            setActiveConversation({ ...recipient, id });
+            setMobileView('chat');
+          }
+          setDirectLoading(false);
+        }
+      } else if (mounted && initialRecipient?.dui) {
+        setNotice(`Contacts could not be loaded: ${error.message}`);
+        setDirectLoading(false);
       }
     };
     loadPeople();
     return () => { mounted = false; };
-  }, [currentDui]);
+  }, [currentDui, initialProjectId, initialRecipient?.dui]);
 
   useEffect(() => {
     let mounted = true;
@@ -92,18 +172,10 @@ function Chat({ usuarioData }) {
 
   const openConversation = async (conversation) => {
     if (!currentDui || !conversation?.dui) return;
-    const { data: participantRow } = await supabase.from('chat_participants').select('conversation_id').eq('dui', currentDui);
-    const conversationIds = (participantRow || []).map((row) => row.conversation_id);
-    let conversationId = null;
-    if (conversationIds.length) {
-      const { data: shared } = await supabase.from('chat_participants').select('conversation_id').eq('dui', conversation.dui).in('conversation_id', conversationIds).limit(1).maybeSingle();
-      conversationId = shared?.conversation_id || null;
-    }
-    if (!conversationId) {
-      const { data: created } = await supabase.from('chat_conversations').insert({}).select('id').single();
-      if (!created) return;
-      conversationId = created.id;
-      await supabase.from('chat_participants').insert([{ conversation_id: conversationId, dui: currentDui }, { conversation_id: conversationId, dui: conversation.dui }]);
+    const { id: conversationId, error } = await getOrCreateConversation(currentDui, conversation);
+    if (error || !conversationId) {
+      setNotice(`Conversation could not be opened: ${error?.message || 'Unknown error'}`);
+      return;
     }
     setActiveConversation({ ...conversation, id: conversationId });
     setMobileView('chat');
@@ -121,7 +193,7 @@ function Chat({ usuarioData }) {
   };
 
   return (
-    <div className="chat-shell flex min-h-screen flex-col bg-[#f7f3ee] text-[#424a4c]">
+    <div className={`chat-shell flex ${compact ? 'h-[560px] max-h-[70vh]' : 'min-h-screen'} flex-col bg-[#f7f3ee] text-[#424a4c]`}>
       <main className="flex min-h-0 w-full flex-1 flex-col px-0 py-0">
         {notice && (
           <div
@@ -139,7 +211,7 @@ function Chat({ usuarioData }) {
           </div>
         )}
         <div className="chat-window flex min-h-0 flex-1 overflow-hidden border-y border-[#dfe5df] bg-white">
-          <section
+          {!initialRecipient && <section
             className={`${mobileView === "chat" ? "hidden" : "flex"} inbox-panel w-full shrink-0 flex-col border-r border-[#424a4c]/15 sm:flex sm:w-80 lg:w-96`}
             aria-label="Conversation list"
           >
@@ -222,23 +294,25 @@ function Chat({ usuarioData }) {
                 </button>
               ))}
             </div>
-          </section>
+          </section>}
           <section
-            className={`${mobileView === "inbox" ? "hidden" : "flex"} chat-panel min-w-0 flex-1 flex-col sm:flex`}
+            className={`${initialRecipient || mobileView === "chat" ? "flex" : "hidden sm:flex"} chat-panel min-w-0 flex-1 flex-col`}
             aria-label="Active conversation"
           >
-            {activeConversation ? (
+            {directLoading ? (
+              <p className="m-auto px-6 text-center text-sm text-[#718083]">Opening project conversation...</p>
+            ) : activeConversation ? (
               <>
                 <header className="flex h-18 shrink-0 items-center justify-between border-b border-[#424a4c]/10 px-4 sm:px-6">
                   <div className="flex items-center gap-2 sm:gap-3">
-                    <button
+                    {!initialRecipient && <button
                       type="button"
                       onClick={() => setMobileView("inbox")}
                       className="grid h-8 w-8 place-items-center rounded-full text-2xl text-[#424a4c] sm:hidden"
                       aria-label="Back to inbox"
                     >
                       <ArrowLeft size={16} />
-                    </button>
+                    </button>}
                     <Avatar person={activeConversation} />
                     <div>
                       <h2 className="text-sm font-bold">
