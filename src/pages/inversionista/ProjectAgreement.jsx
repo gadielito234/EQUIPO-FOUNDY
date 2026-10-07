@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { ArrowLeft, FileText, Handshake, MapPin, MessageCircle, ShieldCheck, TrendingUp } from 'lucide-react';
 import { useLanguage } from '../../components/LanguageContext.jsx';
 import InvestmentContracts from '../../components/InvestmentContracts.jsx';
+import SimulatedPaymentModal from '../../components/SimulatedPaymentModal.jsx';
 import Chat from '../chat/Chat.jsx';
 import { supabase } from '../../services/supabase.js';
 
@@ -23,6 +24,7 @@ function ProjectAgreement({ projectId, usuarioData, onBack }) {
   const [investmentAmount, setInvestmentAmount] = useState('');
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
   const [investmentSaved, setInvestmentSaved] = useState(false);
   const [notice, setNotice] = useState('');
 
@@ -84,8 +86,7 @@ function ProjectAgreement({ projectId, usuarioData, onBack }) {
     ? (project.expectedProfit * amount) / project.goalAmount
     : 0;
 
-  const recordInvestment = async (event) => {
-    event.preventDefault();
+  const recordInvestment = () => {
     if (!project || !usuarioData?.dui || !Number.isFinite(amount) || amount <= 0) {
       setNotice(t('Enter a valid amount to invest.'));
       return;
@@ -103,26 +104,64 @@ function ProjectAgreement({ projectId, usuarioData, onBack }) {
       return;
     }
 
+    setPaymentModalOpen(true);
+  };
+
+  const completeSimulatedPayment = async (paymentMethod) => {
     setSaving(true);
     try {
-      const { data: investment, error: investmentError } = await supabase.from('inversion').insert({
-        fecha: new Date().toISOString().slice(0, 10),
-        monto: amount,
-        participacion: participation,
-        id_proyecto: project.id_proyecto,
-        id_inversionista: usuarioData.dui,
-      }).select('id_inversion').single();
-      if (investmentError) throw investmentError;
+      const paymentDate = new Date().toISOString().slice(0, 10);
+      const { data: matchingInvestments, error: matchingInvestmentsError } = await supabase
+        .from('inversion')
+        .select('id_inversion')
+        .eq('fecha', paymentDate)
+        .eq('monto', amount)
+        .eq('id_proyecto', project.id_proyecto)
+        .eq('id_inversionista', usuarioData.dui)
+        .order('id_inversion', { ascending: false });
+      if (matchingInvestmentsError) throw matchingInvestmentsError;
+
+      let investment = null;
+      if (matchingInvestments?.length) {
+        const candidateIds = matchingInvestments.map((row) => row.id_inversion);
+        const { data: existingPayments, error: existingPaymentsError } = await supabase
+          .from('pago')
+          .select('id_inversion')
+          .in('id_inversion', candidateIds);
+        if (existingPaymentsError) throw existingPaymentsError;
+        const paidInvestmentIds = new Set((existingPayments || []).map((row) => String(row.id_inversion)));
+        investment = matchingInvestments.find((row) => !paidInvestmentIds.has(String(row.id_inversion))) || null;
+      }
+
+      if (!investment) {
+        const { data: newInvestment, error: investmentError } = await supabase.from('inversion').insert({
+          fecha: paymentDate,
+          monto: amount,
+          participacion: participation,
+          id_proyecto: project.id_proyecto,
+          id_inversionista: usuarioData.dui,
+        }).select('id_inversion').single();
+        if (investmentError) throw investmentError;
+        investment = newInvestment;
+      }
 
       const { error: paymentError } = await supabase.from('pago').insert({
-        fecha: new Date().toISOString().slice(0, 10),
+        fecha: paymentDate,
         monto: amount,
-        estado: 'pending',
-        metodo: 'Pending',
+        estado: 'paid',
+        metodo: paymentMethod,
         id_inversionista: usuarioData.dui,
         id_inversion: investment.id_inversion,
       });
-      if (paymentError) throw paymentError;
+      if (paymentError) {
+        const { error: rollbackError } = await supabase.from('inversion')
+          .delete()
+          .eq('id_inversion', investment.id_inversion);
+        const rollbackNote = rollbackError
+          ? ` No se pudo limpiar la inversión parcial ${investment.id_inversion}: ${rollbackError.message}`
+          : '';
+        throw new Error(`${paymentError.message}${rollbackNote}`, { cause: paymentError });
+      }
 
       const { data: currentProject, error: readError } = await supabase
         .from('proyecto')
@@ -144,12 +183,15 @@ function ProjectAgreement({ projectId, usuarioData, onBack }) {
       });
 
       setInvestmentSaved(true);
+      setPaymentModalOpen(false);
       setProject((current) => ({ ...current, raisedAmount: current.raisedAmount + amount }));
       setNotice(notificationError
         ? t('Investment recorded; the agreement will be generated after payment confirmation.')
         : t('Investment recorded; the agreement will be generated after payment confirmation.'));
     } catch (saveError) {
-      setNotice(`${t('Investment could not be recorded:')} ${saveError.message}`);
+      const message = `${t('Investment could not be recorded:')} ${saveError.message}`;
+      setNotice(message);
+      throw new Error(message, { cause: saveError });
     } finally {
       setSaving(false);
     }
@@ -180,7 +222,7 @@ function ProjectAgreement({ projectId, usuarioData, onBack }) {
         <button type="button" onClick={onBack} className="mb-5 inline-flex items-center gap-2 text-sm font-semibold text-[#0b5d61] hover:text-[#07474b]"><ArrowLeft size={16} />{t('Back to opportunities')}</button>
 
         <section className="overflow-hidden rounded-xl border border-[#e9e2d8] bg-white">
-          <div className="grid lg:grid-cols-[minmax(0,1.1fr)_minmax(300px,0.9fr)]">
+          <div className="grid min-w-0 grid-cols-1 lg:grid-cols-[minmax(0,1.1fr)_minmax(300px,0.9fr)]">
             {project.imagen_url ? <img src={project.imagen_url} alt={project.nombre} className="h-56 w-full object-cover lg:h-full lg:min-h-72" /> : <div className="grid min-h-56 place-items-center bg-[#e8efed] text-sm text-[#5d6d6d]">{t('No project image')}</div>}
             <div className="flex flex-col justify-center p-5 sm:p-8">
               <div className="flex flex-wrap items-center gap-2"><span className="rounded-full bg-[#edf5f2] px-3 py-1 text-xs font-semibold text-[#1d4b4c]">{project.categoryName}</span><span className="flex items-center gap-1 text-xs text-[#718083]"><MapPin size={14} />{project.ubicacion || t('Location unavailable')}</span></div>
@@ -213,7 +255,7 @@ function ProjectAgreement({ projectId, usuarioData, onBack }) {
         )}
 
         {activeTab === 'agreement' && (
-          <section className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(300px,0.72fr)]">
+          <section className="mt-5 grid min-w-0 grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(300px,0.72fr)]">
             <div className="space-y-5">
               <section className="rounded-xl border border-[#e9e2d8] bg-white p-5 sm:p-7">
                 <div className="flex items-start gap-3"><span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[#e4f3ed] text-[#0b5d61]"><FileText size={19} /></span><div><p className="text-[10px] font-bold uppercase tracking-[.16em] text-[#168b68]">{t('Automatically prepared')}</p><h2 className="mt-1 text-lg font-bold">{t('Agreement preview')}</h2><p className="mt-1 text-xs leading-5 text-[#718083]">{t('This draft updates with your proposed amount. The final agreement is created automatically after payment confirmation.')}</p></div></div>
@@ -230,6 +272,7 @@ function ProjectAgreement({ projectId, usuarioData, onBack }) {
                   ].map(([label, value]) => <div key={label} className="flex flex-wrap justify-between gap-2 py-3 text-xs"><span className="text-[#718083]">{label}</span><strong className="text-right text-[#1d3f42]">{value}</strong></div>)}
                 </div>
                 <p className="mt-4 flex gap-2 text-[11px] leading-5 text-[#687577]"><ShieldCheck size={15} className="mt-0.5 shrink-0 text-[#168b68]" />{t('Profit and timing are estimates declared by the entrepreneur, not guaranteed returns. This preview is informational and is not a signed legal contract.')}</p>
+                <p className="mt-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-[11px] font-semibold text-amber-900">Pasarela de demostración: no se procesan cobros reales ni se solicitan datos bancarios.</p>
                 <label className="mt-5 flex items-start gap-2 text-xs leading-5 text-[#526164]"><input type="checkbox" checked={acceptedTerms} onChange={(event) => setAcceptedTerms(event.target.checked)} className="mt-1 accent-[#0b5d61]" />{t('I have reviewed the estimated terms and understand they are not guaranteed.')}</label>
                 {investmentSaved ? <p className="mt-5 rounded-lg bg-[#e9f6ef] p-4 text-sm font-semibold text-[#176345]" role="status">{t('Investment recorded; the agreement will be generated after payment confirmation.')}</p> : <button type="button" onClick={recordInvestment} disabled={saving || availableAmount <= 0} className="mt-5 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-[#0b5d61] px-5 py-3 text-sm font-bold text-white hover:bg-[#08494c] disabled:cursor-not-allowed disabled:opacity-55">{saving ? t('Saving...') : t('Confirm investment')}<TrendingUp size={16} /></button>}
               </section>
@@ -248,6 +291,13 @@ function ProjectAgreement({ projectId, usuarioData, onBack }) {
       </div>
 
       {notice && <div role="status" className="fixed bottom-5 left-1/2 z-50 max-w-[calc(100vw-2rem)] -translate-x-1/2 rounded-lg bg-[#173f43] px-4 py-3 text-xs font-semibold text-white shadow-lg">{notice}</div>}
+      <SimulatedPaymentModal
+        open={paymentModalOpen}
+        amount={amount}
+        projectName={project.nombre}
+        onClose={() => setPaymentModalOpen(false)}
+        onConfirm={completeSimulatedPayment}
+      />
     </main>
   );
 }

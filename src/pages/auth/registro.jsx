@@ -132,7 +132,7 @@ function Register({ onSwitchToLogin, onBackToLanding }) {
     const fieldClass = 'mt-2 block h-11 w-full rounded-lg border border-[#d7e5e3] bg-white px-3.5 text-sm text-[#142d39] outline-none transition placeholder:text-[#9aabad] hover:border-[#8fc9c0] focus:border-[#079184] focus:ring-4 focus:ring-[#079184]/10';
 
     return (
-        <main className="min-h-screen bg-[#f4faf8] text-[#142d39] lg:grid lg:grid-cols-[minmax(31rem,0.9fr)_1.1fr]">
+        <main className="min-h-screen bg-[#f4faf8] text-[#142d39] lg:grid lg:grid-cols-[minmax(31rem,0.9fr)_minmax(0,1.1fr)]">
             <section className="relative overflow-hidden px-6 py-7 sm:px-10 lg:flex lg:min-h-screen lg:flex-col lg:px-[clamp(2.5rem,7vw,7rem)] lg:py-10">
                 <div className="absolute -left-28 -top-28 h-72 w-72 rounded-full bg-[#b9e8dd]/45" aria-hidden="true" />
                 <div className="relative z-10 flex items-center justify-between">

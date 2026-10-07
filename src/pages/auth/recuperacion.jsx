@@ -53,7 +53,7 @@ function Recuperacion({ onVolver, onContinuar, onBackToLanding }) {
     };
 
     return (
-        <main className="min-h-screen bg-[#f4faf8] text-[#142d39] lg:grid lg:grid-cols-[0.92fr_1.08fr]">
+        <main className="min-h-screen bg-[#f4faf8] text-[#142d39] lg:grid lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
             <section className="relative flex min-h-screen flex-col overflow-hidden px-6 py-7 sm:px-10 lg:px-[clamp(2.5rem,7vw,7rem)] lg:py-10">
                 <div className="absolute -left-28 -top-28 h-72 w-72 rounded-full bg-[#b9e8dd]/45" aria-hidden="true" />
                 <div className="relative z-10 flex items-center justify-between">

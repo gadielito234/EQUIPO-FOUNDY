@@ -33,7 +33,9 @@ Ejecuta primero tu esquema base en el SQL Editor de Supabase y después ejecuta 
 
 La aplicación usa actualmente la tabla `Usuario` como autenticación heredada. Para producción debes migrar el login a Supabase Auth y reemplazar las políticas públicas del bucket por políticas basadas en `auth.uid()`; la clave publishable no debe considerarse un mecanismo de seguridad.
 
-El formulario pide al emprendedor el monto de ganancia total que proyecta para el proyecto y el plazo estimado en meses. Al publicar, ambos datos y el monto objetivo son obligatorios. El inversionista ve la proyección de su parte calculada según su participación antes de invertir. El script crea `investment_contracts` y genera una constancia cuando `pago.estado` cambia a `paid`, `completed`, `confirmed`, `confirmado`, `pagado` o `completado`; guarda el aporte, la ganancia estimada proporcional y la fecha de retorno calculada desde la confirmación del pago. El inversionista y el emprendedor pueden consultar y descargar el PDF desde sus paneles. Las ganancias y fechas son proyecciones, no rendimientos garantizados; el documento debe ser revisado y firmado por ambas partes. El flujo actual solo registra pagos pendientes: conecta el proveedor de pagos para actualizar `pago.estado` tras confirmar realmente una transacción. No marques el pago como confirmado antes de recibir esa confirmación.
+El formulario pide al emprendedor el monto de ganancia total que proyecta para el proyecto y el plazo estimado en meses. Al publicar, ambos datos y el monto objetivo son obligatorios. El inversionista ve la proyección de su parte calculada según su participación antes de invertir. El script crea `investment_contracts` y genera una constancia cuando `pago.estado` cambia a `paid`, `completed`, `confirmed`, `confirmado`, `pagado` o `completado`; guarda el aporte, la ganancia estimada proporcional y la fecha de retorno calculada desde la confirmación del pago. El inversionista y el emprendedor pueden consultar y descargar el PDF desde sus paneles. Las ganancias y fechas son proyecciones, no rendimientos garantizados; el documento debe ser revisado y firmado por ambas partes.
+
+La pantalla de pago actual es **solo una simulación**: no solicita datos bancarios ni procesa dinero, pero marca el pago de prueba como confirmado para demostrar el flujo y generar la constancia. No la uses para recibir inversiones reales. Antes de producción, reemplázala con un proveedor de pagos, valida su confirmación en el servidor mediante webhook y solo entonces actualiza `pago.estado`.
 
 Después de ejecutar ambos scripts, inicia con `npm run dev` y registra un usuario nuevo para comprobar registro, login, perfil, proyecto, inversión, notificaciones, chat y soporte.
 
@@ -44,4 +46,5 @@ Después de ejecutar ambos scripts, inicia con `npm run dev` y registra un usuar
 - `src/pages/inversionista`: oportunidades e inversiones.
 - `src/pages/chat`: mensajería.
 - `src/pages/shared`: layout y configuración común.
+- `src/components`: componentes compartidos, incluida la pasarela de demostración.
 - `src/services`: conexión con servicios externos.

@@ -5,6 +5,7 @@ import {
   FolderKanban,
   Home,
   LogOut,
+  Menu,
   MessageSquareText,
   Search,
   Settings,
@@ -60,6 +61,7 @@ export default function DashboardLayout({
 }) {
   const { t } = useLanguage();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const nombreUsuario = usuarioData?.usuario || 'Usuario';
@@ -79,12 +81,14 @@ export default function DashboardLayout({
     if (label === 'Messages') onOpenChat?.();
     if (label === 'Settings') onOpenSettings?.();
     if (label === 'Notifications') onOpenNotifications?.();
+    setMobileNavOpen(false);
   };
 
   const handleTopNavAction = (label) => {
     if (label === 'Dashboard') onBackHome?.();
     if (label === 'Statistics') onOpenStatistics?.();
     if (label === 'Foundy card') onOpenFoundyCard?.();
+    setMobileNavOpen(false);
   };
 
   const handleSearchAction = (key) => {
@@ -98,6 +102,7 @@ export default function DashboardLayout({
     if (key === 'settings') onOpenSettings?.();
     if (key === 'notifications') onOpenNotifications?.();
     if (key === 'support') onOpenSupport?.();
+    setMobileNavOpen(false);
   };
 
   useEffect(() => {
@@ -119,21 +124,26 @@ export default function DashboardLayout({
   };
 
   return (
-    <div className="min-h-screen bg-[#efeee7] text-[#1e4043]">
+    <div className="min-h-screen bg-[#efeee7] text-[#1e4043] animate-fade-up">
       <div className="flex min-h-screen w-full flex-col bg-[#f7f3ee]">
-        <div className="flex min-h-0 flex-1">
+        <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
+          {mobileNavOpen && <button type="button" className="fixed inset-0 z-50 cursor-default bg-[#123b3d]/50 backdrop-blur-[2px] lg:hidden" aria-label="Close navigation menu" onClick={() => setMobileNavOpen(false)} />}
           <aside
           className={[
-            'group relative border-r border-[#e9e2d8] bg-[#f8f4ef] px-3 py-5 transition-all duration-300 ease-in-out',
-            sidebarOpen ? 'w-64' : 'w-[88px]',
+            'group fixed inset-y-0 left-0 z-[60] overflow-y-auto border-r border-[#e9e2d8] bg-[#f8f4ef] px-3 py-5 transition-all duration-300 ease-in-out lg:sticky lg:top-0 lg:h-screen lg:shrink-0 lg:overflow-y-auto lg:border-b-0',
+            sidebarOpen ? 'w-[min(84vw,18rem)] lg:w-64' : 'w-[min(84vw,18rem)] lg:w-[88px]',
+            mobileNavOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
           ].join(' ')}
-          onMouseEnter={() => setSidebarOpen(true)}
-          onMouseLeave={() => setSidebarOpen(false)}
+          onMouseEnter={() => { if (window.matchMedia('(min-width: 1024px)').matches) setSidebarOpen(true); }}
+          onMouseLeave={() => { if (window.matchMedia('(min-width: 1024px)').matches) setSidebarOpen(false); }}
         >
           <div className="mb-7 flex items-center justify-center border-b border-[#e3ddd2] pb-4">
             <button
               type="button"
-              onClick={() => setSidebarOpen((value) => !value)}
+              onClick={() => {
+                if (window.matchMedia('(min-width: 1024px)').matches) setSidebarOpen((value) => !value);
+                else setMobileNavOpen(false);
+              }}
               className="flex h-12 w-12 items-center justify-center rounded-full hover:bg-[#efeae2]"
               aria-label={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
             >
@@ -147,7 +157,7 @@ export default function DashboardLayout({
 
           <button
             type="button"
-            onClick={onOpenInvestorProfile || onBackHome}
+                  onClick={() => { (onOpenInvestorProfile || onBackHome)?.(); setMobileNavOpen(false); }}
             className="mb-6 flex w-full items-center gap-3 overflow-hidden rounded-2xl bg-[#f1ece4] px-2 py-2.5 text-left transition-all duration-300 hover:bg-[#ede5dc]"
           >
             <div className="h-11 w-11 shrink-0 overflow-hidden rounded-full border-[2px] border-[#1b4a4d] shadow-sm">
@@ -160,9 +170,9 @@ export default function DashboardLayout({
             <div
               className={[
                 'transition-all duration-300',
-                sidebarOpen ? 'translate-x-0 opacity-100' : '-translate-x-3 opacity-0',
+                      sidebarOpen ? 'translate-x-0 opacity-100' : 'lg:hidden',
               ].join(' ')}
-            >
+                    >
               <p className="text-sm font-semibold text-[#1f4043]">{nombreUsuario}</p>
               <p className="text-[10px] uppercase tracking-[0.18em] text-[#6b7a7c]">Online</p>
             </div>
@@ -193,7 +203,7 @@ export default function DashboardLayout({
                       'whitespace-nowrap transition-all duration-300',
                       sidebarOpen ? 'translate-x-0 opacity-100' : '-translate-x-2 opacity-0',
                     ].join(' ')}
-                    style={{ display: sidebarOpen ? 'inline' : 'none' }}
+                    style={{ display: sidebarOpen ? 'inline' : undefined }}
                   >
                     {t(label)}
                   </span>
@@ -221,7 +231,7 @@ export default function DashboardLayout({
                   'whitespace-nowrap transition-all duration-300',
                   sidebarOpen ? 'translate-x-0 opacity-100' : '-translate-x-2 opacity-0',
                 ].join(' ')}
-                style={{ display: sidebarOpen ? 'inline' : 'none' }}
+                style={{ display: sidebarOpen ? 'inline' : undefined }}
               >
                 {t('Support')}
               </span>
@@ -244,7 +254,7 @@ export default function DashboardLayout({
                   'whitespace-nowrap transition-all duration-300',
                   sidebarOpen ? 'translate-x-0 opacity-100' : '-translate-x-2 opacity-0',
                 ].join(' ')}
-                style={{ display: sidebarOpen ? 'inline' : 'none' }}
+                style={{ display: sidebarOpen ? 'inline' : undefined }}
               >
                 {t('Logout')}
               </span>
@@ -252,19 +262,23 @@ export default function DashboardLayout({
           </div>
           </aside>
 
-          <main className="flex-1">
-          <header className="border-b-[3px] border-[#0b5d61] bg-[#f5f2eb] px-6 py-4">
-            <div className="flex items-center justify-between gap-4">
-              <nav className="flex items-center gap-8 text-sm font-medium text-[#506466]">
+          <main className="flex-1 min-w-0">
+          <header className="border-b-[3px] border-[#0b5d61] bg-[#f5f2eb] px-3 py-3 sm:px-6">
+            <div className="flex flex-wrap items-center gap-3 lg:flex-nowrap lg:justify-between">
+              <button type="button" onClick={() => { setSidebarOpen(true); setMobileNavOpen(true); }} className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-[#d8e1dc] bg-white text-[#0b5d61] lg:hidden" aria-label="Open navigation menu" aria-expanded={mobileNavOpen}>
+                <Menu size={19} />
+              </button>
+              <nav className="flex min-w-0 flex-1 items-center gap-4 overflow-x-auto pb-1 text-sm font-medium text-[#506466] sm:gap-6 lg:flex-initial lg:overflow-visible">
                 {visibleTopNav.map(({ label, key }) => (
                   <button
                     key={key || label}
                     type="button"
                     onClick={() => handleTopNavAction(label)}
                     className={[
-                      'relative pb-1',
+                      'relative shrink-0 pb-1 whitespace-nowrap',
                       activeNav === key ? 'border-b-2 border-[#0d5d61] text-[#0d5d61]' : 'hover:text-[#0d5d61]',
                     ].join(' ')}
+                    onClick={() => setMobileNavOpen(false)}
                   >
                     {t(label)}
                   </button>
@@ -272,8 +286,8 @@ export default function DashboardLayout({
               </nav>
 
               {showSearch && (
-                <div className="relative flex items-center justify-end">
-                  <div className="flex items-center gap-2 rounded-full border border-[#c9d1ce] bg-[#f0f3f0] px-3 py-2 text-sm text-[#5f7274] shadow-sm focus-within:border-[#0b817d] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#0b817d]/15">
+                <div className="relative flex w-full items-center justify-end lg:w-auto">
+                  <div className="flex w-full items-center gap-2 rounded-full border border-[#c9d1ce] bg-[#f0f3f0] px-3 py-2 text-sm text-[#5f7274] shadow-sm focus-within:border-[#0b817d] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#0b817d]/15 sm:w-64">
                     <Search className="h-4 w-4" />
                     <input
                       value={searchTerm}
@@ -284,7 +298,7 @@ export default function DashboardLayout({
                       }}
                       type="text"
                       placeholder={searchPlaceholder}
-                      className="w-28 border-0 bg-transparent text-sm text-[#485d60] outline-none placeholder:text-[#7a8a8b] sm:w-40"
+                      className="w-full border-0 bg-transparent text-sm text-[#485d60] outline-none placeholder:text-[#7a8a8b]"
                       aria-label="Search"
                     />
                   </div>

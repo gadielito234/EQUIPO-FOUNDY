@@ -59,7 +59,7 @@ export default function Support({ onOpenChat, usuarioData }) {
           </div>
         </header>
 
-        <div className="mt-6 grid gap-6 lg:grid-cols-[1.08fr_.92fr]">
+        <div className="mt-6 grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)]">
           <section className="rounded-[24px] border border-[#dfe5e5] bg-white p-5 shadow-[0_10px_30px_rgba(17,52,60,0.04)] sm:p-6" aria-labelledby="faq-heading">
             <div className="flex items-center gap-3">
               <span className="grid h-10 w-10 place-items-center rounded-full bg-[#e7f5f1] text-[#006b73]"><BookOpen size={18} /></span>

@@ -137,14 +137,14 @@ function App() {
   if (usuarioLogueado) {
     if (pantallaLogueado === 'notifications') {
       return renderWithDashboardLayout(
-        <Notifications user={usuarioLogueado} role={usuarioLogueado?.tipo_usuario} onBack={() => setPantallaLogueado(esInversionista ? 'dashboard' : 'home')} />,
+        <Notifications user={usuarioLogueado} role={usuarioLogueado?.tipo_usuario} />,
         { activeNav: 'notifications', showSearch: true }
       );
     }
 
     if (pantallaLogueado === 'support') {
       return renderWithDashboardLayout(
-        <Support usuarioData={usuarioLogueado} onBack={irAHome} onOpenChat={() => setPantallaLogueado('chat')} />,
+        <Support usuarioData={usuarioLogueado} onOpenChat={() => setPantallaLogueado('chat')} />,
         { activeNav: 'support', showSearch: true }
       );
     }
@@ -157,12 +157,6 @@ function App() {
       return renderWithDashboardLayout(
         <Statistics
           usuarioData={usuarioLogueado}
-          onCerrarSesion={handleCerrarSesion}
-          onBackHome={irAHome}
-          onOpenSettings={irAConfiguracion}
-          onOpenChat={() => setPantallaLogueado('chat')}
-          onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
-          embeddedLayout
         />,
         { activeNav: 'statistics', showSearch: true }
       );
@@ -289,13 +283,7 @@ function App() {
     return renderWithDashboardLayout(
       <Inicio
         usuarioData={usuarioLogueado}
-        onCerrarSesion={handleCerrarSesion}
-        showSidebar={false}
-        onOpenSettings={irAConfiguracion}
-        onBackHome={irAHome}
         onOpenCreateProject={() => setPantallaLogueado('create-project')}
-        onOpenChat={() => setPantallaLogueado('chat')}
-        onOpenFoundyCard={() => setPantallaLogueado('foundy-card')}
       />,
       { activeNav: 'dashboard', showSearch: true }
     );
@@ -346,7 +334,7 @@ function App() {
   }
 
   return (
-    <main className="min-h-screen bg-[#f4faf8] text-[#142d39] lg:grid lg:grid-cols-[0.9fr_1.1fr]">
+    <main className="min-h-screen bg-[#f4faf8] text-[#142d39] lg:grid lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
       <section className="relative flex min-h-screen flex-col overflow-hidden px-6 py-7 sm:px-10 lg:px-[clamp(2.5rem,7vw,7rem)] lg:py-10">
         <div className="absolute -right-24 -top-24 h-64 w-64 rounded-full bg-[#b9e8dd]/45" aria-hidden="true" />
         <div className="relative z-10 flex items-center justify-between">

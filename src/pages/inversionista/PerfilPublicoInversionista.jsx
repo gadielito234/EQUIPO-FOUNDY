@@ -142,7 +142,7 @@ export default function PerfilPublicoInversionista({
             </div>
           </div>
 
-          <div className="grid gap-6 p-6 sm:p-8 lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="grid min-w-0 grid-cols-1 gap-6 p-6 sm:p-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
             <div className="space-y-6">
               <section className="rounded-[24px] border border-[#e6eeec] bg-[#f9fbfa] p-5">
                 <div className="flex items-center gap-3">
@@ -220,9 +220,9 @@ export default function PerfilPublicoInversionista({
                 </div>
 
                 <div className="mt-4 space-y-3 text-sm text-[#5d7277]">
-                  <p className="flex items-center gap-2">
-                    <Mail size={14} className="text-[#0b5d61]" />
-                    {correo}
+                  <p className="flex min-w-0 items-center gap-2">
+                    <Mail size={14} className="shrink-0 text-[#0b5d61]" />
+                    <span className="[overflow-wrap:anywhere]">{correo}</span>
                   </p>
                   <p className="flex items-center gap-2">
                     <MessageSquareText size={14} className="text-[#0b5d61]" />

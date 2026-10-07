@@ -105,12 +105,15 @@ export default function Landing({ onLogin, onRegister }) {
                         </button>
                     </div>
                 </nav>
+                <div className="mx-auto flex max-w-7xl gap-5 overflow-x-auto px-6 pb-3 text-xs font-semibold text-[#315d60] sm:px-10 lg:hidden" aria-label="Mobile navigation">
+                    {navigation.map((item) => <a key={item.name} href={item.href} className="shrink-0 whitespace-nowrap py-1 hover:text-[#006b70]">{item.name}</a>)}
+                </div>
             </header>
 
             <main id="top">
                 <section className="relative isolate overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(13,168,147,0.18),transparent_35%),linear-gradient(135deg,#ecf9f5_0%,#ffffff_45%,#edf7f5_100%)]">
                     <div className="hero-grid-pattern absolute inset-0 opacity-40" aria-hidden="true" />
-                    <div className="relative mx-auto grid min-h-[42rem] max-w-7xl items-center gap-10 px-6 py-12 sm:px-10 lg:grid-cols-[1fr_1.05fr] lg:px-12 lg:py-20">
+                    <div className="relative mx-auto grid min-h-0 max-w-7xl grid-cols-1 items-center gap-10 px-4 py-10 sm:px-10 sm:py-12 lg:min-h-[42rem] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:px-12 lg:py-20">
                         <div className="landing-reveal max-w-2xl">
                             <span className="inline-flex items-center gap-2 rounded-full border border-[#a4dbd1] bg-[#ebfaf6] px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-[#0b817d]">
                                 <BadgeCheck className="h-3.5 w-3.5" />
@@ -151,7 +154,7 @@ export default function Landing({ onLogin, onRegister }) {
                         <div className="landing-reveal landing-reveal-delay-2 relative">
                             <div className="glass-panel soft-glow relative overflow-hidden rounded-[2rem] border border-[#dbeee9] bg-white/60 p-4 shadow-[0_28px_60px_rgba(0,72,77,0.15)]">
                                 <div className="overflow-hidden rounded-[1.5rem] bg-[#e6f5f1]">
-                                    <img src="/images/emprendedores-negocios.jpg" alt="Emprendedores y negocios colaborando" className="landing-hero-image h-[30rem] w-full object-cover sm:h-[34rem]" />
+                                    <img src="/images/emprendedores-negocios.jpg" alt="Emprendedores y negocios colaborando" className="landing-hero-image h-[20rem] w-full object-cover sm:h-[28rem] lg:h-[34rem]" />
                                 </div>
 
                                 <div className="absolute left-8 top-8 rounded-2xl border border-white/60 bg-white/80 p-3 shadow-lg backdrop-blur-sm">
@@ -260,7 +263,7 @@ export default function Landing({ onLogin, onRegister }) {
                 </section>
 
                 <section id="about" className="mx-auto max-w-7xl px-6 py-20 sm:px-10 lg:px-12" aria-labelledby="about-title">
-                    <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+                    <div className="grid min-w-0 grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center">
                         <div className="landing-reveal">
                             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#21a99b]">Nosotros</p>
                             <h2 id="about-title" className="mt-3 text-3xl font-bold tracking-tight text-[#006b70] sm:text-4xl">Creamos una comunidad para impulsar ideas con relevancia.</h2>

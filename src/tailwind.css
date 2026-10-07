@@ -1,5 +1,19 @@
 @import 'tailwindcss';
 
+html {
+	scroll-behavior: smooth;
+}
+
+body {
+	background: #f5faf8;
+	font-family: Inter, 'Segoe UI', sans-serif;
+	overflow-x: clip;
+}
+
+* {
+	box-sizing: border-box;
+}
+
 @keyframes foundy-logo-glow {
 	0%, 100% {
 		filter: drop-shadow(0 0 0 rgba(32, 183, 155, 0));
@@ -17,6 +31,35 @@
 		filter: drop-shadow(0 0 5px rgba(126, 239, 212, 0.7));
 		opacity: 1;
 		transform: scale(1.025);
+	}
+}
+
+@keyframes float-up {
+	0% {
+		opacity: 0;
+		transform: translateY(18px) scale(0.98);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}
+
+@keyframes float-soft {
+	0%, 100% {
+		transform: translateY(0px);
+	}
+	50% {
+		transform: translateY(-8px);
+	}
+}
+
+@keyframes pulse-soft {
+	0%, 100% {
+		box-shadow: 0 0 0 rgba(33, 169, 155, 0);
+	}
+	50% {
+		box-shadow: 0 0 0 12px rgba(33, 169, 155, 0.08);
 	}
 }
 
@@ -51,11 +94,23 @@
 
 button:not(:disabled),
 a {
-	transition-duration: 180ms;
+	transition: transform 180ms ease, box-shadow 180ms ease, opacity 180ms ease, background-color 180ms ease, border-color 180ms ease;
+}
+
+button:not(:disabled):hover,
+a:hover {
+	transform: translateY(-1px);
 }
 
 button:not(:disabled):active {
-	transform: scale(0.97);
+	transform: scale(0.98);
+}
+
+button:not(:disabled):focus-visible,
+a:focus-visible,
+input:focus-visible {
+	outline: 2px solid rgba(13, 129, 125, 0.55);
+	outline-offset: 2px;
 }
 
 .hero-grid-pattern {
@@ -72,6 +127,81 @@ button:not(:disabled):active {
 
 .soft-glow {
 	box-shadow: 0 28px 60px rgba(0, 72, 77, 0.14);
+}
+
+.animate-fade-up {
+	animation: float-up 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.chat-panel {
+	animation: float-up 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.chat-message {
+	animation: float-up 350ms ease-out both;
+}
+
+.typing-dot {
+	display: inline-block;
+	height: 7px;
+	width: 7px;
+	border-radius: 999px;
+	background: #14a89a;
+	animation: typing-bounce 1.2s ease-in-out infinite;
+}
+
+.typing-dot:nth-child(2) {
+	animation-delay: 0.15s;
+}
+
+.typing-dot:nth-child(3) {
+	animation-delay: 0.3s;
+}
+
+@keyframes typing-bounce {
+	0%, 80%, 100% {
+		opacity: 0.35;
+		transform: translateY(0);
+	}
+	40% {
+		opacity: 1;
+		transform: translateY(-3px);
+	}
+}
+
+.card-float {
+	animation: float-soft 6s ease-in-out infinite;
+}
+
+.card-pulse {
+	animation: pulse-soft 3.2s ease-in-out infinite;
+}
+
+.section-reveal {
+	animation: float-up 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+article,
+.card,
+.panel,
+[data-card] {
+	transition: transform 260ms ease, box-shadow 260ms ease, border-color 260ms ease, opacity 260ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+	article:hover,
+	.card:hover,
+	.panel:hover,
+	[data-card]:hover {
+		transform: translateY(-6px);
+		box-shadow: 0 18px 35px rgba(0, 107, 112, 0.12);
+	}
+
+	.landing-card:hover {
+		transform: translateY(-7px);
+		border-color: rgba(33, 169, 155, 0.45);
+		box-shadow: 0 18px 35px rgba(0, 107, 112, 0.12);
+	}
 }
 
 .landing-reveal {
@@ -97,17 +227,22 @@ button:not(:disabled):active {
 	transition: transform 300ms ease, box-shadow 300ms ease, border-color 300ms ease;
 }
 
-.landing-card:hover {
-	transform: translateY(-7px);
-	border-color: rgba(33, 169, 155, 0.45);
-	box-shadow: 0 18px 35px rgba(0, 107, 112, 0.12);
+@media (max-width: 767px) {
+	html {
+		scroll-behavior: auto;
+	}
+
+	button:not(:disabled):hover,
+	a:hover {
+		transform: none;
+	}
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.foundy-logo-glow {
-		animation: none;
-	}
-
+	.foundy-logo-glow,
+	.card-float,
+	.card-pulse,
+	.section-reveal,
 	.landing-reveal,
 	.landing-hero-image,
 	.landing-hero-overlay {
@@ -116,6 +251,10 @@ button:not(:disabled):active {
 		transform: none;
 	}
 
+	article,
+	.card,
+	.panel,
+	[data-card],
 	.landing-card,
 	.landing-card:hover {
 		transition: none;

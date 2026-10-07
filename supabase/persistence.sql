@@ -65,7 +65,7 @@ alter table public.inversion
   drop constraint if exists inversion_id_inversionista_fkey;
 
 alter table public.pago
-  drop constraint if exists PAGO_ID_inversionista_fkey;
+  drop constraint if exists "PAGO_ID_inversionista_fkey";
 
 do $$
 begin

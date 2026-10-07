@@ -73,22 +73,22 @@ function AIConsultingPanel({ project }) {
   };
 
   return (
-    <aside className="flex h-[min(720px,calc(100vh-3rem))] min-h-[520px] flex-col overflow-hidden rounded-2xl border border-[#424a4c]/15 bg-white shadow-[0_12px_35px_rgba(20,65,65,0.06)]">
-      <header className="flex items-center justify-between border-b border-slate-100 p-5 sm:p-6">
+    <aside className="chat-panel flex h-[min(720px,calc(100dvh-2rem))] min-h-[min(420px,calc(100dvh-2rem))] w-full max-w-[760px] flex-col overflow-hidden rounded-[28px] border border-[#dfe9e5] bg-[linear-gradient(180deg,#ffffff_0%,#f8fbfa_100%)] shadow-[0_24px_60px_rgba(17,52,60,0.08)] ring-1 ring-white/80 sm:h-[min(720px,calc(100dvh-3rem))] sm:min-h-[520px]">
+      <header className="flex items-center justify-between border-b border-slate-100 bg-[radial-gradient(circle_at_top_left,_rgba(27,153,137,0.18),transparent_40%)] p-4 sm:p-5">
         <div className="flex items-center gap-3">
-          <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#006b73] text-white">
-            <Sparkles size={19} />
+          <span className="card-pulse grid h-11 w-11 place-items-center rounded-2xl bg-[linear-gradient(135deg,#006b73_0%,#0f8d87_100%)] text-white shadow-[0_12px_24px_rgba(0,107,115,0.24)]">
+            <Sparkles size={18} />
           </span>
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#006b73]">Foundy</p>
-            <h2 className="text-lg font-black text-[#424a4c]">Asistente de proyectos</h2>
+            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#006b73]">Foundy</p>
+            <h2 className="text-base font-black text-[#2d4043] sm:text-lg">Asistente de proyectos</h2>
             <p className="text-[11px] text-[#168b68]">{loading ? 'Escribiendo...' : 'Consultoría para tu idea'}</p>
           </div>
         </div>
         <button
           type="button"
           onClick={resetConversation}
-          className="grid h-9 w-9 place-items-center rounded-lg text-[#687577] transition hover:bg-slate-100 hover:text-[#006b73]"
+          className="grid h-9 w-9 place-items-center rounded-xl text-[#687577] transition hover:bg-slate-100 hover:text-[#006b73]"
           aria-label="Reiniciar conversación"
           title="Nueva conversación"
         >
@@ -96,39 +96,45 @@ function AIConsultingPanel({ project }) {
         </button>
       </header>
 
-      <div ref={transcriptRef} className="min-h-0 flex-1 space-y-4 overflow-y-auto bg-[#fbfcfa] p-4 sm:p-5" role="log" aria-live="polite" aria-label="Conversación con el asistente">
+      <div ref={transcriptRef} className="min-h-0 flex-1 space-y-4 overflow-y-auto bg-[linear-gradient(180deg,#f6fbfa_0%,#fbfcfb_100%)] p-3.5 sm:p-5" role="log" aria-live="polite" aria-label="Conversación con el asistente">
         {messages.map((message, index) => {
           const isAssistant = message.role === 'assistant';
           return (
-            <div key={`${message.role}-${index}`} className={`flex items-start gap-2.5 ${isAssistant ? '' : 'flex-row-reverse'}`}>
-              <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-full ${isAssistant ? 'bg-[#e0f1eb] text-[#006b73]' : 'bg-[#e8eaef] text-[#465266]'}`}>
+            <div key={`${message.role}-${index}`} className={`chat-message flex items-end gap-2.5 ${isAssistant ? '' : 'flex-row-reverse'}`}>
+              <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-full ${isAssistant ? 'bg-[#e0f1eb] text-[#006b73]' : 'bg-[#e7ecf1] text-[#465266]'}`}>
                 {isAssistant ? <Bot size={15} /> : <User size={15} />}
               </span>
-              <p className={`m-0 max-w-[88%] whitespace-pre-wrap rounded-2xl px-3.5 py-3 text-xs leading-5 ${isAssistant ? 'rounded-tl-sm bg-white text-[#424a4c] shadow-sm ring-1 ring-slate-100' : 'rounded-tr-sm bg-[#006b73] text-white'}`}>
+              <p className={`m-0 max-w-[87%] whitespace-pre-wrap rounded-2xl px-3.5 py-3 text-xs leading-5 sm:text-sm ${isAssistant ? 'rounded-tl-sm bg-white text-[#424a4c] shadow-[0_8px_18px_rgba(15,46,50,0.05)] ring-1 ring-slate-100' : 'rounded-tr-sm bg-[linear-gradient(135deg,#006b73_0%,#0a7b7f_100%)] text-white shadow-[0_12px_24px_rgba(0,107,115,0.18)]'}`}>
                 {message.content}
               </p>
             </div>
           );
         })}
         {loading && (
-          <div className="flex items-center gap-2.5 text-xs text-[#687577]">
+          <div className="chat-message flex items-end gap-2.5 text-xs text-[#687577]">
             <span className="grid h-7 w-7 place-items-center rounded-full bg-[#e0f1eb] text-[#006b73]"><Bot size={15} /></span>
-            <span className="rounded-2xl rounded-tl-sm bg-white px-3.5 py-3 shadow-sm ring-1 ring-slate-100">Estoy revisando tu consulta...</span>
+            <span className="rounded-2xl rounded-tl-sm bg-white px-3.5 py-3 shadow-[0_8px_18px_rgba(15,46,50,0.05)] ring-1 ring-slate-100">
+              <span className="inline-flex items-center gap-1.5">
+                <span className="typing-dot" />
+                <span className="typing-dot" />
+                <span className="typing-dot" />
+              </span>
+            </span>
           </div>
         )}
       </div>
 
       {messages.length === 1 && (
-        <div className="border-t border-slate-100 px-4 pt-4 sm:px-5">
-          <p className="mb-2 text-[10px] font-bold uppercase tracking-wide text-[#899496]">Prueba preguntando</p>
-          <div className="flex gap-2 overflow-x-auto pb-2">
+        <div className="border-t border-slate-100 bg-white/70 px-3 pt-3 sm:px-4 sm:pt-4">
+          <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[#899496]">Prueba preguntando</p>
+          <div className="flex flex-wrap gap-2 pb-2">
             {quickPrompts.map((prompt) => (
               <button
                 key={prompt}
                 type="button"
                 onClick={() => sendQuery(prompt)}
                 disabled={loading}
-                className="shrink-0 rounded-full border border-[#d6e5df] bg-[#f3faf6] px-3 py-2 text-left text-[10px] font-semibold text-[#1d4b4c] transition hover:border-[#0b817d] hover:bg-[#e5f5ef] disabled:opacity-50"
+                className="max-w-full whitespace-normal rounded-full border border-[#d6e5df] bg-[#f3faf6] px-3 py-2 text-left text-[10px] font-semibold text-[#1d4b4c] transition hover:border-[#0b817d] hover:bg-[#e5f5ef] hover:shadow-[0_10px_18px_rgba(27,153,137,0.10)] disabled:opacity-50"
               >
                 {prompt}
               </button>
@@ -138,7 +144,7 @@ function AIConsultingPanel({ project }) {
       )}
 
       {error && (
-        <div className="mx-4 mt-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-xs leading-5 text-red-800 sm:mx-5" role="alert">
+        <div className="mx-3 mt-3 rounded-2xl border border-red-200 bg-red-50 px-3 py-2.5 text-xs leading-5 text-red-800 shadow-sm sm:mx-4" role="alert">
           <p className="font-bold">No se pudo obtener una respuesta</p>
           <p>{error}</p>
           <button type="button" onClick={retryLastMessage} className="mt-1 font-bold underline" disabled={loading || messages.at(-1)?.role !== 'user'}>
@@ -148,13 +154,13 @@ function AIConsultingPanel({ project }) {
       )}
 
       <form
-        className="border-t border-slate-100 p-4 sm:p-5"
+        className="border-t border-slate-100 bg-white/80 p-3.5 sm:p-4"
         onSubmit={(event) => {
           event.preventDefault();
           sendQuery();
         }}
       >
-        <div className="flex items-end gap-2 rounded-xl border border-[#cbd8d4] bg-white p-2 focus-within:border-[#168b88] focus-within:ring-4 focus-within:ring-[#168b88]/10">
+        <div className="flex items-end gap-2 rounded-2xl border border-[#cbd8d4] bg-white p-2 shadow-[0_8px_20px_rgba(15,46,50,0.04)] transition focus-within:border-[#168b88] focus-within:ring-4 focus-within:ring-[#168b88]/10">
           <textarea
             ref={inputRef}
             rows={2}
@@ -169,12 +175,12 @@ function AIConsultingPanel({ project }) {
             }}
             placeholder="Escribe tu pregunta..."
             aria-label="Escribe tu pregunta para el asistente"
-            className="max-h-28 min-h-10 min-w-0 flex-1 resize-y bg-transparent px-2 py-1.5 text-xs leading-5 text-[#424a4c] outline-none placeholder:text-[#899496]"
+            className="max-h-28 min-h-10 min-w-0 flex-1 resize-y bg-transparent px-2 py-1.5 text-xs leading-5 text-[#424a4c] outline-none placeholder:text-[#899496] sm:text-sm"
           />
           <button
             type="submit"
             disabled={loading || !query.trim()}
-            className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-[#006b73] text-white transition hover:bg-[#00545b] disabled:cursor-not-allowed disabled:opacity-40"
+            className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[linear-gradient(135deg,#006b73_0%,#0d8d8b_100%)] text-white shadow-[0_12px_20px_rgba(0,107,115,0.18)] transition hover:-translate-y-0.5 hover:bg-[#00545b] disabled:cursor-not-allowed disabled:opacity-40"
             aria-label="Enviar mensaje"
           >
             <ArrowUp size={17} />

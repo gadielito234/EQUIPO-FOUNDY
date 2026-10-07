@@ -193,7 +193,7 @@ function Chat({ usuarioData, initialRecipient, initialProjectId, compact = false
   };
 
   return (
-    <div className={`chat-shell flex ${compact ? 'h-[560px] max-h-[70vh]' : 'min-h-screen'} flex-col bg-[#f7f3ee] text-[#424a4c]`}>
+    <div className={`chat-shell flex min-w-0 ${compact ? 'h-[min(560px,70dvh)] min-h-[320px]' : 'min-h-[calc(100dvh-12rem)]'} flex-col bg-[#f7f3ee] text-[#424a4c]`}>
       <main className="flex min-h-0 w-full flex-1 flex-col px-0 py-0">
         {notice && (
           <div
@@ -360,7 +360,7 @@ function Chat({ usuarioData, initialRecipient, initialProjectId, compact = false
                           {message.author}
                         </span>
                         <div
-                          className={`rounded-2xl px-4 py-3 text-xs leading-5 ${message.type === "sent" ? "rounded-br-sm bg-[#006b73] text-white" : "rounded-bl-sm bg-[#424a4c]/10"}`}
+                          className={`max-w-full [overflow-wrap:anywhere] rounded-2xl px-4 py-3 text-xs leading-5 ${message.type === "sent" ? "rounded-br-sm bg-[#006b73] text-white" : "rounded-bl-sm bg-[#424a4c]/10"}`}
                         >
                           {message.text}
                         </div>

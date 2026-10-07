@@ -143,7 +143,7 @@ function DashboardInversionista({ usuarioData, onOpenProject }) {
       <div className="w-full">
         {opportunities.length > 0 && (
           <section className="overflow-hidden rounded-2xl bg-[#006b73] p-6 text-white shadow-[0_12px_24px_rgba(0,80,85,0.16)] sm:p-8">
-            <div className="grid items-center gap-8 lg:grid-cols-[.7fr_1.3fr]">
+            <div className="grid min-w-0 grid-cols-1 items-center gap-8 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)]">
               {opportunities[0].image ? <img src={opportunities[0].image} alt="" className="mx-auto h-48 w-48 rounded-full border-4 border-[#dff1ed] object-cover sm:h-56 sm:w-56" /> : <div className="mx-auto grid h-48 w-48 place-items-center rounded-full border-4 border-[#dff1ed] bg-white/10 text-xs text-[#d5efee] sm:h-56 sm:w-56">{t('No image')}</div>}
               <div>
                 <p className="text-[10px] font-medium uppercase tracking-[.14em] text-[#d4efee]">{t('Featured opportunity')}</p>
