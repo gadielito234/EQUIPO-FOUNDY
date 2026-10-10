@@ -134,8 +134,6 @@ export default function DashboardLayout({
             sidebarOpen ? 'w-[min(84vw,18rem)] lg:w-64' : 'w-[min(84vw,18rem)] lg:w-[88px]',
             mobileNavOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
           ].join(' ')}
-          onMouseEnter={() => { if (window.matchMedia('(min-width: 1024px)').matches) setSidebarOpen(true); }}
-          onMouseLeave={() => { if (window.matchMedia('(min-width: 1024px)').matches) setSidebarOpen(false); }}
         >
           <div className="mb-7 flex items-center justify-center border-b border-[#e3ddd2] pb-4">
             <button
@@ -196,14 +194,13 @@ export default function DashboardLayout({
                   style={{ minHeight: '42px' }}
                 >
                   <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-base font-bold leading-none">
-                    <Icon className="h-4 w-4 stroke-[2.2]" />
+                    <Icon className="h-[18px] w-[18px] shrink-0 stroke-[2]" />
                   </span>
                   <span
                     className={[
                       'whitespace-nowrap transition-all duration-300',
-                      sidebarOpen ? 'translate-x-0 opacity-100' : '-translate-x-2 opacity-0',
+                      sidebarOpen ? 'translate-x-0 opacity-100' : 'hidden',
                     ].join(' ')}
-                    style={{ display: sidebarOpen ? 'inline' : undefined }}
                   >
                     {t(label)}
                   </span>
@@ -224,14 +221,13 @@ export default function DashboardLayout({
               style={{ minHeight: '42px' }}
             >
               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-base font-bold leading-none">
-                <CircleHelp className="h-4 w-4 stroke-[2.2]" />
+                <CircleHelp className="h-[18px] w-[18px] shrink-0 stroke-[2]" />
               </span>
               <span
                 className={[
                   'whitespace-nowrap transition-all duration-300',
-                  sidebarOpen ? 'translate-x-0 opacity-100' : '-translate-x-2 opacity-0',
+                  sidebarOpen ? 'translate-x-0 opacity-100' : 'hidden',
                 ].join(' ')}
-                style={{ display: sidebarOpen ? 'inline' : undefined }}
               >
                 {t('Support')}
               </span>
@@ -247,14 +243,13 @@ export default function DashboardLayout({
               style={{ minHeight: '42px' }}
             >
               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-base font-bold leading-none">
-                <LogOut className="h-4 w-4 stroke-[2.2]" />
+                <LogOut className="h-[18px] w-[18px] shrink-0 stroke-[2]" />
               </span>
               <span
                 className={[
                   'whitespace-nowrap transition-all duration-300',
-                  sidebarOpen ? 'translate-x-0 opacity-100' : '-translate-x-2 opacity-0',
+                  sidebarOpen ? 'translate-x-0 opacity-100' : 'hidden',
                 ].join(' ')}
-                style={{ display: sidebarOpen ? 'inline' : undefined }}
               >
                 {t('Logout')}
               </span>
@@ -278,7 +273,6 @@ export default function DashboardLayout({
                       'relative shrink-0 pb-1 whitespace-nowrap',
                       activeNav === key ? 'border-b-2 border-[#0d5d61] text-[#0d5d61]' : 'hover:text-[#0d5d61]',
                     ].join(' ')}
-                    onClick={() => setMobileNavOpen(false)}
                   >
                     {t(label)}
                   </button>
