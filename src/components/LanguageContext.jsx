@@ -82,7 +82,7 @@ const translations = {
     'Loading your projects...': 'Cargando tus proyectos...',
     'You have no registered projects yet.': 'Aún no tienes proyectos registrados.',
     'No description available.': 'Descripción no disponible.',
-    'No pudimos cargar tus proyectos. Intenta nuevamente.': 'We could not load your projects. Please try again.',
+    'We could not load your projects. Please try again.': 'No pudimos cargar tus proyectos. Intenta nuevamente.',
     'Conectamos ideas, emprendedores e inversionistas para construir nuevas oportunidades en El Salvador.': 'We connect ideas, entrepreneurs, and investors to build new opportunities in El Salvador.',
     'Conecta. Crece. Hazlo posible.': 'Connect. Grow. Make it happen.',
     'Explora': 'Explore',
@@ -180,9 +180,17 @@ const translations = {
 };
 
 const LanguageContext = createContext(null);
+const LANGUAGE_INITIALIZED_KEY = 'foundy-language-initialized';
 
 export function LanguageProvider({ children }) {
   const [language, setLanguageState] = useState(() => {
+    const initialized = window.localStorage.getItem(LANGUAGE_INITIALIZED_KEY) === 'true';
+    if (!initialized) {
+      window.localStorage.setItem('foundy-language', 'English');
+      window.localStorage.setItem(LANGUAGE_INITIALIZED_KEY, 'true');
+      return 'English';
+    }
+
     const savedLanguage = window.localStorage.getItem('foundy-language');
     return savedLanguage === 'Spanish' ? 'Spanish' : 'English';
   });

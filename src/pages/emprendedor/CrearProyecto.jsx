@@ -16,6 +16,7 @@ function CrearProyecto({ usuarioData }) {
   const [imagenes, setImagenes] = useState([]);
   const [alerta, setAlerta] = useState(null);
   const [categorias, setCategorias] = useState([]);
+  const [cargandoCategorias, setCargandoCategorias] = useState(true);
   const [guardando, setGuardando] = useState(false);
   const inputImagenes = useRef(null);
 
@@ -27,9 +28,14 @@ function CrearProyecto({ usuarioData }) {
         .order("nombre");
       if (error) {
         setAlerta({ tipo: "warning", texto: `Could not load categories: ${error.message}` });
+        setCargandoCategorias(false);
         return;
       }
       setCategorias(data || []);
+      setCargandoCategorias(false);
+      if (!data?.length) {
+        setAlerta({ tipo: "warning", texto: "No categories are configured. Run supabase/persistence.sql to seed the default categories." });
+      }
     };
     cargarCategorias();
   }, []);
@@ -228,7 +234,9 @@ function CrearProyecto({ usuarioData }) {
                       onChange={actualizarCampo}
                       className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-normal normal-case outline-none focus:border-[#168b88] focus:bg-white focus:ring-4 focus:ring-[#168b88]/10"
                     >
-                      <option value="">Select a category</option>
+                      <option value="">
+                        {cargandoCategorias ? "Loading categories..." : categorias.length ? "Select a category" : "No categories available"}
+                      </option>
                       {categorias.map((categoria) => (
                         <option key={categoria.id_categoria} value={categoria.id_categoria}>
                           {categoria.nombre}

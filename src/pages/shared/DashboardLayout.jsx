@@ -327,7 +327,7 @@ export default function DashboardLayout({
                 <div className="sm:col-span-2">
                   <img src="/images/foundy-negro.png" alt="Foundy" className="h-10 w-auto object-contain" />
                   <p className="mt-4 max-w-sm text-sm leading-6 text-teal-100">
-                    Conectamos ideas, emprendedores e inversionistas para construir nuevas oportunidades en El Salvador.
+                    We connect ideas, entrepreneurs, and investors to build new opportunities in El Salvador.
                   </p>
                 </div>
 

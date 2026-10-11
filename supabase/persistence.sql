@@ -93,6 +93,19 @@ values
   ('servicios', 'Services', 'Professional and community services')
 on conflict (id_categoria) do nothing;
 
+grant select on public.categoria to anon, authenticated;
+
+do $$
+begin
+  create policy foundy_categories_read_for_registration
+    on public.categoria
+    for select
+    to anon, authenticated
+    using (true);
+exception
+  when duplicate_object then null;
+end $$;
+
 create table if not exists public.preferencias_usuario (
   dui numeric primary key,
   alertas_transacciones boolean not null default true,

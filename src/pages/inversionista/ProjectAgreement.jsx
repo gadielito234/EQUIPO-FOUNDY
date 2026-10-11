@@ -158,7 +158,7 @@ function ProjectAgreement({ projectId, usuarioData, onBack }) {
           .delete()
           .eq('id_inversion', investment.id_inversion);
         const rollbackNote = rollbackError
-          ? ` No se pudo limpiar la inversión parcial ${investment.id_inversion}: ${rollbackError.message}`
+          ? ` Could not remove the partial investment ${investment.id_inversion}: ${rollbackError.message}`
           : '';
         throw new Error(`${paymentError.message}${rollbackNote}`, { cause: paymentError });
       }
@@ -272,7 +272,7 @@ function ProjectAgreement({ projectId, usuarioData, onBack }) {
                   ].map(([label, value]) => <div key={label} className="flex flex-wrap justify-between gap-2 py-3 text-xs"><span className="text-[#718083]">{label}</span><strong className="text-right text-[#1d3f42]">{value}</strong></div>)}
                 </div>
                 <p className="mt-4 flex gap-2 text-[11px] leading-5 text-[#687577]"><ShieldCheck size={15} className="mt-0.5 shrink-0 text-[#168b68]" />{t('Profit and timing are estimates declared by the entrepreneur, not guaranteed returns. This preview is informational and is not a signed legal contract.')}</p>
-                <p className="mt-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-[11px] font-semibold text-amber-900">Pasarela de demostración: no se procesan cobros reales ni se solicitan datos bancarios.</p>
+                <p className="mt-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-[11px] font-semibold text-amber-900">Demo checkout: no real charges are processed and no banking details are requested.</p>
                 <label className="mt-5 flex items-start gap-2 text-xs leading-5 text-[#526164]"><input type="checkbox" checked={acceptedTerms} onChange={(event) => setAcceptedTerms(event.target.checked)} className="mt-1 accent-[#0b5d61]" />{t('I have reviewed the estimated terms and understand they are not guaranteed.')}</label>
                 {investmentSaved ? <p className="mt-5 rounded-lg bg-[#e9f6ef] p-4 text-sm font-semibold text-[#176345]" role="status">{t('Investment recorded; the agreement will be generated after payment confirmation.')}</p> : <button type="button" onClick={recordInvestment} disabled={saving || availableAmount <= 0} className="mt-5 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-[#0b5d61] px-5 py-3 text-sm font-bold text-white hover:bg-[#08494c] disabled:cursor-not-allowed disabled:opacity-55">{saving ? t('Saving...') : t('Confirm investment')}<TrendingUp size={16} /></button>}
               </section>

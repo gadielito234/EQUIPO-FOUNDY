@@ -1,6 +1,25 @@
 ﻿import { useState } from 'react';
 import { supabase } from '../../services/supabase.js';
 
+function getRegistrationErrorMessage(error) {
+    const errorText = `${error?.constraint || ''} ${error?.message || ''} ${error?.details || ''}`.toLowerCase();
+
+    if (errorText.includes('correo') || errorText.includes('email')) {
+        return 'An account with this email address already exists.';
+    }
+    if (errorText.includes('usuario') || errorText.includes('username')) {
+        return 'This username is already taken.';
+    }
+    if (errorText.includes('dui')) {
+        return 'This user is already registered.';
+    }
+    if (error?.code === '23505') {
+        return 'An account with these details already exists.';
+    }
+
+    return error?.message || 'The account could not be saved. Check your Supabase connection.';
+}
+
 function Register({ onSwitchToLogin, onBackToLanding }) {
     const [formData, setFormData] = useState({
         nombre: '',
@@ -86,8 +105,21 @@ function Register({ onSwitchToLogin, onBackToLanding }) {
         }
 
         const duiNumerico = Number(formData.dui.replace('-', ''));
+        const correoNormalizado = formData.correo.trim();
 
         try {
+            const { data: correoExistente, error: correoError } = await supabase
+                .from('Usuario')
+                .select('dui')
+                .eq('correo', correoNormalizado)
+                .maybeSingle();
+
+            if (correoError) throw correoError;
+            if (correoExistente) {
+                setErrorMsg('An account with this email address already exists.');
+                return;
+            }
+
             const { data: usuarioExistente, error: consultaError } = await supabase
                 .from('Usuario')
                 .select('dui')
@@ -111,7 +143,7 @@ function Register({ onSwitchToLogin, onBackToLanding }) {
                         tipo_usuario: formData.tipo_usuario,
                         telefono: formData.telefono,
                         dui: duiNumerico,
-                        correo: formData.correo,
+                        correo: correoNormalizado,
                         contrasena: formData.contrasena,
                     },
                 ]);
@@ -123,7 +155,7 @@ function Register({ onSwitchToLogin, onBackToLanding }) {
                 if (onSwitchToLogin) onSwitchToLogin();
             }, 2000);
         } catch (error) {
-            setErrorMsg(error.message || 'The account could not be saved. Check your Supabase connection.');
+            setErrorMsg(getRegistrationErrorMessage(error));
         } finally {
             setLoading(false);
         }
@@ -149,8 +181,8 @@ function Register({ onSwitchToLogin, onBackToLanding }) {
                         <div className="grid gap-x-5 gap-y-5 sm:grid-cols-2">
                             <label className="text-xs font-semibold text-[#31515a]">First name<input className={fieldClass} type="text" name="nombre" minLength={2} maxLength={50} pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+" placeholder="John" value={formData.nombre} onChange={handleChange} required /></label>
                             <label className="text-xs font-semibold text-[#31515a]">Last name<input className={fieldClass} type="text" name="apellidos" minLength={2} maxLength={50} pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+" placeholder="Garcia" value={formData.apellidos} onChange={handleChange} required /></label>
-                            <label className="text-xs font-semibold text-[#31515a]">Correo<input className={fieldClass} type="email" name="correo" maxLength={100} placeholder="juan@ejemplo.com" value={formData.correo} onChange={handleChange} required /></label>
-                            <label className="text-xs font-semibold text-[#31515a]">Usuario<input className={fieldClass} type="text" name="usuario" minLength={4} maxLength={20} pattern="[A-Za-z0-9_]+" placeholder="juanperez" value={formData.usuario} onChange={handleChange} required /></label>
+                            <label className="text-xs font-semibold text-[#31515a]">Email<input className={fieldClass} type="email" name="correo" maxLength={100} placeholder="john@example.com" value={formData.correo} onChange={handleChange} required /></label>
+                            <label className="text-xs font-semibold text-[#31515a]">Username<input className={fieldClass} type="text" name="usuario" minLength={4} maxLength={20} pattern="[A-Za-z0-9_]+" placeholder="johnsmith" value={formData.usuario} onChange={handleChange} required /></label>
                             <label className="text-xs font-semibold text-[#31515a]">User type<select className={fieldClass} name="tipo_usuario" value={formData.tipo_usuario} onChange={handleChange} required><option value="">Select an option</option><option value="Emprendedor">Entrepreneur</option><option value="Inversionista">Investor</option></select></label>
                             <label className="text-xs font-semibold text-[#31515a]">Phone<input className={fieldClass} type="tel" name="telefono" placeholder="77777777" value={formData.telefono} inputMode="numeric" maxLength={8} pattern="[0-9]{8}" onChange={handleChange} required /></label>
                             <label className="text-xs font-semibold text-[#31515a]">DUI<input className={fieldClass} type="text" name="dui" placeholder="23560189-0" value={formData.dui || ''} maxLength={10} pattern="[0-9]{8}-[0-9]" onChange={handleChange} required /></label>
@@ -164,8 +196,8 @@ function Register({ onSwitchToLogin, onBackToLanding }) {
                     <button type="button" onClick={onBackToLanding} className="mt-3 block w-full text-center text-xs font-bold text-[#087f78] transition hover:text-[#066b67]">← Back to landing</button>
                 </div>
             </section>
-            <section className="relative hidden min-h-screen overflow-hidden bg-[#075d65] lg:block" aria-label="Emprendimiento y comercio local">
-                <img className="absolute inset-0 h-full w-full object-cover opacity-80" src="/images/emprendedores-negocios.jpg" alt="Emprendedores y comercio local" />
+            <section className="relative hidden min-h-screen overflow-hidden bg-[#075d65] lg:block" aria-label="Entrepreneurship and local business">
+                <img className="absolute inset-0 h-full w-full object-cover opacity-80" src="/images/emprendedores-negocios.jpg" alt="Entrepreneurs and local businesses" />
                 <div className="absolute inset-0 bg-[#075d65]/55" />
                 <div className="absolute inset-x-12 bottom-14 max-w-lg text-white">
                     <div className="mb-7 h-1 w-16 bg-[#64d2b8]" />

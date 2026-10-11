@@ -256,7 +256,7 @@ export default function PerfilPublicoInversionista({
                 </label>
               </div>
               <label className="text-sm font-semibold text-[#314f52]">
-                <span className="mb-2 block">Nombre visible</span>
+                <span className="mb-2 block">Display name</span>
                 <input value={displayName} onChange={(event) => setDisplayName(event.target.value)} className="w-full rounded-xl border border-[#dce7e4] bg-[#f8fbfa] px-4 py-3 font-normal outline-none focus:border-[#1ca38b] focus:ring-2 focus:ring-[#dff5f0]" />
               </label>
               <label className="text-sm font-semibold text-[#314f52]">

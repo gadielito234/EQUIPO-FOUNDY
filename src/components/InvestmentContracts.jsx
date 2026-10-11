@@ -5,15 +5,15 @@ import { useLanguage } from './LanguageContext.jsx';
 import { supabase } from '../services/supabase.js';
 
 const formatDate = (value) => {
-  if (!value) return 'No definida';
+  if (!value) return 'Not defined';
   const date = new Date(`${value}T00:00:00`);
-  return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString('es-SV');
+  return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString('en-US');
 };
 
 const formatMoney = (value) => (
   value === null || value === undefined
-    ? 'No definida'
-    : `$${Number(value).toLocaleString('es-SV', {
+    ? 'Not defined'
+    : `$${Number(value).toLocaleString('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     })}`
@@ -28,35 +28,35 @@ function downloadContract(contract) {
   document.setTextColor(0, 91, 97);
   document.setFont('helvetica', 'bold');
   document.setFontSize(18);
-  document.text('ACUERDO DE INVERSION', 18, y);
+  document.text('INVESTMENT AGREEMENT', 18, y);
   y += 10;
 
   document.setTextColor(70, 83, 84);
   document.setFont('helvetica', 'normal');
   document.setFontSize(10);
-  document.text(`Generado: ${formatDate(new Date().toISOString().slice(0, 10))}`, 18, y);
+  document.text(`Generated: ${formatDate(new Date().toISOString().slice(0, 10))}`, 18, y);
   y += 12;
   const returnTerm = contract.plazo_retorno_meses
-    ? `${contract.plazo_retorno_meses} meses`
-    : 'plazo no definido';
+    ? `${contract.plazo_retorno_meses} months`
+    : 'term not defined';
 
   const paragraphs = [
-    `Inversionista: ${contract.inversionista_nombre}`,
-    `Emprendedor: ${contract.emprendedor_nombre}`,
-    `Proyecto: ${contract.proyecto_nombre}`,
-    `Aporte confirmado: ${formatMoney(contract.monto)} USD`,
-    `Participacion registrada: ${Number(contract.participacion || 0).toFixed(2)}%`,
-    `Ganancia total estimada del proyecto: ${formatMoney(contract.ganancia_esperada_proyecto)} USD`,
-    `Parte estimada de la ganancia para este inversionista: ${formatMoney(contract.ganancia_estimada_inversionista)} USD`,
-    `Total estimado a recibir (aporte mas ganancia): ${formatMoney(Number(contract.monto || 0) + Number(contract.ganancia_estimada_inversionista || 0))} USD`,
-    `Plazo estimado: ${returnTerm}`,
-    `Fecha de confirmacion del pago: ${formatDate(contract.fecha_pago)}`,
-    `Fecha estimada de retorno: ${formatDate(contract.fecha_limite_retorno)}`,
+    `Investor: ${contract.inversionista_nombre}`,
+    `Entrepreneur: ${contract.emprendedor_nombre}`,
+    `Project: ${contract.proyecto_nombre}`,
+    `Confirmed contribution: ${formatMoney(contract.monto)} USD`,
+    `Recorded participation: ${Number(contract.participacion || 0).toFixed(2)}%`,
+    `Estimated total project profit: ${formatMoney(contract.ganancia_esperada_proyecto)} USD`,
+    `Estimated profit share for this investor: ${formatMoney(contract.ganancia_estimada_inversionista)} USD`,
+    `Estimated total to receive (contribution plus profit): ${formatMoney(Number(contract.monto || 0) + Number(contract.ganancia_estimada_inversionista || 0))} USD`,
+    `Estimated term: ${returnTerm}`,
+    `Payment confirmation date: ${formatDate(contract.fecha_pago)}`,
+    `Estimated return date: ${formatDate(contract.fecha_limite_retorno)}`,
     '',
-    'Terminos registrados',
-    `El emprendedor declara una ganancia total estimada de ${formatMoney(contract.ganancia_esperada_proyecto)} USD para el proyecto. La parte estimada de este inversionista es ${formatMoney(contract.ganancia_estimada_inversionista)} USD, calculada segun su participacion de ${Number(contract.participacion || 0).toFixed(2)}%. El plazo estimado es ${returnTerm} a partir de la confirmacion del pago.`,
+    'Recorded terms',
+    `The entrepreneur declares estimated total project profit of ${formatMoney(contract.ganancia_esperada_proyecto)} USD. This investor's estimated share is ${formatMoney(contract.ganancia_estimada_inversionista)} USD, calculated from their ${Number(contract.participacion || 0).toFixed(2)}% participation. The estimated term is ${returnTerm} from payment confirmation.`,
     '',
-    'La ganancia y la fecha de retorno son proyecciones declaradas por el emprendedor y no una garantia de resultados. Este documento es una constancia informativa generada a partir de los datos registrados en Foundy; las partes deben revisar los terminos y firmar el documento por separado para formalizar obligaciones legales. No sustituye asesoria legal.',
+    'Profit and return dates are projections provided by the entrepreneur and are not guaranteed. This document is an informational record generated from data entered in Foundy. Both parties should review the terms and sign a separate document to formalize legal obligations. This document is not a substitute for legal advice.',
   ];
 
   paragraphs.forEach((paragraph) => {
@@ -65,7 +65,7 @@ function downloadContract(contract) {
       return;
     }
 
-    if (paragraph === 'Terminos registrados') {
+    if (paragraph === 'Recorded terms') {
       document.setFont('helvetica', 'bold');
       document.setTextColor(0, 91, 97);
     } else {
@@ -90,9 +90,9 @@ function downloadContract(contract) {
   document.line(22, y + 15, 88, y + 15);
   document.line(122, y + 15, 188, y + 15);
   document.setFontSize(9);
-  document.text('Firma del inversionista', 22, y + 21);
-  document.text('Firma del emprendedor', 122, y + 21);
-  document.save(`foundy-acuerdo-inversion-${contract.id_inversion}.pdf`);
+  document.text('Investor signature', 22, y + 21);
+  document.text('Entrepreneur signature', 122, y + 21);
+  document.save(`foundy-investment-agreement-${contract.id_inversion}.pdf`);
 }
 
 export default function InvestmentContracts({ userId, party }) {

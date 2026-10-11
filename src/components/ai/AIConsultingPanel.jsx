@@ -3,15 +3,15 @@ import { ArrowUp, Bot, RotateCcw, Sparkles, User } from 'lucide-react';
 import { askGemini } from '../../services/aiService';
 
 const quickPrompts = [
-  'Ayudame a mejorar la descripcion de mi proyecto.',
-  'Que fortalezas y riesgos ves en mi idea?',
-  'Revisa si mi monto y ganancia estimada son coherentes.',
-  'Sugiere un nombre atractivo para mi proyecto.',
+  'Help me improve my project description.',
+  'What strengths and risks do you see in my idea?',
+  'Review whether my funding goal and estimated profit make sense.',
+  'Suggest an appealing name for my project.',
 ];
 
 const welcomeMessage = {
   role: 'assistant',
-  content: '¡Hola! Puedo ayudarte a mejorar tu idea, revisar la descripción, pensar en riesgos o analizar las cifras que ingresaste. ¿Por dónde empezamos?',
+  content: 'Hi! I can help improve your idea, review its description, think through risks, or analyze the figures you entered. Where should we start?',
 };
 
 function AIConsultingPanel({ project }) {
@@ -52,7 +52,7 @@ function AIConsultingPanel({ project }) {
       }, history);
       setMessages((current) => [...current, { role: 'assistant', content: reply }]);
     } catch (requestError) {
-      setError(requestError.message || 'No se pudo contactar al asistente. Intenta de nuevo.');
+      setError(requestError.message || 'The assistant could not be reached. Please try again.');
     } finally {
       setLoading(false);
       inputRef.current?.focus();
@@ -81,22 +81,22 @@ function AIConsultingPanel({ project }) {
           </span>
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#006b73]">Foundy</p>
-            <h2 className="text-base font-black text-[#2d4043] sm:text-lg">Asistente de proyectos</h2>
-            <p className="text-[11px] text-[#168b68]">{loading ? 'Escribiendo...' : 'Consultoría para tu idea'}</p>
+            <h2 className="text-base font-black text-[#2d4043] sm:text-lg">Project assistant</h2>
+            <p className="text-[11px] text-[#168b68]">{loading ? 'Thinking...' : 'Guidance for your idea'}</p>
           </div>
         </div>
         <button
           type="button"
           onClick={resetConversation}
           className="grid h-9 w-9 place-items-center rounded-xl text-[#687577] transition hover:bg-slate-100 hover:text-[#006b73]"
-          aria-label="Reiniciar conversación"
-          title="Nueva conversación"
+          aria-label="Reset conversation"
+          title="New conversation"
         >
           <RotateCcw size={16} />
         </button>
       </header>
 
-      <div ref={transcriptRef} className="min-h-0 flex-1 space-y-4 overflow-y-auto bg-[linear-gradient(180deg,#f6fbfa_0%,#fbfcfb_100%)] p-3.5 sm:p-5" role="log" aria-live="polite" aria-label="Conversación con el asistente">
+      <div ref={transcriptRef} className="min-h-0 flex-1 space-y-4 overflow-y-auto bg-[linear-gradient(180deg,#f6fbfa_0%,#fbfcfb_100%)] p-3.5 sm:p-5" role="log" aria-live="polite" aria-label="Conversation with the assistant">
         {messages.map((message, index) => {
           const isAssistant = message.role === 'assistant';
           return (
@@ -126,7 +126,7 @@ function AIConsultingPanel({ project }) {
 
       {messages.length === 1 && (
         <div className="border-t border-slate-100 bg-white/70 px-3 pt-3 sm:px-4 sm:pt-4">
-          <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[#899496]">Prueba preguntando</p>
+          <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[#899496]">Try asking</p>
           <div className="flex flex-wrap gap-2 pb-2">
             {quickPrompts.map((prompt) => (
               <button
@@ -145,10 +145,10 @@ function AIConsultingPanel({ project }) {
 
       {error && (
         <div className="mx-3 mt-3 rounded-2xl border border-red-200 bg-red-50 px-3 py-2.5 text-xs leading-5 text-red-800 shadow-sm sm:mx-4" role="alert">
-          <p className="font-bold">No se pudo obtener una respuesta</p>
+          <p className="font-bold">Could not get a response</p>
           <p>{error}</p>
           <button type="button" onClick={retryLastMessage} className="mt-1 font-bold underline" disabled={loading || messages.at(-1)?.role !== 'user'}>
-            Reintentar
+            Try again
           </button>
         </div>
       )}
@@ -173,20 +173,20 @@ function AIConsultingPanel({ project }) {
                 sendQuery();
               }
             }}
-            placeholder="Escribe tu pregunta..."
-            aria-label="Escribe tu pregunta para el asistente"
+            placeholder="Type your question..."
+            aria-label="Type your question for the assistant"
             className="max-h-28 min-h-10 min-w-0 flex-1 resize-y bg-transparent px-2 py-1.5 text-xs leading-5 text-[#424a4c] outline-none placeholder:text-[#899496] sm:text-sm"
           />
           <button
             type="submit"
             disabled={loading || !query.trim()}
             className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[linear-gradient(135deg,#006b73_0%,#0d8d8b_100%)] text-white shadow-[0_12px_20px_rgba(0,107,115,0.18)] transition hover:-translate-y-0.5 hover:bg-[#00545b] disabled:cursor-not-allowed disabled:opacity-40"
-            aria-label="Enviar mensaje"
+            aria-label="Send message"
           >
             <ArrowUp size={17} />
           </button>
         </div>
-        <p className="mt-2 text-[10px] text-[#899496]">Enter para enviar · Shift + Enter para nueva línea</p>
+        <p className="mt-2 text-[10px] text-[#899496]">Enter to send · Shift + Enter for a new line</p>
       </form>
     </aside>
   );

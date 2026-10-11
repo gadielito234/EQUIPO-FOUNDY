@@ -8,28 +8,28 @@ function normalizeText(value) {
 
 function buildLocalFallbackReply(message, context = {}) {
   const lowerMessage = message.toLowerCase();
-  const projectName = normalizeText(context.nombre) || 'tu proyecto';
-  const amount = normalizeText(context.monto) || 'no indicado';
-  const gain = normalizeText(context.ganancia_esperada) || 'no indicada';
-  const returnMonths = normalizeText(context.retorno_meses) || 'no indicado';
+  const projectName = normalizeText(context.nombre) || 'your project';
+  const amount = normalizeText(context.monto) || 'not specified';
+  const gain = normalizeText(context.ganancia_esperada) || 'not specified';
+  const returnMonths = normalizeText(context.retorno_meses) || 'not specified';
 
-  if (lowerMessage.includes('descripcion') || lowerMessage.includes('mejorar') || lowerMessage.includes('idea')) {
-    return `Tu idea tiene buen potencial, pero conviene reforzar la descripcion para que se entienda rapido. Te recomiendo: 1) explicar el problema que resuelves, 2) mostrar quien es tu cliente, 3) describir la propuesta de valor y 4) dejar claro como ganas dinero. En el caso de "${projectName}", la descripcion actual puede mejorar si agregas contexto sobre el usuario, la necesidad y el impacto real.`;
+  if (lowerMessage.includes('description') || lowerMessage.includes('improve') || lowerMessage.includes('idea')) {
+    return `Your idea has potential, but the description could be clearer and more compelling. Try to: 1) explain the problem you solve, 2) identify your customer, 3) describe your value proposition, and 4) clarify how you make money. For "${projectName}", add context about the user, their need, and the project's real-world impact.`;
   }
 
-  if (lowerMessage.includes('riesgo') || lowerMessage.includes('riesgos') || lowerMessage.includes('fortalezas')) {
-    return `Para "${projectName}", una fortaleza clara es que tienes un enfoque con una necesidad concreta. Los riesgos principales suelen ser: falta de diferenciacion, estimaciones financieras poco realistas y no definir bien a quien va dirigido. Si quieres, te ayudo a convertir eso en una version mas solida, con oportunidades y riesgos explicados de manera clara.`;
+  if (lowerMessage.includes('risk') || lowerMessage.includes('strength')) {
+    return `For "${projectName}", a clear strength is its focus on a specific need. Common risks include limited differentiation, unrealistic financial estimates, and an unclear target audience. I can help you turn this into a stronger overview with clearly explained opportunities and risks.`;
   }
 
-  if (lowerMessage.includes('ganancia') || lowerMessage.includes('monto') || lowerMessage.includes('coherente') || lowerMessage.includes('financ')) {
-    return `Con los datos actuales, tu objetivo de inversion es ${amount} y la ganancia esperada es ${gain}. El plazo estimado es ${returnMonths}. Eso puede ser coherente si tu proyecto tiene un modelo claro de monetizacion, un cliente objetivo definido y una ruta de crecimiento razonable. Te sugeriria validar si el retorno se sostiene con un plan de ventas realista y no solo con una proyeccion optimista.`;
+  if (lowerMessage.includes('profit') || lowerMessage.includes('funding') || lowerMessage.includes('goal') || lowerMessage.includes('financial') || lowerMessage.includes('make sense')) {
+    return `Based on the current details, your funding goal is ${amount}, estimated profit is ${gain}, and the estimated return period is ${returnMonths}. These figures may be reasonable if your project has a clear revenue model, a defined target customer, and a credible growth plan. Validate the expected return against realistic sales assumptions rather than an optimistic projection alone.`;
   }
 
-  if (lowerMessage.includes('nombre') || lowerMessage.includes('llamar')) {
-    return `Un buen nombre para "${projectName}" debe ser facil de recordar, relacionado con tu propuesta y con buena sonoridad. Prueba opciones mas simples como nombres que transmitan valor, confianza y claridad. Si quieres, puedo ayudarte a crear 10 nombres con diferentes estilos: premium, local, innovador o mas institucional.`;
+  if (lowerMessage.includes('name') || lowerMessage.includes('call')) {
+    return `A good name for "${projectName}" should be memorable, relevant to your offer, and easy to say. Consider simple names that convey value, trust, and clarity. I can also suggest ten options in different styles: premium, local, innovative, or institutional.`;
   }
 
-  return `Gracias por tu consulta sobre "${projectName}". Aunque la IA conectada en Supabase/Gemini aun no este configurada, esta guia local te da una primera direccion: define bien el problema, explica el cliente, refuerza la propuesta de valor y valida tus cifras con una proyeccion realista. Si activas la clave de Gemini y despliegas la funcion chat-ai, el asistente va a responder con un analisis mas profundo.`;
+  return `Thanks for asking about "${projectName}". While the connected Supabase/Gemini AI is not configured, here is a starting point: define the problem, explain who your customer is, strengthen your value proposition, and validate your figures with a realistic forecast. Once Gemini is configured and the chat-ai function is deployed, the assistant can provide a deeper analysis.`;
 }
 
 async function readFunctionError(error) {
@@ -43,17 +43,17 @@ async function readFunctionError(error) {
     }
 
     if (response.status === 404) {
-      return 'No se encontro la funcion de IA. Despliega chat-ai en tu proyecto de Supabase.';
+      return 'The AI function was not found. Deploy chat-ai to your Supabase project.';
     }
   }
 
-  return error?.message || 'No se pudo contactar al asistente.';
+  return error?.message || 'The assistant could not be reached.';
 }
 
 export async function askGemini(message, context = {}, history = []) {
   const trimmedMessage = message?.trim();
   if (!trimmedMessage) {
-    throw new Error('Escribe una consulta para el asistente.');
+    throw new Error('Enter a question for the assistant.');
   }
 
   const hasSupabaseConfig = Boolean(import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY);
@@ -75,36 +75,36 @@ export async function askGemini(message, context = {}, history = []) {
     if (error) {
       const functionError = await readFunctionError(error);
       const actionableMessage = functionError.includes('GEMINI_API_KEY')
-        ? `${functionError} Ejecuta primero: supabase functions deploy chat-ai y luego supabase secrets set GEMINI_API_KEY=tu_clave_de_gemini.`
-        : functionError.includes('No se encontro la funcion de IA')
-          ? `${functionError} Debes desplegar la Edge Function chat-ai en Supabase.`
-          : functionError.includes('Supabase no configurado')
-            ? `${functionError} Configura VITE_SUPABASE_URL y VITE_SUPABASE_PUBLISHABLE_KEY en tu archivo .env.`
+        ? `${functionError} First run: supabase functions deploy chat-ai, then supabase secrets set GEMINI_API_KEY=your_gemini_key.`
+        : functionError.includes('The AI function was not found')
+          ? `${functionError} Deploy the chat-ai Edge Function to Supabase.`
+          : functionError.includes('Supabase is not configured')
+            ? `${functionError} Set VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY in your .env file.`
             : functionError;
 
-      console.warn('Fallback local activado por problema de IA:', actionableMessage);
+      console.warn('Local AI fallback activated after an AI error:', actionableMessage);
       return buildLocalFallbackReply(trimmedMessage, context);
     }
 
     if (typeof data?.error === 'string' && data.error.trim()) {
       const configurableError = data.error.includes('GEMINI_API_KEY')
-        ? `${data.error} Ejecuta: supabase functions deploy chat-ai y luego supabase secrets set GEMINI_API_KEY=tu_clave_de_gemini.`
-        : data.error.includes('No se encontro la funcion de IA')
-          ? `${data.error} Debes desplegar la Edge Function chat-ai en Supabase.`
+        ? `${data.error} Run: supabase functions deploy chat-ai, then supabase secrets set GEMINI_API_KEY=your_gemini_key.`
+        : data.error.includes('The AI function was not found')
+          ? `${data.error} Deploy the chat-ai Edge Function to Supabase.`
           : data.error;
 
-      console.warn('Fallback local activado por error de Edge Function:', configurableError);
+      console.warn('Local AI fallback activated after an Edge Function error:', configurableError);
       return buildLocalFallbackReply(trimmedMessage, context);
     }
 
     if (typeof data?.reply !== 'string' || !data.reply.trim()) {
-      console.warn('Fallback local activado por respuesta vacia del asistente.');
+      console.warn('Local AI fallback activated after an empty assistant response.');
       return buildLocalFallbackReply(trimmedMessage, context);
     }
 
     return data.reply.trim();
   } catch (requestError) {
-    console.warn('Fallback local activado por excepcion de IA:', requestError);
+    console.warn('Local AI fallback activated after an AI exception:', requestError);
     return buildLocalFallbackReply(trimmedMessage, context);
   }
 }

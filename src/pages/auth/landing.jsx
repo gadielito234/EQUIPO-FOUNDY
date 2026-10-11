@@ -11,67 +11,67 @@
 } from 'lucide-react';
 
 const navigation = [
-    { name: 'Cómo funciona', href: '#function' },
-    { name: 'Emprendedores', href: '#pathways-title' },
-    { name: 'Inversores', href: '#showcase-title' },
-    { name: 'Nosotros', href: '#about' },
+    { name: 'How it works', href: '#function' },
+    { name: 'Entrepreneurs', href: '#pathways-title' },
+    { name: 'Investors', href: '#showcase-title' },
+    { name: 'About us', href: '#about' },
 ];
 
 const stats = [
-    { value: '48+', label: 'proyectos activos' },
-    { value: '86%', label: 'crecimiento anual' },
-    { value: '24h', label: 'respuesta promedio' },
+    { value: '48+', label: 'active projects' },
+    { value: '86%', label: 'annual growth' },
+    { value: '24h', label: 'average response' },
 ];
 
 const howItWorks = [
     {
         icon: Sparkles,
-        title: 'Descubre oportunidades',
-        description: 'Encuentra proyectos con potencial real y una narrativa clara para crecer.',
+        title: 'Discover opportunities',
+        description: 'Find promising projects with a clear story and room to grow.',
     },
     {
         icon: Users,
-        title: 'Conecta con confianza',
-        description: 'Haz match con emprendedores, aliados e inversionistas que comparten tus objetivos.',
+        title: 'Connect with confidence',
+        description: 'Meet entrepreneurs, partners, and investors who share your goals.',
     },
     {
         icon: TrendingUp,
-        title: 'Impulsa tu siguiente etapa',
-        description: 'Acelera decisiones con una comunidad enfocada en resultados y relación de largo plazo.',
+        title: 'Move into your next chapter',
+        description: 'Make confident decisions with a community focused on results and lasting relationships.',
     },
 ];
 
 const features = [
     {
-        title: 'Perfil profesional',
-        description: 'Presenta tu proyecto o interés con una identidad clara y credibilidad desde el inicio.',
+        title: 'Professional profile',
+        description: 'Present your project or investment interests with a clear, credible profile.',
     },
     {
-        title: 'Match inteligente',
-        description: 'Conecta con personas y proyectos que realmente responden a tu necesidad de crecimiento.',
+        title: 'Smarter connections',
+        description: 'Connect with people and projects that fit your growth goals.',
     },
     {
-        title: 'Seguimiento claro',
-        description: 'Mantén el impulso con una experiencia centrada en la evolución y la confianza.',
+        title: 'Clear progress tracking',
+        description: 'Keep moving forward with an experience built around progress and trust.',
     },
 ];
 
 const showcase = [
-    { image: '/images/Cafemonteverde.png', label: 'Comercio local', title: 'Ideas con raíces en la comunidad', description: 'Apoya negocios con propósito y una hoja de ruta para crecer con impacto.' },
-    { image: '/images/Artesaníaselfaro.png', label: 'Economía creativa', title: 'Talento que merece un impulso', description: 'Conecta a creadores locales con personas listas para abrir nuevas oportunidades.' },
-    { image: '/images/tatipupuseria.png', label: 'Emprendimiento', title: 'Pequeñas empresas, grandes posibilidades', description: 'Convierte una idea prometedora en un proyecto con visibilidad y respaldo.' },
+    { image: '/images/Cafemonteverde.png', label: 'Local business', title: 'Ideas rooted in the community', description: 'Support purpose-driven businesses with a roadmap for meaningful growth.' },
+    { image: '/images/Artesaníaselfaro.png', label: 'Creative economy', title: 'Talent ready for a boost', description: 'Connect local creators with people ready to open new opportunities.' },
+    { image: '/images/tatipupuseria.png', label: 'Entrepreneurship', title: 'Small businesses, big possibilities', description: 'Turn a promising idea into a project with visibility and support.' },
 ];
 
 const testimonials = [
     {
-        quote: 'Foundy me ayudó a encontrar la estructura adecuada para presentar mi negocio y abrir conversaciones con inversionistas reales.',
+        quote: 'Foundy helped me find the right way to present my business and start conversations with real investors.',
         author: 'María López',
-        role: 'Emprendedora local',
+        role: 'Local entrepreneur',
     },
     {
-        quote: 'La plataforma me permite descubrir proyectos con claridad y acompañarlos desde una perspectiva mucho más estratégica.',
+        quote: 'The platform helps me discover projects with clarity and support them from a more strategic perspective.',
         author: 'Jorge Ramírez',
-        role: 'Inversionista angel',
+        role: 'Angel investor',
     },
 ];
 
@@ -98,10 +98,10 @@ export default function Landing({ onLogin, onRegister }) {
 
                     <div className="flex items-center gap-2">
                         <button type="button" onClick={onRegister} className="rounded-md bg-[#006b70] px-5 py-2.5 text-xs font-semibold text-white shadow-sm transition hover:-translate-y-1 hover:bg-[#00545a]">
-                            Registrarse
+                            Sign up
                         </button>
                         <button type="button" onClick={onLogin} className="hidden rounded-md border border-[#9bc7bd] px-5 py-2.5 text-xs font-semibold text-[#006b70] transition hover:-translate-y-1 hover:bg-[#eff9f5] sm:block">
-                            Iniciar sesión
+                            Sign in
                         </button>
                     </div>
                 </nav>
@@ -117,28 +117,28 @@ export default function Landing({ onLogin, onRegister }) {
                         <div className="landing-reveal max-w-2xl">
                             <span className="inline-flex items-center gap-2 rounded-full border border-[#a4dbd1] bg-[#ebfaf6] px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-[#0b817d]">
                                 <BadgeCheck className="h-3.5 w-3.5" />
-                                Comunidad de crecimiento
+                                A community for growth
                             </span>
                             <h1 id="landing-title" className="mt-6 text-4xl font-black leading-[0.95] tracking-[-0.06em] text-[#073f4a] sm:text-5xl lg:text-6xl">
-                                Conecta ideas con capital y con el futuro que merecen.
+                                Connect ideas with capital and the future they deserve.
                             </h1>
                             <p className="mt-6 max-w-xl text-base leading-7 text-[#4d666b] sm:text-lg">
-                                Foundy reúne emprendedores, inversionistas y aliados para convertir proyectos con potencial en oportunidades reales, sostenibles y con impacto.
+                                Foundy brings entrepreneurs, investors, and partners together to turn promising projects into meaningful, sustainable opportunities.
                             </p>
 
                             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                                 <button type="button" onClick={onRegister} className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#006b70] px-5 py-3.5 text-sm font-bold text-white shadow-[0_18px_30px_rgba(0,107,112,0.18)] transition hover:-translate-y-1 hover:bg-[#00545a]">
-                                    Unirme a Foundy
+                                    Join Foundy
                                     <ArrowRight className="h-4 w-4" />
                                 </button>
                                 <button type="button" onClick={onLogin} className="inline-flex items-center justify-center rounded-xl border border-[#8dbbb2] bg-white/80 px-5 py-3.5 text-sm font-bold text-[#006b70] transition hover:-translate-y-1 hover:bg-white">
-                                    Explorar oportunidades
+                                    Explore opportunities
                                 </button>
                             </div>
 
                             <div className="mt-8 flex flex-wrap items-center gap-3 text-sm text-[#44666a]">
-                                <span className="inline-flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-[#0b817d]" /> Red verificada</span>
-                                <span className="inline-flex items-center gap-2"><MessageSquareText className="h-4 w-4 text-[#0b817d]" /> Conexiones reales</span>
+                                <span className="inline-flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-[#0b817d]" /> Verified network</span>
+                                <span className="inline-flex items-center gap-2"><MessageSquareText className="h-4 w-4 text-[#0b817d]" /> Real connections</span>
                             </div>
 
                             <div className="mt-10 grid max-w-md grid-cols-3 gap-4">
@@ -154,7 +154,7 @@ export default function Landing({ onLogin, onRegister }) {
                         <div className="landing-reveal landing-reveal-delay-2 relative">
                             <div className="glass-panel soft-glow relative overflow-hidden rounded-[2rem] border border-[#dbeee9] bg-white/60 p-4 shadow-[0_28px_60px_rgba(0,72,77,0.15)]">
                                 <div className="overflow-hidden rounded-[1.5rem] bg-[#e6f5f1]">
-                                    <img src="/images/emprendedores-negocios.jpg" alt="Emprendedores y negocios colaborando" className="landing-hero-image h-[20rem] w-full object-cover sm:h-[28rem] lg:h-[34rem]" />
+                                    <img src="/images/emprendedores-negocios.jpg" alt="Entrepreneurs and businesses working together" className="landing-hero-image h-[20rem] w-full object-cover sm:h-[28rem] lg:h-[34rem]" />
                                 </div>
 
                                 <div className="absolute left-8 top-8 rounded-2xl border border-white/60 bg-white/80 p-3 shadow-lg backdrop-blur-sm">
@@ -164,14 +164,14 @@ export default function Landing({ onLogin, onRegister }) {
                                         </div>
                                         <div>
                                             <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#5f7a7d]">Pipeline</p>
-                                            <p className="text-sm font-bold text-[#0f4a4c]">+38% en visibilidad</p>
+                                            <p className="text-sm font-bold text-[#0f4a4c]">+38% visibility</p>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className="absolute bottom-8 right-8 max-w-[17rem] rounded-2xl border border-[#d6f6ee] bg-[#0a666a] p-4 text-white shadow-[0_20px_32px_rgba(3,72,75,0.25)]">
-                                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#b3efe1]">Oportunidad destacada</p>
-                                    <p className="mt-2 text-lg font-bold leading-snug">El proyecto ideal para apoyar tu próximos pasos.</p>
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#b3efe1]">Featured opportunity</p>
+                                    <p className="mt-2 text-lg font-bold leading-snug">The right project to support your next steps.</p>
                                 </div>
                             </div>
                         </div>
@@ -180,8 +180,8 @@ export default function Landing({ onLogin, onRegister }) {
 
                 <section id="function" className="mx-auto max-w-7xl px-6 py-20 sm:px-10 lg:px-12" aria-labelledby="function-title">
                     <div className="landing-reveal max-w-2xl">
-                        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#21a99b]">Cómo funciona</p>
-                        <h2 id="function-title" className="mt-3 text-3xl font-bold tracking-tight text-[#006b70] sm:text-4xl">Un flujo sencillo para crecer con claridad.</h2>
+                        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#21a99b]">How it works</p>
+                        <h2 id="function-title" className="mt-3 text-3xl font-bold tracking-tight text-[#006b70] sm:text-4xl">A simple path to grow with confidence.</h2>
                     </div>
 
                     <div className="mt-10 grid gap-5 md:grid-cols-3">
@@ -200,8 +200,8 @@ export default function Landing({ onLogin, onRegister }) {
 
                 <section className="mx-auto max-w-7xl px-6 pb-20 sm:px-10 lg:px-12" aria-labelledby="pathways-title">
                     <div className="landing-reveal max-w-2xl">
-                        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#21a99b]">En la misma plataforma</p>
-                        <h2 id="pathways-title" className="mt-3 text-3xl font-bold tracking-tight text-[#006b70] sm:text-4xl">Encuentra tu camino según el rol que quieras jugar.</h2>
+                        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#21a99b]">One platform</p>
+                        <h2 id="pathways-title" className="mt-3 text-3xl font-bold tracking-tight text-[#006b70] sm:text-4xl">Find your path and make your next move.</h2>
                     </div>
 
                     <div className="mt-8 grid gap-5 lg:grid-cols-2">
@@ -214,11 +214,11 @@ export default function Landing({ onLogin, onRegister }) {
                                 </div>
                             </div>
                             <div className="p-6 sm:p-7">
-                                <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#21a99b]">Para emprendedores</p>
-                                <h3 className="mt-3 text-2xl font-bold text-[#006b70]">Haz visible tu proyecto y abre la puerta correcta.</h3>
-                                <p className="mt-3 text-sm leading-6 text-slate-600">Construye una presencia clara, comparte tu visión y conecta con personas que entienden tu etapa de crecimiento.</p>
+                                <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#21a99b]">For entrepreneurs</p>
+                                <h3 className="mt-3 text-2xl font-bold text-[#006b70]">Showcase your project and open the right doors.</h3>
+                                <p className="mt-3 text-sm leading-6 text-slate-600">Build a clear presence, share your vision, and connect with people who understand your stage of growth.</p>
                                 <button type="button" onClick={onRegister} className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-[#006b70] transition hover:translate-x-1">
-                                    Crear mi perfil <ArrowRight className="h-4 w-4" />
+                                    Create my profile <ArrowRight className="h-4 w-4" />
                                 </button>
                             </div>
                         </article>
@@ -232,11 +232,11 @@ export default function Landing({ onLogin, onRegister }) {
                                 </div>
                             </div>
                             <div className="p-6 sm:p-7">
-                                <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#a8e7d6]">Para inversionistas</p>
-                                <h3 className="mt-3 text-2xl font-bold">Descubre oportunidades con contexto y potencial.</h3>
-                                <p className="mt-3 text-sm leading-6 text-teal-50/80">Explora proyectos con una narrativa sólida, evalúa su dirección y elige las inversiones más alineadas con tus metas.</p>
+                                <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#a8e7d6]">For investors</p>
+                                <h3 className="mt-3 text-2xl font-bold">Discover opportunities with context and potential.</h3>
+                                <p className="mt-3 text-sm leading-6 text-teal-50/80">Explore compelling projects, understand their direction, and choose investments that align with your goals.</p>
                                 <button type="button" onClick={onRegister} className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-white transition hover:translate-x-1">
-                                    Ver oportunidades <ArrowRight className="h-4 w-4" />
+                                    View opportunities <ArrowRight className="h-4 w-4" />
                                 </button>
                             </div>
                         </article>
@@ -246,8 +246,8 @@ export default function Landing({ onLogin, onRegister }) {
                 <section className="bg-[#edf7f5]" aria-labelledby="features-title">
                     <div className="mx-auto max-w-7xl px-6 py-20 sm:px-10 lg:px-12">
                         <div className="landing-reveal max-w-2xl">
-                            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#21a99b]">¿Qué te ofrece Foundy?</p>
-                            <h2 id="features-title" className="mt-3 text-3xl font-bold tracking-tight text-[#006b70] sm:text-4xl">Todo lo que necesitas para avanzar.</h2>
+                            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#21a99b]">What Foundy offers</p>
+                            <h2 id="features-title" className="mt-3 text-3xl font-bold tracking-tight text-[#006b70] sm:text-4xl">Everything you need to move forward.</h2>
                         </div>
 
                         <div className="mt-10 grid gap-5 md:grid-cols-3">
@@ -265,13 +265,13 @@ export default function Landing({ onLogin, onRegister }) {
                 <section id="about" className="mx-auto max-w-7xl px-6 py-20 sm:px-10 lg:px-12" aria-labelledby="about-title">
                     <div className="grid min-w-0 grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center">
                         <div className="landing-reveal">
-                            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#21a99b]">Nosotros</p>
-                            <h2 id="about-title" className="mt-3 text-3xl font-bold tracking-tight text-[#006b70] sm:text-4xl">Creamos una comunidad para impulsar ideas con relevancia.</h2>
+                            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#21a99b]">About us</p>
+                            <h2 id="about-title" className="mt-3 text-3xl font-bold tracking-tight text-[#006b70] sm:text-4xl">A community built to move meaningful ideas forward.</h2>
                             <p className="mt-5 max-w-xl text-base leading-7 text-slate-600">
-                                En Foundy creemos que cada proyecto con potencial merece ser visto, conectado y respaldado por la comunidad correcta. Unimos personas con visión para construir oportunidades con sentido y crecimiento real.
+                                At Foundy, we believe every promising project deserves to be seen, connected, and supported by the right community. We bring people with vision together to create meaningful opportunities and lasting growth.
                             </p>
                             <button type="button" onClick={onRegister} className="mt-7 rounded-xl bg-[#006b70] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#00545a]">
-                                Únete a la comunidad
+                                Join the community
                             </button>
                         </div>
 
@@ -282,8 +282,8 @@ export default function Landing({ onLogin, onRegister }) {
                                         <ShieldCheck className="h-5 w-5" />
                                     </div>
                                     <div>
-                                        <h3 className="font-bold text-[#006b70]">Confianza en cada conexión</h3>
-                                        <p className="mt-1 text-sm leading-6 text-slate-600">Una experiencia pensada para fomentar relaciones genuinas y evitar ruido.</p>
+                                        <h3 className="font-bold text-[#006b70]">Trust in every connection</h3>
+                                        <p className="mt-1 text-sm leading-6 text-slate-600">An experience designed to encourage genuine relationships and cut through the noise.</p>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-3 rounded-2xl bg-[#f6fbfb] p-4">
@@ -291,8 +291,8 @@ export default function Landing({ onLogin, onRegister }) {
                                         <Users className="h-5 w-5" />
                                     </div>
                                     <div>
-                                        <h3 className="font-bold text-[#006b70]">Personas con visión</h3>
-                                        <p className="mt-1 text-sm leading-6 text-slate-600">Combinamos emprendimiento, inversión y colaboración para generar momentum.</p>
+                                        <h3 className="font-bold text-[#006b70]">People with vision</h3>
+                                        <p className="mt-1 text-sm leading-6 text-slate-600">We bring entrepreneurship, investment, and collaboration together to build momentum.</p>
                                     </div>
                                 </div>
                             </div>
@@ -303,11 +303,11 @@ export default function Landing({ onLogin, onRegister }) {
                 <section className="mx-auto max-w-7xl px-6 pb-20 sm:px-10 lg:px-12" aria-labelledby="showcase-title">
                     <div className="landing-reveal flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
                         <div className="max-w-2xl">
-                            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#21a99b]">Casos inspiradores</p>
-                            <h2 id="showcase-title" className="mt-3 text-3xl font-bold tracking-tight text-[#006b70] sm:text-4xl">Ideas locales con alcance real.</h2>
+                            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#21a99b]">Featured stories</p>
+                            <h2 id="showcase-title" className="mt-3 text-3xl font-bold tracking-tight text-[#006b70] sm:text-4xl">Local ideas with real reach.</h2>
                         </div>
                         <button type="button" onClick={onRegister} className="w-fit rounded-xl border border-[#006b70] px-5 py-3 text-sm font-semibold text-[#006b70] transition hover:bg-[#006b70] hover:text-white">
-                            Sumarse a la comunidad
+                            Join the community
                         </button>
                     </div>
 
@@ -328,8 +328,8 @@ export default function Landing({ onLogin, onRegister }) {
                 <section className="bg-[#006b70] text-white" aria-labelledby="testimonials-title">
                     <div className="mx-auto max-w-7xl px-6 py-20 sm:px-10 lg:px-12">
                         <div className="landing-reveal max-w-2xl">
-                            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#9be4d0]">Testimonios</p>
-                            <h2 id="testimonials-title" className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">La comunidad que impulsa a la gente a moverse.</h2>
+                            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#9be4d0]">Testimonials</p>
+                            <h2 id="testimonials-title" className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">A community that gets people moving.</h2>
                         </div>
 
                         <div className="mt-10 grid gap-5 lg:grid-cols-2">
@@ -350,24 +350,24 @@ export default function Landing({ onLogin, onRegister }) {
                     <div className="landing-reveal rounded-[2rem] bg-[linear-gradient(135deg,#0a5d5d_0%,#006b70_35%,#0d7c78_100%)] px-6 py-10 text-white shadow-[0_24px_45px_rgba(0,88,92,0.26)] sm:px-8 lg:px-10">
                         <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
                             <div>
-                                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#9be4d0]">Tu próximo paso</p>
-                                <h2 id="roles-title" className="mt-3 text-3xl font-bold leading-tight sm:text-4xl">Construye, invierte y crece con una comunidad que te entiende.</h2>
-                                <p className="mt-4 max-w-md text-sm leading-7 text-teal-50/80">Foundy te ayuda a encontrar conexiones con sentido para llevar tu proyecto o tu apoyo al siguiente nivel.</p>
+                                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#9be4d0]">Your next step</p>
+                                <h2 id="roles-title" className="mt-3 text-3xl font-bold leading-tight sm:text-4xl">Build, invest, and grow with a community that understands you.</h2>
+                                <p className="mt-4 max-w-md text-sm leading-7 text-teal-50/80">Foundy helps you find meaningful connections to take your project or support to the next level.</p>
                                 <button type="button" onClick={onRegister} className="mt-7 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-bold text-[#006b70] transition hover:-translate-y-1 hover:bg-[#e5f8f3]">
-                                    Comenzar ahora <ArrowRight className="h-4 w-4" />
+                                    Get started <ArrowRight className="h-4 w-4" />
                                 </button>
                             </div>
 
                             <div className="grid gap-4 sm:grid-cols-2">
                                 <article className="rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur-sm">
                                     <span className="text-3xl" aria-hidden="true">↗</span>
-                                    <h3 className="mt-5 text-xl font-bold">Para emprendedores</h3>
-                                    <p className="mt-2 text-sm leading-6 text-teal-50/80">Muestra tu proyecto, reúne apoyo y crea mayor visibilidad con la comunidad adecuada.</p>
+                                    <h3 className="mt-5 text-xl font-bold">For entrepreneurs</h3>
+                                    <p className="mt-2 text-sm leading-6 text-teal-50/80">Showcase your project, build support, and raise its visibility with the right community.</p>
                                 </article>
                                 <article className="rounded-2xl border border-white/15 bg-[#21a99b] p-5">
                                     <span className="text-3xl" aria-hidden="true">✦</span>
-                                    <h3 className="mt-5 text-xl font-bold">Para inversores</h3>
-                                    <p className="mt-2 text-sm leading-6 text-white/85">Descubre oportunidades con contexto, tracción y potencial de impacto real.</p>
+                                    <h3 className="mt-5 text-xl font-bold">For investors</h3>
+                                    <p className="mt-2 text-sm leading-6 text-white/85">Discover opportunities with context, traction, and real potential for impact.</p>
                                 </article>
                             </div>
                         </div>
@@ -379,10 +379,10 @@ export default function Landing({ onLogin, onRegister }) {
                 <div className="mx-auto grid max-w-7xl gap-8 px-6 py-10 sm:grid-cols-2 sm:px-10 lg:grid-cols-4 lg:px-12">
                     <div className="sm:col-span-2">
                         <img src="/images/foundy-logo.png" alt="Foundy" className="h-10 w-auto object-contain brightness-0 invert" />
-                        <p className="mt-4 max-w-sm text-sm leading-6 text-teal-100">Conectamos ideas, emprendedores e inversionistas para crear nuevas oportunidades en El Salvador.</p>
+                        <p className="mt-4 max-w-sm text-sm leading-6 text-teal-100">We connect ideas, entrepreneurs, and investors to create new opportunities in El Salvador.</p>
                     </div>
                     <div>
-                        <h2 className="text-sm font-semibold">Explorar</h2>
+                        <h2 className="text-sm font-semibold">Explore</h2>
                         <div className="mt-4 space-y-3 text-sm text-teal-100">
                             {navigation.map((item) => (
                                 <a key={item.name} className="block hover:text-white" href={item.href}>{item.name}</a>
@@ -390,14 +390,14 @@ export default function Landing({ onLogin, onRegister }) {
                         </div>
                     </div>
                     <div>
-                        <h2 className="text-sm font-semibold">Cuenta</h2>
+                        <h2 className="text-sm font-semibold">Account</h2>
                         <div className="mt-4 space-y-3 text-sm text-teal-100">
-                            <button type="button" onClick={onLogin} className="block text-left hover:text-white">Iniciar sesión</button>
-                            <button type="button" onClick={onRegister} className="block text-left hover:text-white">Registrarse</button>
+                            <button type="button" onClick={onLogin} className="block text-left hover:text-white">Sign in</button>
+                            <button type="button" onClick={onRegister} className="block text-left hover:text-white">Sign up</button>
                         </div>
                     </div>
                 </div>
-                <div className="border-t border-white/20 px-6 py-5 text-center text-xs text-teal-100 sm:px-10">© 2026 Foundy. Todos los derechos reservados.</div>
+                <div className="border-t border-white/20 px-6 py-5 text-center text-xs text-teal-100 sm:px-10">© 2026 Foundy. All rights reserved.</div>
             </footer>
         </div>
     );
