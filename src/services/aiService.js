@@ -17,7 +17,11 @@ export function buildLocalFallbackReply(message, context = {}) {
   const gain = normalizeText(context.ganancia_esperada) || 'no especificado';
   const returnMonths = normalizeText(context.retorno_meses) || 'no especificado';
 
-  if (lowerMessage.includes('gaseosa') || lowerMessage.includes('centro histórico') || lowerMessage.includes('vender') || lowerMessage.includes('bolsa')) {
+  if (lowerMessage.includes('tortilla') || lowerMessage.includes('tortitas') || lowerMessage.includes('tacos') || lowerMessage.includes('quesadilla')) {
+    return `Para vender tortillas en el centro histórico, conviene enfocarte en tres cosas: 1) definir tu cliente ideal (turistas, oficinistas o transeúntes), 2) ofrecer una diferencia clara por sabor, relleno o calidad del producto, y 3) cuidar el precio y el margen. Prueba un precio competitivo, valida la demanda en horas pico y enfoca la promoción en visibilidad, rapidez y sabor para mejorar las ventas.`;
+  }
+
+  if (lowerMessage.includes('gaseosa') || lowerMessage.includes('refresco') || lowerMessage.includes('bebida') || lowerMessage.includes('bolsa')) {
     return `Para vender gaseosa en bolsa en el centro histórico, conviene enfocarte en tres cosas: 1) definir tu cliente ideal (turistas, oficinistas o transeúntes), 2) ofrecer una diferencia clara por sabor, temperatura o conveniencia, y 3) cuidar el precio y el margen. Prueba un precio competitivo, valida la demanda en horas pico y enfoca la promoción en visibilidad, rapidez y frescura para mejorar las ventas.`;
   }
 
