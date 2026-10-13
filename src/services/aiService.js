@@ -1,4 +1,4 @@
-import { supabase } from './supabase';
+import { supabase } from './supabase.js';
 
 function normalizeText(value) {
   if (typeof value === 'string') return value.trim();
@@ -6,30 +6,38 @@ function normalizeText(value) {
   return '';
 }
 
-function buildLocalFallbackReply(message, context = {}) {
+function getRuntimeEnv() {
+  return typeof import.meta !== 'undefined' && import.meta.env ? import.meta.env : {};
+}
+
+export function buildLocalFallbackReply(message, context = {}) {
   const lowerMessage = message.toLowerCase();
-  const projectName = normalizeText(context.nombre) || 'your project';
-  const amount = normalizeText(context.monto) || 'not specified';
-  const gain = normalizeText(context.ganancia_esperada) || 'not specified';
-  const returnMonths = normalizeText(context.retorno_meses) || 'not specified';
+  const projectName = normalizeText(context.nombre) || 'tu proyecto';
+  const amount = normalizeText(context.monto) || 'no especificado';
+  const gain = normalizeText(context.ganancia_esperada) || 'no especificado';
+  const returnMonths = normalizeText(context.retorno_meses) || 'no especificado';
 
-  if (lowerMessage.includes('description') || lowerMessage.includes('improve') || lowerMessage.includes('idea')) {
-    return `Your idea has potential, but the description could be clearer and more compelling. Try to: 1) explain the problem you solve, 2) identify your customer, 3) describe your value proposition, and 4) clarify how you make money. For "${projectName}", add context about the user, their need, and the project's real-world impact.`;
+  if (lowerMessage.includes('gaseosa') || lowerMessage.includes('centro histórico') || lowerMessage.includes('vender') || lowerMessage.includes('bolsa')) {
+    return `Para vender gaseosa en bolsa en el centro histórico, conviene enfocarte en tres cosas: 1) definir tu cliente ideal (turistas, oficinistas o transeúntes), 2) ofrecer una diferencia clara por sabor, temperatura o conveniencia, y 3) cuidar el precio y el margen. Prueba un precio competitivo, valida la demanda en horas pico y enfoca la promoción en visibilidad, rapidez y frescura para mejorar las ventas.`;
   }
 
-  if (lowerMessage.includes('risk') || lowerMessage.includes('strength')) {
-    return `For "${projectName}", a clear strength is its focus on a specific need. Common risks include limited differentiation, unrealistic financial estimates, and an unclear target audience. I can help you turn this into a stronger overview with clearly explained opportunities and risks.`;
+  if (lowerMessage.includes('descripción') || lowerMessage.includes('describir') || lowerMessage.includes('idea') || lowerMessage.includes('mejorar')) {
+    return `Tu idea tiene potencial, pero la propuesta necesita ser más concreta. Explica el problema que resuelves, identifica a tu cliente, describe tu valor y muestra cómo generas ingresos. Para "${projectName}", añade quién es la persona, qué necesidad cubre y por qué tu solución es distinta.`;
   }
 
-  if (lowerMessage.includes('profit') || lowerMessage.includes('funding') || lowerMessage.includes('goal') || lowerMessage.includes('financial') || lowerMessage.includes('make sense')) {
-    return `Based on the current details, your funding goal is ${amount}, estimated profit is ${gain}, and the estimated return period is ${returnMonths}. These figures may be reasonable if your project has a clear revenue model, a defined target customer, and a credible growth plan. Validate the expected return against realistic sales assumptions rather than an optimistic projection alone.`;
+  if (lowerMessage.includes('riesgo') || lowerMessage.includes('fortaleza') || lowerMessage.includes('debilidad')) {
+    return `Para "${projectName}", una fortaleza clara es tener una idea enfocada en una necesidad concreta. Los riesgos más comunes son la poca diferenciación, una estimación financiera poco realista y un público objetivo poco definido. Conviene dejarlo claro en la presentación y mostrar por qué resuelve un problema real.`;
   }
 
-  if (lowerMessage.includes('name') || lowerMessage.includes('call')) {
-    return `A good name for "${projectName}" should be memorable, relevant to your offer, and easy to say. Consider simple names that convey value, trust, and clarity. I can also suggest ten options in different styles: premium, local, innovative, or institutional.`;
+  if (lowerMessage.includes('ganancia') || lowerMessage.includes('monto') || lowerMessage.includes('financ') || lowerMessage.includes('rentabilidad') || lowerMessage.includes('tiene sentido')) {
+    return `Con la información actual, tu meta de financiamiento es ${amount}, la ganancia estimada es ${gain} y el retorno estimado es ${returnMonths} meses. Esto puede ser razonable si tu proyecto tiene un modelo de ingresos claro, un cliente definido y una proyección de ventas realista. Antes de lanzar una cifra, valida el costo, la demanda y el tiempo de venta.`;
   }
 
-  return `Thanks for asking about "${projectName}". While the connected Supabase/Gemini AI is not configured, here is a starting point: define the problem, explain who your customer is, strengthen your value proposition, and validate your figures with a realistic forecast. Once Gemini is configured and the chat-ai function is deployed, the assistant can provide a deeper analysis.`;
+  if (lowerMessage.includes('nombre') || lowerMessage.includes('llamar') || lowerMessage.includes('marca')) {
+    return `Un buen nombre para "${projectName}" debe ser claro, memorable y fácil de pronunciar. Busca algo que transmita valor, confianza y proximidad con tu cliente. Puedo ayudarte con opciones más premium, locales, modernas o institucionales.`;
+  }
+
+  return `Para "${projectName}", lo más importante es definir claramente el problema que resuelves, a quién le vendes, qué hace diferente tu oferta y cómo puedes venderlo de forma realista. Si deseas, puedo ayudarte a pulir la propuesta, definir un precio, o diseñar una estrategia más efectiva para tu idea.`;
 }
 
 async function readFunctionError(error) {
@@ -53,10 +61,11 @@ async function readFunctionError(error) {
 export async function askGemini(message, context = {}, history = []) {
   const trimmedMessage = message?.trim();
   if (!trimmedMessage) {
-    throw new Error('Enter a question for the assistant.');
+    throw new Error('Ingresa una pregunta para el asistente.');
   }
 
-  const hasSupabaseConfig = Boolean(import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY);
+  const runtimeEnv = getRuntimeEnv();
+  const hasSupabaseConfig = Boolean(runtimeEnv.VITE_SUPABASE_URL && runtimeEnv.VITE_SUPABASE_PUBLISHABLE_KEY);
   const hasSupabaseClient = Boolean(supabase?.functions?.invoke);
 
   if (!hasSupabaseConfig || !hasSupabaseClient) {
