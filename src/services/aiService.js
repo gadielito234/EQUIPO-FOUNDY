@@ -41,7 +41,7 @@ export function buildLocalFallbackReply(message, context = {}) {
     return `Un buen nombre para "${projectName}" debe ser claro, memorable y fácil de pronunciar. Busca algo que transmita valor, confianza y proximidad con tu cliente. Puedo ayudarte con opciones más premium, locales, modernas o institucionales.`;
   }
 
-  return `Para "${projectName}", lo más importante es definir claramente el problema que resuelves, a quién le vendes, qué hace diferente tu oferta y cómo puedes venderlo de forma realista. Si deseas, puedo ayudarte a pulir la propuesta, definir un precio, o diseñar una estrategia más efectiva para tu idea.`;
+  return `La IA no está conectada todavía en este proyecto, así que te estoy dando una respuesta local. Para activarla debes configurar VITE_SUPABASE_URL y VITE_SUPABASE_PUBLISHABLE_KEY en tu archivo .env y desplegar la función Edge chat-ai de Supabase con la clave de Gemini. Mientras tanto, para "${projectName}", lo más importante es definir claramente el problema que resuelves, a quién le vendes, qué hace diferente tu oferta y cómo lo vas a vender de forma realista. Si quieres, puedo ayudarte a pulir la propuesta, definir un precio o diseñar una estrategia más efectiva para tu idea.`;
 }
 
 async function readFunctionError(error) {
